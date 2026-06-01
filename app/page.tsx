@@ -4,61 +4,15 @@ import Image from "next/image";
 import React from "react";
 import { motion, useScroll } from "framer-motion";
 
-type IconName =
-  | "arrow"
-  | "sparkles"
-  | "workflow"
-  | "code"
-  | "database"
-  | "figma"
-  | "brain"
-  | "mail"
-  | "phone"
-  | "map";
+import { CvShareActions } from "@/app/_components/CvShareActions";
+import { cv, cvMarkdown } from "@/app/_data/cv";
+import type { IconName } from "@/app/_data/cv";
 
-type Skill = {
-  title: string;
-  icon: IconName;
-  items: string;
-};
-
-type Experience = {
-  title: string;
-  company: string;
-  period: string;
-  points: string[];
-};
-
-const profile = {
-  name: "Akkapol Kumpapug",
-  role: "AI Systems Builder & Problem Solver",
-  tagline: "AI-Integrated Systems · Workflow Design · Practical Execution",
-  location: "Bangkok, Thailand",
-  email: "akkapol.kumpapug@gmail.com",
-  phone: "+66961195161",
-  linkedin: "linkedin.com/in/akkapol-kumpapug",
-  portfolio: "akkapol-portfolio.vercel.app",
-};
+const profile = cv.profile;
 
 const profileHeroImage = "/images/akkapol-profile.png";
-
-const currentFocus = [
-  "2026-ready AI-integrated business systems",
-  "Agentic workflow design",
-  "SME operational automation",
-  "Customer intake systems",
-  "Quotation and status tracking",
-  "Production workflow visibility",
-  "Practical AI-assisted software development",
-];
-
-const strengths = [
-  "AI-Driven Thinking",
-  "Systems Builder",
-  "Ambiguity to Clarity",
-  "Stakeholder Bridge",
-  "Practical Execution",
-];
+const currentFocus = cv.currentFocus;
+const strengths = cv.strengths;
 
 const workflowStages = [
   {
@@ -103,115 +57,9 @@ const workflowStages = [
   },
 ];
 
-const skills: Skill[] = [
-  {
-    title: "AI & Agentic Workflows",
-    icon: "brain",
-    items: "LLM Integration · AI Workflow Orchestration · Agentic Workflow Design · AI-assisted coding, debugging & prototyping",
-  },
-  {
-    title: "Full-Stack & Cloud",
-    icon: "code",
-    items: "Next.js · React · TypeScript · JavaScript · Supabase · PostgreSQL · Vercel · Firebase · GCP · Cloudflare R2",
-  },
-  {
-    title: "Business Workflow Systems",
-    icon: "workflow",
-    items: "LINE Messaging API · LIFF · MINI App flows · REST APIs · Webhooks · Signed URLs · CRM workflows · Intake · Quote/status tracking",
-  },
-  {
-    title: "Enterprise Automation",
-    icon: "database",
-    items: "SharePoint 2019 · Power Automate · Power Apps · SQL Server · Git · Cursor · GitHub Copilot · Codex",
-  },
-];
-
-const experience: Experience[] = [
-  {
-    title: "Independent AI Systems Developer & Consultant",
-    company: "Independent",
-    period: "2026 - Present",
-    points: [
-      "Design AI-assisted operational systems and workflow platforms for small businesses and production environments.",
-      "Build LINE + LIFF based customer intake and quotation workflow systems integrated with Supabase and Vercel.",
-      "Design CRM and workflow foundations for customer intake, quote visibility, payment/commercial gates, production status tracking, and operator handoff.",
-      "Develop scalable file and asset handling strategies using signed URLs and cloud object storage.",
-      "Apply AI-assisted development workflows using ChatGPT/Codex, Claude, Gemini, Cursor, and GitHub Copilot for implementation, testing, documentation, and debugging.",
-      "Design practical AI features as assistive workflow layers, including AI preview support, operational guidance, and structured workflow decision support.",
-      "Explore agentic AI workflows and orchestration patterns for future production automation systems.",
-    ],
-  },
-  {
-    title: "AI-Assisted Problem Solver / AI & Tech Integrator",
-    company: "Independent / AK3 Studio",
-    period: "2025 - 2026",
-    points: [
-      "Use AI as a thinking and reasoning partner for research-driven problem analysis and decision support.",
-      "Clarify ambiguous business problems, test assumptions, and translate insights into practical execution directions.",
-      "Focus on intelligent workflows that improve decision quality, operational efficiency, and long-term business value for SMEs.",
-      "Translate unclear business requirements into practical workflow structures, system logic, and execution-ready solutions.",
-    ],
-  },
-  {
-    title: "IT Programmer / SharePoint & Power Platform Developer",
-    company: "C.C.S. Advance Tech Co., Ltd. · Nonthaburi",
-    period: "Nov 2022 - Nov 2025",
-    points: [
-      "Developed and maintained enterprise systems on SharePoint 2019 On-Premise.",
-      "Automated workflows using Power Automate to reduce manual processes.",
-      "Built custom forms and interfaces using JavaScript, jQuery, HTML, and CSS.",
-      "Integrated SharePoint lists, legacy data, and business requirements into scalable digital tools.",
-      "Collaborated with cross-functional teams to define requirements and prioritize development tasks.",
-    ],
-  },
-  {
-    title: "Front-End Developer",
-    company: "Absolute Solution Co., Ltd. · Bangkok",
-    period: "Nov 2021 - Jul 2022",
-    points: [
-      "Developed user interfaces using React, Next.js, Ant Design, and Material UI.",
-      "Integrated REST APIs to support real-time data operations.",
-      "Participated in Agile workflows and collaborated with designers and backend developers.",
-    ],
-  },
-  {
-    title: "Operations Manager",
-    company: "Frozen Restaurant · Kalasin",
-    period: "Oct 2018 - Dec 2020",
-    points: [
-      "Managed daily operations, staff coordination, and resource planning.",
-      "Improved operational workflows and overall team performance.",
-      "Gained hands-on experience in decision-making under real operational constraints.",
-    ],
-  },
-  {
-    title: "Junior .NET Developer",
-    company: "Auction Trade Co., Ltd. · Bangkok",
-    period: "Oct 2015 - Feb 2018",
-    points: [
-      "Developed internal systems using C#, .NET Framework, and SQL Server.",
-      "Fixed bugs, optimized legacy code, and improved system stability.",
-      "Supported database operations and ongoing system maintenance.",
-    ],
-  },
-  {
-    title: "Graphic Designer",
-    company: "Manta Performing Arts",
-    period: "Dec 2013 - Dec 2014",
-    points: [
-      "Created visual assets, branding materials, and stage graphics.",
-      "Built strong foundations in creative thinking and visual communication.",
-    ],
-  },
-];
-
-const education = [
-  "Data Analysis with Power BI · AskMe Solutions · 2024 - Present",
-  "SCADA Systems for Production Processes · Rajamangala University of Technology Phra Nakhon · 2024 - Present",
-  "Full-Stack JavaScript Web Development · Software Park Thailand · 2021",
-  "Undergraduate Coursework · Chandrakasem Rajabhat University · 2013",
-  "Vocational Certificate in Electrical & Electronics · Tak Technical College · 2010",
-];
+const skills = cv.skills;
+const experience = cv.experience;
+const education = cv.education;
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -560,9 +408,13 @@ export default function AkkapolPortfolioPage() {
             </a>
           </div>
 
+          <div className="mt-5">
+            <CvShareActions markdown={cvMarkdown} />
+          </div>
+
           <div className="mt-10 flex flex-wrap gap-3">
             {strengths.map((item) => (
-              <Badge key={item}>{item}</Badge>
+              <Badge key={item.title}>{item.title}</Badge>
             ))}
           </div>
         </motion.div>
@@ -584,12 +436,7 @@ export default function AkkapolPortfolioPage() {
             title="Full-stack execution, AI workflow design, and operational problem solving in one profile."
           />
           <div className="rounded-lg border border-white/10 bg-white/[0.04] p-8 text-lg leading-9 text-zinc-300 shadow-2xl shadow-black/20 backdrop-blur">
-            <p>
-              AI-integrated systems builder with a background in full-stack development,
-              SharePoint and Power Platform automation, workflow systems, and operational
-              problem-solving. Focused on turning business ambiguity into clear workflow
-              states, usable interfaces, customer visibility, and scalable operational processes.
-            </p>
+            <p>{cv.summary}</p>
           </div>
         </div>
       </section>
@@ -686,10 +533,16 @@ export default function AkkapolPortfolioPage() {
         <div className="grid gap-4 md:grid-cols-2">
           {education.map((item) => (
             <div
-              key={item}
+              key={`${item.program}-${item.period}`}
               className="rounded-lg border border-white/10 bg-white/[0.04] p-5 text-sm leading-6 text-zinc-300 backdrop-blur"
             >
-              {item}
+              <p className="font-semibold text-white">{item.program}</p>
+              <p className="mt-1 text-zinc-400">
+                {item.institution} · {item.period}
+              </p>
+              {item.description ? (
+                <p className="mt-3 text-zinc-400">{item.description}</p>
+              ) : null}
             </div>
           ))}
         </div>
@@ -708,6 +561,9 @@ export default function AkkapolPortfolioPage() {
                 workflow automation, CRM-style quote/status tracking, and production-ready web
                 platforms.
               </p>
+              <div className="mt-8">
+                <CvShareActions markdown={cvMarkdown} variant="contact" />
+              </div>
             </div>
             <div className="flex flex-col justify-end gap-4 text-sm text-zinc-300">
               <a
@@ -717,7 +573,7 @@ export default function AkkapolPortfolioPage() {
                 <Icon name="mail" className="h-5 w-5 text-amber-200" /> {profile.email}
               </a>
               <a
-                href={`tel:${profile.phone}`}
+                href={`tel:${profile.phone.replace(/\s+/g, "")}`}
                 className="flex items-center gap-3 rounded-lg bg-black/30 p-4 transition hover:bg-black/45"
               >
                 <Icon name="phone" className="h-5 w-5 text-amber-200" /> {profile.phone}

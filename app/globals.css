@@ -17,3 +17,33 @@ body {
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
+
+.cv-print-page,
+.cv-print-page * {
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+
+.cv-section {
+  break-inside: avoid;
+}
+
+.cv-item {
+  break-inside: avoid;
+}
+
+@page {
+  size: A4;
+  margin: 10mm;
+}
+
+@media print {
+  html,
+  body {
+    background: #ffffff;
+  }
+
+  .cv-print-page {
+    min-height: auto;
+  }
+}
