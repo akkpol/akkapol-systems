@@ -7,7 +7,7 @@
 - Phone: +66 961195161
 - Email: akkapol.kumpapug@gmail.com
 - LinkedIn: linkedin.com/in/akkapol-kumpapug
-- Portfolio: akkapol-systems-ak3lab.vercel.app
+- Portfolio: akkapol-systems.vercel.app
 
 ---
 

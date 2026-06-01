@@ -25,4 +25,4 @@ Primary routes:
 - `/robots.txt`
 - `/sitemap.xml`
 
-Production target: [https://akkapol-systems-ak3lab.vercel.app](https://akkapol-systems-ak3lab.vercel.app)
+Production target: [https://akkapol-systems.vercel.app](https://akkapol-systems.vercel.app)

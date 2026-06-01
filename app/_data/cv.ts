@@ -45,7 +45,7 @@ export const cv = {
     phone: "+66 961195161",
     email: "akkapol.kumpapug@gmail.com",
     linkedin: "linkedin.com/in/akkapol-kumpapug",
-    portfolio: "akkapol-systems-ak3lab.vercel.app",
+    portfolio: "akkapol-systems.vercel.app",
   },
   summary:
     "AI-integrated systems builder with a background in full-stack development, SharePoint and Power Platform automation, workflow systems, and operational problem-solving. Experienced in designing practical AI-assisted business systems that combine LLM tooling, agentic development workflows, cloud infrastructure, CRM-style operational flows, customer intake, quotation/status tracking, and production-ready web systems. Strong foundation in real-world enterprise systems execution, legacy system support, front-end engineering, and operations management. Focused on turning business ambiguity into clear workflow states, usable interfaces, customer visibility, and scalable operational processes.",
