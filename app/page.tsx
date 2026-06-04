@@ -22,7 +22,7 @@ const workflowStages = [
     label: "Intake",
     title: "Capture the real request",
     description:
-      "Customer intake turns messy input into a structured case with files, context, and ownership.",
+      "Customer requests are turned into structured cases with clear context, files, and ownership.",
     event: "customer_intake.submitted",
     guard: "Schema validation + signed asset URLs",
   },
@@ -30,9 +30,9 @@ const workflowStages = [
     id: "triage",
     step: "02",
     label: "AI Triage",
-    title: "Reduce ambiguity before execution starts",
+    title: "Clarify the work before execution",
     description:
-      "AI helps classify intent, missing details, urgency, and quote readiness while keeping people in control.",
+      "AI helps identify intent, missing information, urgency, and quote readiness while people stay in control of the decision.",
     event: "case.triage.completed",
     guard: "Human review + confidence threshold",
   },
@@ -40,9 +40,9 @@ const workflowStages = [
     id: "quote",
     step: "03",
     label: "Quote",
-    title: "Move through clear operational states",
+    title: "Make every business step visible",
     description:
-      "Quotes, payments, and approvals are turned into clear system states instead of scattered chats or spreadsheets.",
+      "Quotes, payments, and approvals become easier to track through clear system steps instead of scattered chats or spreadsheets.",
     event: "quote.status.changed",
     guard: "Idempotent transition keys",
   },
@@ -386,7 +386,7 @@ export default function AkkapolPortfolioPage() {
         <div className="grid gap-8 md:grid-cols-[0.8fr_1.2fr]">
           <SectionTitle
             eyebrow="Executive Summary"
-            title="A profile that combines full-stack execution, AI workflow design, and real operational problem solving."
+            title="A practical profile built around execution, workflow design, and solving real business problems."
           />
           <div className="rounded-lg border border-white/10 bg-white/[0.04] p-8 text-lg leading-9 text-zinc-300 shadow-2xl shadow-black/20 backdrop-blur">
             <p>{cv.summary}</p>
@@ -435,7 +435,7 @@ export default function AkkapolPortfolioPage() {
       <section id="systems" className="relative z-10 mx-auto max-w-7xl px-6 py-20 md:px-10">
         <SectionTitle
           eyebrow="System Operating Model"
-          title="The portfolio should reflect the systems I build: clear states, clear events, and reliable handoffs."
+          title="This portfolio reflects how I build systems: clear steps, clear signals, and smooth handoffs."
         />
         <WorkflowPreview stages={workflowStages} />
       </section>
@@ -446,7 +446,7 @@ export default function AkkapolPortfolioPage() {
       >
         <SectionTitle
           eyebrow="Experience"
-          title="Current role first: AI systems, workflow design, and practical implementation."
+          title="Current role first: building AI systems, workflows, and practical solutions."
         />
         <div className="space-y-4">
           {experience.map((job) => (
@@ -506,11 +506,11 @@ export default function AkkapolPortfolioPage() {
             <div>
               <Icon name="brain" className="mb-6 h-10 w-10 text-amber-200" />
               <h2 className="text-4xl font-semibold text-white md:text-6xl">
-                Let&apos;s turn business complexity into a working AI-assisted system.
+                Let&apos;s turn business problems into practical AI-assisted systems.
               </h2>
               <p className="mt-6 max-w-2xl text-lg leading-8 text-zinc-300">
-                Best fit: AI-assisted operational systems, customer intake flows,
-                workflow automation, and production-ready web platforms.
+                Best fit: practical AI-assisted systems, customer workflows,
+                process automation, and production-ready web platforms.
               </p>
               <div className="mt-8">
                 <CvShareActions markdown={cvMarkdown} variant="contact" />
