@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { HeroNameMotion } from "@/app/_components/home/HeroNameMotion";
+import { HeroPortraitMotion } from "@/app/_components/home/HeroPortraitMotion";
 import { KineticHeroFX } from "@/app/_components/home/KineticHeroFX";
 
 const profileHeroImage = "/images/brand/akkapol-hero-transparent.png";
@@ -44,11 +46,11 @@ function HeroSystemMap() {
   return (
     <div
       aria-hidden="true"
-      className="ak-system-map pointer-events-none absolute inset-y-0 right-0 z-[5] hidden w-[56%] overflow-hidden opacity-60 lg:block"
+      className="ak-system-map pointer-events-none absolute inset-y-0 right-0 z-[5] hidden w-[56%] overflow-hidden lg:block"
     >
       <svg
         viewBox="0 0 820 760"
-        className="absolute right-0 top-20 h-[74%] w-full text-amber-300/35"
+        className="absolute right-0 top-20 z-0 h-[74%] w-full text-amber-300/35 opacity-60"
         fill="none"
       >
         <defs>
@@ -62,23 +64,60 @@ function HeroSystemMap() {
             <stop offset="0.65" stopColor="#8bd8dc" stopOpacity="0.56" />
             <stop offset="1" stopColor="#8bd8dc" stopOpacity="0" />
           </linearGradient>
+          <linearGradient id="tracePulse" x1="0" x2="1" y1="0" y2="0">
+            <stop offset="0" stopColor="#8bd8dc" stopOpacity="0" />
+            <stop offset="0.28" stopColor="#8bd8dc" stopOpacity="0.78" />
+            <stop offset="0.56" stopColor="#f6b51e" stopOpacity="0.82" />
+            <stop offset="0.74" stopColor="#fff7d6" stopOpacity="0.62" />
+            <stop offset="1" stopColor="#f6b51e" stopOpacity="0" />
+          </linearGradient>
         </defs>
         <path
+          className="ak-system-pipeline-base"
           d="M75 372h150c34 0 62-28 62-62V202c0-35 28-63 63-63h145c42 0 76 34 76 76v31"
           stroke="url(#traceCyan)"
           strokeWidth="1.4"
         />
         <path
+          className="ak-system-pipeline-base"
           d="M310 330h182c44 0 80-36 80-80v-16c0-40 32-72 72-72h96"
           stroke="url(#traceAmber)"
           strokeWidth="1.5"
         />
-        <path d="M420 410h118c48 0 87 39 87 87v95" stroke="url(#traceAmber)" strokeWidth="2" />
         <path
+          className="ak-system-pipeline-base"
+          d="M420 410h118c48 0 87 39 87 87v95"
+          stroke="url(#traceAmber)"
+          strokeWidth="2"
+        />
+        <path
+          className="ak-system-pipeline-base"
           d="M300 478h198c35 0 64 29 64 64v48c0 25 20 45 45 45h126"
           stroke="url(#traceCyan)"
           strokeWidth="1.2"
         />
+        <g className="ak-system-pipeline-pulses" stroke="url(#tracePulse)" strokeLinecap="round">
+          <path
+            className="ak-system-pipeline-pulse ak-system-pipeline-pulse-a"
+            d="M75 372h150c34 0 62-28 62-62V202c0-35 28-63 63-63h145c42 0 76 34 76 76v31"
+            pathLength={1}
+          />
+          <path
+            className="ak-system-pipeline-pulse ak-system-pipeline-pulse-b"
+            d="M310 330h182c44 0 80-36 80-80v-16c0-40 32-72 72-72h96"
+            pathLength={1}
+          />
+          <path
+            className="ak-system-pipeline-pulse ak-system-pipeline-pulse-c"
+            d="M420 410h118c48 0 87 39 87 87v95"
+            pathLength={1}
+          />
+          <path
+            className="ak-system-pipeline-pulse ak-system-pipeline-pulse-d"
+            d="M300 478h198c35 0 64 29 64 64v48c0 25 20 45 45 45h126"
+            pathLength={1}
+          />
+        </g>
         <path d="M470 126c36 20 68 52 94 95" stroke="#fff" strokeDasharray="4 8" strokeOpacity="0.14" />
         <path d="M540 326c66-4 118 15 156 56" stroke="#fff" strokeDasharray="4 8" strokeOpacity="0.12" />
         <rect x="360" y="116" width="82" height="55" rx="6" stroke="#ffffff" strokeOpacity="0.12" />
@@ -98,30 +137,30 @@ function HeroSystemMap() {
         </g>
       </svg>
 
-      <div className="absolute left-[8%] top-[42%] max-w-28 text-right opacity-75">
-        <p className="font-mono text-xs font-semibold text-cyan-100/60">CLARIFY</p>
+      <div className="absolute left-[8%] top-[42%] z-10 max-w-28 text-right opacity-75">
+        <p className="ak-type-label text-cyan-100/60">CLARIFY</p>
         <p className="mt-1 text-xs leading-4 text-zinc-600">Understand goals, constraints, context</p>
       </div>
-      <div className="absolute left-[10%] top-[55%] max-w-28 text-right opacity-70">
-        <p className="font-mono text-xs font-semibold text-cyan-100/55">DESIGN</p>
+      <div className="absolute left-[10%] top-[55%] z-10 max-w-28 text-right opacity-70">
+        <p className="ak-type-label text-cyan-100/55">DESIGN</p>
         <p className="mt-1 text-xs leading-4 text-zinc-600">Map systems and workflows</p>
       </div>
-      <div className="absolute right-[10%] top-[20%] max-w-48 border-l border-white/10 pl-4 opacity-80">
-        <p className="font-mono text-xs font-semibold text-zinc-300">AMBIGUOUS INPUT</p>
+      <div className="absolute right-[10%] top-[20%] z-10 max-w-48 border-l border-white/10 pl-4 opacity-80">
+        <p className="ak-type-label text-zinc-300">AMBIGUOUS INPUT</p>
         <p className="mt-1 text-xs leading-4 text-zinc-600">Unclear, scattered, hard to scale</p>
       </div>
-      <div className="absolute right-[20%] top-[38%] max-w-40 opacity-75">
-        <p className="font-mono text-xs font-semibold text-zinc-300">BUILD</p>
+      <div className="absolute right-[20%] top-[38%] z-10 max-w-40 opacity-75">
+        <p className="ak-type-label text-zinc-300">BUILD</p>
         <p className="mt-1 text-xs leading-4 text-zinc-600">Create intelligent tools and automations</p>
       </div>
-      <div className="absolute right-[7%] top-[55%] max-w-36 opacity-70">
-        <p className="font-mono text-xs font-semibold text-zinc-300">OPERATE</p>
+      <div className="absolute right-[7%] top-[55%] z-10 max-w-36 opacity-70">
+        <p className="ak-type-label text-zinc-300">OPERATE</p>
         <p className="mt-1 text-xs leading-4 text-zinc-600">Run, refine, and evolve systems</p>
       </div>
-      <div className="absolute right-[2%] top-[47%] flex items-center gap-4 text-amber-300/85">
+      <div className="absolute right-[2%] top-[47%] z-10 flex items-center gap-4 text-amber-300/85">
         <span className="h-px w-10 bg-amber-300/55" />
         <ArrowUpRight className="h-5 w-5" />
-        <p className="font-mono text-xs font-semibold leading-5">
+        <p className="ak-type-label">
           ELEGANT SYSTEMS.
           <br />
           REAL RESULTS.
@@ -150,7 +189,7 @@ export function StudioHero({ email }: { email: string }) {
         <Link href="#top" className={`group flex items-center gap-5 text-zinc-100 ${ctaFocus}`}>
           <StudioMark />
           <span className="h-8 w-px bg-white/18" aria-hidden="true" />
-          <span className="flex items-center gap-4 font-mono text-xs text-zinc-400 transition group-hover:text-zinc-200">
+          <span className="ak-type-label flex items-center gap-4 text-zinc-400 transition group-hover:text-zinc-200">
             <span className="h-2 w-2 rounded-full bg-amber-300 shadow-[0_0_18px_rgba(246,181,30,0.45)]" aria-hidden="true" />
             SYSTEMS STUDIO
           </span>
@@ -159,27 +198,27 @@ export function StudioHero({ email }: { email: string }) {
         <div className="hidden min-w-[25rem] justify-end md:flex">
           <div className="relative border-t border-r border-white/16 px-8 py-4 text-right">
             <span className="absolute -left-1.5 top-3 h-2 w-2 rounded-full bg-amber-300" />
-            <p className="font-mono text-xs text-zinc-500">SYSTEMS THINKER • BUILDER • OPERATOR</p>
+            <p className="ak-type-label text-zinc-500">SYSTEMS THINKER • BUILDER • OPERATOR</p>
           </div>
         </div>
       </header>
 
       <div className="relative z-20 grid min-h-[calc(100svh-18rem)] items-center pt-12 lg:grid-cols-[0.48fr_0.52fr] lg:pt-5">
         <div className="ak-hero-copy relative z-20">
-          <h1 className="text-5xl font-semibold leading-[0.9] text-zinc-100 sm:text-7xl md:text-[5.6rem] lg:text-[6.35rem] 2xl:text-[7.75rem]">
+          <HeroNameMotion>
             AKKAPOL
             <span className="block">KUMPAPUG</span>
-          </h1>
+          </HeroNameMotion>
 
           <div className="mt-6 flex max-w-[23rem] items-center gap-3 text-amber-300">
             <span className="h-px flex-1 bg-amber-300" aria-hidden="true" />
             <span className="h-3 w-3 rounded-full border border-amber-300 bg-[#070707] shadow-[0_0_18px_rgba(246,181,30,0.25)]" />
           </div>
 
-          <p className="mt-5 text-xl font-normal text-amber-300 sm:text-2xl md:text-3xl">
+          <p className="ak-type-title-hero mt-5 text-amber-300">
             Creative AI Systems Builder
           </p>
-          <p className="mt-5 max-w-full text-lg leading-7 text-zinc-300 sm:text-xl sm:leading-8 md:text-2xl md:leading-10">
+          <p className="ak-type-body-hero mt-5 max-w-full text-zinc-300">
             Systems, workflows, and intelligent tools
             <br className="hidden sm:block" /> for real business operations
           </p>
@@ -213,7 +252,7 @@ export function StudioHero({ email }: { email: string }) {
           </div>
         </div>
 
-        <div className="pointer-events-none absolute bottom-0 right-0 z-20 hidden h-[80svh] w-[55vw] max-w-[58rem] lg:block">
+        <HeroPortraitMotion className="ak-hero-portrait-shell pointer-events-none absolute bottom-0 right-0 z-20 hidden h-[80svh] w-[55vw] max-w-[58rem] lg:block">
           <div className="absolute inset-x-12 bottom-0 h-44 bg-gradient-to-t from-[#070707] via-[#070707]/70 to-transparent" />
           <div className="absolute inset-y-0 right-0 w-40 bg-gradient-to-l from-[#070707] to-transparent" />
           <Image
@@ -222,9 +261,10 @@ export function StudioHero({ email }: { email: string }) {
             fill
             preload
             sizes="(min-width: 1024px) 55vw, 0vw"
+            style={{ transform: "translate3d(0, 0.75rem, 0) scale(1.02)", transformOrigin: "bottom right" }}
             className="ak-hero-portrait object-contain object-bottom opacity-95"
           />
-        </div>
+        </HeroPortraitMotion>
       </div>
 
       <div
@@ -236,15 +276,15 @@ export function StudioHero({ email }: { email: string }) {
         <div className="relative mx-auto grid w-full max-w-[92rem] gap-8 md:grid-cols-[0.43fr_0.31fr_0.26fr] md:items-end">
           <div>
             <div className="mb-7 flex items-center gap-4">
-              <p className="font-mono text-xs font-semibold text-amber-300">WHAT I DO</p>
+              <p className="ak-type-label text-amber-300">WHAT I DO</p>
               <span className="h-px flex-1 bg-white/18" />
             </div>
-            <h2 className="text-3xl font-light leading-tight text-zinc-100 sm:text-4xl xl:text-5xl">
+            <h2 className="ak-type-title-panel text-zinc-100">
               I build systems that
               <span className="block">run your business.</span>
             </h2>
           </div>
-          <p className="w-full max-w-[22rem] text-sm leading-7 text-zinc-400 [overflow-wrap:anywhere] sm:text-base sm:leading-8 md:col-start-2 md:max-w-md">
+          <p className="ak-type-body w-full max-w-[22rem] text-zinc-400 [overflow-wrap:anywhere] md:col-start-2 md:max-w-md">
             I partner with founders and operators to turn ambiguity into structure,
             designing and building systems that streamline operations and scale with
             confidence.

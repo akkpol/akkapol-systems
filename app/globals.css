@@ -3,6 +3,12 @@
 :root {
   --background: #070707;
   --foreground: #ededed;
+  --ak-type-display-hero: clamp(3rem, 8vw, 7.75rem);
+  --ak-type-title-hero: clamp(1.25rem, 2.2vw, 1.875rem);
+  --ak-type-body-hero: clamp(1.125rem, 1.6vw, 1.5rem);
+  --ak-type-title-panel: clamp(2rem, 3.3vw, 3rem);
+  --ak-type-title-section: clamp(2rem, 4vw, 3.75rem);
+  --ak-type-title-section-long: clamp(1.875rem, 3vw, 3rem);
 }
 
 @theme inline {
@@ -34,25 +40,83 @@ html {
   color: #ffffff;
 }
 
-.ak-kinetic-grid,
-.ak-kinetic-static {
-  position: absolute;
-  inset: -16% -10%;
-  background-image:
-    linear-gradient(90deg, rgba(139, 216, 220, 0.09) 1px, transparent 1px),
-    linear-gradient(0deg, rgba(246, 181, 30, 0.07) 1px, transparent 1px),
-    linear-gradient(135deg, transparent 0 48%, rgba(255, 255, 255, 0.06) 49% 51%, transparent 52% 100%);
-  background-size: 54px 54px, 54px 54px, 160px 160px;
-  mask-image: radial-gradient(ellipse at 66% 34%, black 0 24%, rgba(0, 0, 0, 0.86) 36%, transparent 72%);
-  transform: translateZ(0);
+.ak-type-display-hero {
+  font-size: var(--ak-type-display-hero);
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 0.9;
 }
 
-.ak-kinetic-grid {
-  animation: ak-kinetic-grid-drift 22s linear infinite;
+.ak-type-title-hero {
+  font-size: var(--ak-type-title-hero);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.2;
 }
 
-.ak-kinetic-static {
-  opacity: 0.22;
+.ak-type-body-hero {
+  font-size: var(--ak-type-body-hero);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.55;
+}
+
+.ak-type-title-panel {
+  font-size: var(--ak-type-title-panel);
+  font-weight: 300;
+  letter-spacing: 0;
+  line-height: 1.08;
+}
+
+.ak-type-title-section {
+  font-size: var(--ak-type-title-section);
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 1.08;
+}
+
+.ak-type-title-section-long {
+  font-size: var(--ak-type-title-section-long);
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 1.15;
+}
+
+.ak-type-title-card {
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 1.55;
+}
+
+.ak-type-body-lg {
+  font-size: 1.125rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.75;
+}
+
+.ak-type-body {
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.65;
+}
+
+.ak-type-body-sm {
+  font-size: 0.875rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.65;
+}
+
+.ak-type-label {
+  font-family: var(--font-geist-mono), "Courier New", monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  line-height: 1rem;
+  text-transform: uppercase;
 }
 
 .ak-kinetic-stage-frame {
@@ -93,42 +157,6 @@ html {
   animation: ak-kinetic-node-blink 2.4s ease-in-out infinite;
 }
 
-.ak-kinetic-cursor-frame {
-  position: absolute;
-  left: 58%;
-  top: 24%;
-  width: clamp(8rem, 16vw, 15rem);
-  height: clamp(4.5rem, 8vw, 7.5rem);
-  border: 1px solid rgba(246, 181, 30, 0.22);
-  background-image:
-    linear-gradient(90deg, transparent 0 47%, rgba(246, 181, 30, 0.18) 48% 52%, transparent 53% 100%),
-    linear-gradient(0deg, transparent 0 47%, rgba(139, 216, 220, 0.16) 48% 52%, transparent 53% 100%);
-  clip-path: polygon(0 18%, 8% 18%, 8% 0, 92% 0, 92% 18%, 100% 18%, 100% 82%, 92% 82%, 92% 100%, 8% 100%, 8% 82%, 0 82%);
-  opacity: 0.72;
-  mix-blend-mode: screen;
-}
-
-.ak-kinetic-cursor-frame::before,
-.ak-kinetic-cursor-frame::after {
-  content: "";
-  position: absolute;
-  background: rgba(139, 216, 220, 0.32);
-}
-
-.ak-kinetic-cursor-frame::before {
-  left: 50%;
-  top: -16%;
-  width: 1px;
-  height: 132%;
-}
-
-.ak-kinetic-cursor-frame::after {
-  left: -8%;
-  top: 50%;
-  width: 116%;
-  height: 1px;
-}
-
 .ak-kinetic-scan {
   position: absolute;
   inset-inline: 5% 0;
@@ -141,47 +169,6 @@ html {
   box-shadow: 0 0 28px rgba(246, 181, 30, 0.18);
   mask-image: linear-gradient(90deg, transparent, black 16%, black 72%, transparent);
   animation: ak-kinetic-scan-glow 2.6s ease-in-out infinite;
-}
-
-.ak-kinetic-orbit {
-  position: absolute;
-  aspect-ratio: 1;
-  border: 1px solid rgba(255, 255, 255, 0.11);
-  border-radius: 999px;
-  mix-blend-mode: screen;
-}
-
-.ak-kinetic-orbit::before {
-  content: "";
-  position: absolute;
-  right: 12%;
-  top: 18%;
-  width: 0.42rem;
-  height: 0.42rem;
-  border: 1px solid rgba(246, 181, 30, 0.7);
-  background: #070707;
-  box-shadow: 0 0 18px rgba(246, 181, 30, 0.28);
-}
-
-.ak-kinetic-orbit::after {
-  content: "";
-  position: absolute;
-  inset: 16%;
-  border: 1px dashed rgba(139, 216, 220, 0.14);
-  border-radius: inherit;
-}
-
-.ak-kinetic-orbit-a {
-  right: 9%;
-  top: 15%;
-  width: min(34vw, 29rem);
-}
-
-.ak-kinetic-orbit-b {
-  right: 23%;
-  top: 32%;
-  width: min(24vw, 20rem);
-  opacity: 0.68;
 }
 
 .ak-kinetic-signal {
@@ -228,8 +215,72 @@ html {
   animation: ak-scroll-cue-travel 1.7s cubic-bezier(0.22, 1, 0.36, 1) infinite;
 }
 
+.ak-hero-name-motion {
+  width: max-content;
+  max-width: 100%;
+  transform: translateZ(0);
+}
+
+.ak-hero-name-sheen {
+  border-radius: 0.08em;
+  filter: blur(18px) saturate(1.2);
+  mix-blend-mode: screen;
+  opacity: 0;
+  transform: translateZ(0);
+  transition: opacity 420ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: background, opacity;
+}
+
+.ak-hero-name-rim {
+  border-left: 1px solid rgba(246, 181, 30, 0.2);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background:
+    linear-gradient(90deg, rgba(246, 181, 30, 0.09), transparent 38%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06), transparent 42%);
+  mask-image: linear-gradient(90deg, black, black 72%, transparent 100%);
+  opacity: 0.18;
+  transition: opacity 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.ak-hero-name-motion:hover .ak-hero-name-sheen {
+  opacity: 1;
+}
+
+.ak-hero-name-motion:hover .ak-hero-name-rim {
+  opacity: 0.44;
+}
+
 .ak-system-map {
   animation: ak-system-map-breathe 9s ease-in-out infinite;
+}
+
+.ak-system-pipeline-base,
+.ak-system-pipeline-pulse {
+  vector-effect: non-scaling-stroke;
+}
+
+.ak-system-pipeline-pulse {
+  stroke-width: 2.65;
+  stroke-dasharray: 0.085 0.915;
+  stroke-dashoffset: 1;
+  opacity: 0;
+  filter: drop-shadow(0 0 10px rgba(139, 216, 220, 0.22)) drop-shadow(0 0 14px rgba(246, 181, 30, 0.16));
+  animation: ak-system-pipeline-pulse 5.6s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+
+.ak-system-pipeline-pulse-b {
+  animation-delay: 0.72s;
+  stroke-width: 2.25;
+}
+
+.ak-system-pipeline-pulse-c {
+  animation-delay: 1.34s;
+  stroke-width: 2.4;
+}
+
+.ak-system-pipeline-pulse-d {
+  animation-delay: 2.05s;
+  stroke-width: 2.1;
 }
 
 .ak-system-node {
@@ -269,13 +320,24 @@ html {
   }
 }
 
-@keyframes ak-kinetic-grid-drift {
+@keyframes ak-system-pipeline-pulse {
   0% {
-    background-position: 0 0, 0 0, 0 0;
+    opacity: 0;
+    stroke-dashoffset: 1;
   }
 
+  13% {
+    opacity: 0.72;
+  }
+
+  42% {
+    opacity: 0.58;
+  }
+
+  68%,
   100% {
-    background-position: 54px 54px, -54px 54px, 160px 160px;
+    opacity: 0;
+    stroke-dashoffset: 0;
   }
 }
 
@@ -362,9 +424,10 @@ html {
   box-sizing: border-box;
 }
 
-.ak-hero-portrait {
-  transform: translateY(11rem) scale(1.12);
+.ak-hero-portrait-shell {
   transform-origin: bottom right;
+  mask-image: linear-gradient(90deg, transparent 0, black 9%, black 86%, transparent 100%);
+  will-change: opacity, transform, filter;
 }
 
 @media (min-width: 640px) {
@@ -387,19 +450,16 @@ html {
   }
 }
 
+@media (max-width: 360px) {
+  :root {
+    --ak-type-display-hero: clamp(2.5rem, 13.2vw, 2.875rem);
+  }
+}
+
 @media (max-width: 1023px) {
-  .ak-kinetic-cursor-frame,
-  .ak-kinetic-orbit,
   .ak-kinetic-stage-frame,
   .ak-kinetic-signal {
     display: none;
-  }
-
-  .ak-kinetic-grid,
-  .ak-kinetic-static {
-    inset: -10% -24%;
-    opacity: 0.26;
-    mask-image: radial-gradient(ellipse at 62% 24%, black 0 18%, transparent 70%);
   }
 
   .ak-kinetic-scan {
@@ -411,7 +471,8 @@ html {
 @media (prefers-reduced-motion: reduce) {
   .ak-system-map,
   .ak-system-node,
-  .ak-kinetic-grid,
+  .ak-system-pipeline-pulse,
+  .ak-hero-name-sheen,
   .ak-kinetic-scan,
   .ak-kinetic-signal::before,
   .ak-kinetic-stage-frame::before,

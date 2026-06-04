@@ -149,10 +149,10 @@ function Icon({ name, className = "h-5 w-5" }: { name: IconName; className?: str
 function SectionTitle({ eyebrow, title }: { eyebrow: string; title: string }) {
   return (
     <div className="mb-8">
-      <p className="mb-3 text-sm font-medium uppercase text-amber-300/80">
+      <p className="ak-type-label mb-3 text-amber-300/80">
         {eyebrow}
       </p>
-      <h2 className="max-w-3xl text-3xl font-semibold text-white md:text-5xl">
+      <h2 className="ak-type-title-section-long max-w-3xl text-white">
         {title}
       </h2>
     </div>
@@ -174,7 +174,7 @@ export default function AkkapolPortfolioPage() {
             eyebrow="Executive Summary"
             title="A practical profile built around execution, workflow design, and solving real business problems."
           />
-          <div className="rounded-lg border border-white/10 bg-white/[0.04] p-8 text-lg leading-9 text-zinc-300 shadow-2xl shadow-black/20 backdrop-blur">
+          <div className="ak-type-body-lg rounded-lg border border-white/10 bg-white/[0.04] p-8 text-zinc-300 shadow-2xl shadow-black/20 backdrop-blur">
             <p>{cv.summary}</p>
           </div>
         </div>
@@ -193,7 +193,7 @@ export default function AkkapolPortfolioPage() {
           {currentFocus.map((item) => (
             <div
               key={item}
-              className="rounded-lg border border-white/10 bg-white/[0.04] p-4 text-sm leading-6 text-zinc-300 backdrop-blur"
+              className="ak-type-body-sm rounded-lg border border-white/10 bg-white/[0.04] p-4 text-zinc-300 backdrop-blur"
             >
               {item}
             </div>
@@ -219,8 +219,8 @@ export default function AkkapolPortfolioPage() {
               <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-lg bg-amber-300/15 text-amber-200">
                 <Icon name={skill.icon} className="h-6 w-6" />
               </div>
-              <h3 className="text-lg font-semibold text-white">{skill.title}</h3>
-              <p className="mt-3 text-sm leading-6 text-zinc-400">{skill.items}</p>
+              <h3 className="ak-type-title-card text-white">{skill.title}</h3>
+              <p className="ak-type-body-sm mt-3 text-zinc-400">{skill.items}</p>
             </div>
           ))}
         </div>
@@ -241,15 +241,15 @@ export default function AkkapolPortfolioPage() {
               className="grid gap-6 rounded-lg border border-white/10 bg-white/[0.04] p-6 backdrop-blur md:grid-cols-[0.8fr_1.2fr] md:p-8"
             >
               <div>
-                <p className="text-sm font-medium text-amber-200">{job.period}</p>
-                <h3 className="mt-3 text-2xl font-semibold text-white">
+                <p className="ak-type-body-sm font-medium text-amber-200">{job.period}</p>
+                <h3 className="ak-type-title-card mt-3 text-white">
                   {job.title}
                 </h3>
-                <p className="mt-2 text-zinc-400">{job.company}</p>
+                <p className="ak-type-body-sm mt-2 text-zinc-400">{job.company}</p>
               </div>
-              <ul className="space-y-3 text-zinc-300">
+              <ul className="ak-type-body space-y-3 text-zinc-300">
                 {job.points.map((point) => (
-                  <li key={point} className="flex gap-3 leading-7">
+                  <li key={point} className="flex gap-3">
                     <span className="mt-3 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-300" />
                     <span>{point}</span>
                   </li>
@@ -273,7 +273,7 @@ export default function AkkapolPortfolioPage() {
           {education.map((item) => (
             <div
               key={`${item.program}-${item.period}`}
-              className="rounded-lg border border-white/10 bg-white/[0.04] p-5 text-sm leading-6 text-zinc-300 backdrop-blur"
+              className="ak-type-body-sm rounded-lg border border-white/10 bg-white/[0.04] p-5 text-zinc-300 backdrop-blur"
             >
               <p className="font-semibold text-white">{item.program}</p>
               <p className="mt-1 text-zinc-400">
@@ -295,10 +295,10 @@ export default function AkkapolPortfolioPage() {
           <div className="grid gap-10 md:grid-cols-[1.1fr_0.9fr]">
             <div>
               <Icon name="brain" className="mb-6 h-10 w-10 text-amber-200" />
-              <h2 className="text-4xl font-semibold text-white md:text-6xl">
+              <h2 className="ak-type-title-section-long text-white">
                 Let&apos;s turn business problems into practical AI-assisted systems.
               </h2>
-              <p className="mt-6 max-w-2xl text-lg leading-8 text-zinc-300">
+              <p className="ak-type-body-lg mt-6 max-w-2xl text-zinc-300">
                 Best fit: practical AI-assisted systems, customer workflows,
                 process automation, and production-ready web platforms.
               </p>
@@ -307,7 +307,7 @@ export default function AkkapolPortfolioPage() {
               </div>
             </div>
 
-            <div className="flex flex-col justify-end gap-4 text-sm text-zinc-300">
+            <div className="ak-type-body-sm flex flex-col justify-end gap-4 text-zinc-300">
               <a
                 href={`mailto:${profile.email}`}
                 className="flex items-center gap-3 rounded-lg bg-black/30 p-4 transition hover:bg-black/45"
