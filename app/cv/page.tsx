@@ -73,6 +73,7 @@ export default function CvPage() {
                   src="/images/akkapol-profile.png"
                   alt="Akkapol Kumpapug"
                   fill
+                  preload
                   sizes="156px"
                   className="object-cover object-center"
                 />

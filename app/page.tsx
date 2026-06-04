@@ -1,62 +1,13 @@
-import Image from "next/image";
-import type React from "react";
 import { CvShareActions } from "@/app/_components/CvShareActions";
-import {
-  ScrollProgress,
-  SystemRadar,
-  WorkflowPreview,
-  type WorkflowStage,
-} from "@/app/_components/HomeMotion";
+import { ScrollProgress } from "@/app/_components/HomeMotion";
+import { ScrollReveal } from "@/app/_components/home/ScrollReveal";
+import { StudioHero } from "@/app/_components/home/StudioHero";
 import { cv, cvMarkdown } from "@/app/_data/cv";
 import type { IconName } from "@/app/_data/cv";
 
 const profile = cv.profile;
-const profileHeroImage = "/images/akkapol-profile-2026.png";
 const currentFocus = cv.currentFocus;
 const strengths = cv.strengths;
-
-const workflowStages = [
-  {
-    id: "intake",
-    step: "01",
-    label: "Intake",
-    title: "Capture the real request",
-    description:
-      "Customer requests are turned into structured cases with clear context, files, and ownership.",
-    event: "customer_intake.submitted",
-    guard: "Schema validation + signed asset URLs",
-  },
-  {
-    id: "triage",
-    step: "02",
-    label: "AI Triage",
-    title: "Clarify the work before execution",
-    description:
-      "AI helps identify intent, missing information, urgency, and quote readiness while people stay in control of the decision.",
-    event: "case.triage.completed",
-    guard: "Human review + confidence threshold",
-  },
-  {
-    id: "quote",
-    step: "03",
-    label: "Quote",
-    title: "Make every business step visible",
-    description:
-      "Quotes, payments, and approvals become easier to track through clear system steps instead of scattered chats or spreadsheets.",
-    event: "quote.status.changed",
-    guard: "Idempotent transition keys",
-  },
-  {
-    id: "production",
-    step: "04",
-    label: "Production",
-    title: "Expose the operational truth",
-    description:
-      "Operators, customers, and owners see one workflow timeline with handoffs, blockers, and status changes.",
-    event: "production.stage.updated",
-    guard: "Audit log + role-scoped access",
-  },
-] satisfies WorkflowStage[];
 
 const skills = cv.skills;
 const experience = cv.experience;
@@ -195,14 +146,6 @@ function Icon({ name, className = "h-5 w-5" }: { name: IconName; className?: str
   }
 }
 
-function Badge({ children }: { children: React.ReactNode }) {
-  return (
-    <span className="inline-flex items-center border border-amber-300/18 bg-amber-300/[0.055] px-3.5 py-2 text-sm text-zinc-200 shadow-sm backdrop-blur">
-      {children}
-    </span>
-  );
-}
-
 function SectionTitle({ eyebrow, title }: { eyebrow: string; title: string }) {
   return (
     <div className="mb-8">
@@ -216,173 +159,16 @@ function SectionTitle({ eyebrow, title }: { eyebrow: string; title: string }) {
   );
 }
 
-function HeroProfileCard() {
-  return (
-    <div className="relative overflow-hidden border border-amber-300/22 bg-zinc-950 shadow-2xl shadow-black/50">
-      <div className="absolute left-5 top-5 z-20 border border-amber-300/25 bg-black/55 px-3 py-2 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-amber-200 backdrop-blur">
-        Systems online
-      </div>
-      <div className="absolute right-5 top-5 z-20 hidden text-right font-mono text-[0.68rem] uppercase tracking-[0.16em] text-zinc-500 sm:block">
-        <p>Role</p>
-        <p className="mt-2 max-w-32 text-zinc-200">{profile.role}</p>
-      </div>
-      <div className="relative aspect-[4/5] w-full">
-        <Image
-          src={profileHeroImage}
-          alt="Akkapol Kumpapug profile portrait in dark amber system style"
-          fill
-          preload
-          sizes="(min-width: 768px) 45vw, 100vw"
-          className="object-cover object-[50%_34%]"
-        />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_45%_28%,transparent,rgba(0,0,0,0.06)_36%,rgba(0,0,0,0.5)_100%)]" />
-        <div className="absolute inset-0 ring-1 ring-inset ring-amber-300/10" />
-      </div>
-      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black via-black/60 to-transparent p-5 pt-24">
-        <p className="font-mono text-xs uppercase tracking-[0.2em] text-amber-200">
-          {profile.name}
-        </p>
-        <p className="mt-2 text-sm text-zinc-300">
-          Automation · Integration · Intelligence
-        </p>
-      </div>
-    </div>
-  );
-}
-
-function HeroWorkflowStrip() {
-  return (
-    <div className="relative overflow-hidden border border-amber-300/18 bg-black/35 p-4 shadow-2xl shadow-black/30 backdrop-blur">
-      <div className="mb-4 flex items-center justify-between font-mono text-[0.68rem] uppercase tracking-[0.2em] text-amber-200">
-        <span>Systems workflow</span>
-        <span>State guarded</span>
-      </div>
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        {workflowStages.map((stage, index) => (
-          <div
-            key={stage.id}
-            className="relative border border-white/10 bg-white/[0.035] p-3"
-          >
-            {index < workflowStages.length - 1 ? (
-              <span className="absolute -right-3 top-1/2 hidden h-px w-3 bg-amber-300/50 sm:block" />
-            ) : null}
-            <p className="font-mono text-xs text-amber-200">{stage.step}</p>
-            <p className="mt-2 text-sm font-semibold text-white">{stage.label}</p>
-            <p className="mt-1 line-clamp-2 text-xs leading-5 text-zinc-500">{stage.title}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
 export default function AkkapolPortfolioPage() {
   return (
     <main className="min-h-screen overflow-hidden bg-[#070707] text-zinc-100">
       <ScrollProgress />
-      <div className="pointer-events-none fixed inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(251,191,36,0.12),transparent_35%),linear-gradient(to_right,rgba(251,191,36,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(251,191,36,0.04)_1px,transparent_1px)] bg-[size:100%_100%,72px_72px,72px_72px] [mask-image:linear-gradient(to_bottom,black,transparent_80%)]" />
-        <div className="absolute inset-x-0 top-0 h-px bg-amber-300/50" />
-      </div>
+      <StudioHero email={profile.email} />
 
-      <header className="relative z-10 mx-auto flex max-w-7xl items-center justify-between px-6 py-5 md:px-10">
-        <a
-          href="#top"
-          className="font-mono text-sm font-semibold uppercase tracking-[0.22em] text-white"
-        >
-          AKKAPOL
-        </a>
-
-        <nav className="hidden items-center gap-7 font-mono text-xs uppercase tracking-[0.16em] text-zinc-400 md:flex">
-          <a className="transition hover:text-amber-200" href="#about">
-            About
-          </a>
-          <a className="transition hover:text-amber-200" href="#focus">
-            Focus
-          </a>
-          <a className="transition hover:text-amber-200" href="#skills">
-            Skills
-          </a>
-          <a className="transition hover:text-amber-200" href="#systems">
-            Systems
-          </a>
-          <a className="transition hover:text-amber-200" href="#experience">
-            Experience
-          </a>
-          <a className="transition hover:text-amber-200" href="#education">
-            Education
-          </a>
-          <a className="transition hover:text-amber-200" href="#contact">
-            Contact
-          </a>
-        </nav>
-      </header>
-
-      <section
-        id="top"
-        className="relative z-10 mx-auto grid min-h-[calc(100svh-64px)] max-w-7xl gap-7 px-6 pb-8 pt-4 md:grid-cols-[1.02fr_0.98fr] md:px-10 lg:gap-8"
+      <ScrollReveal
+        id="about"
+        className="relative z-10 mx-auto max-w-7xl px-6 py-20 md:px-10"
       >
-        <div className="flex flex-col justify-start pt-6 md:pt-10">
-          <h1
-            className="max-w-4xl text-[4rem] font-black uppercase leading-[0.78] text-white sm:text-[7.2rem] md:text-[8.4rem] lg:text-[9.2rem]"
-          >
-            AKKAPOL
-            <span className="mt-5 block max-w-3xl text-3xl font-semibold normal-case leading-tight text-zinc-100 sm:text-4xl md:text-5xl">
-              <span className="text-amber-300">AI-integrated</span> systems builder
-              focused on solving real business problems with systems that actually get used.
-            </span>
-          </h1>
-
-          <p
-            className="mt-5 max-w-2xl text-base leading-8 text-zinc-300 md:text-lg"
-          >
-            I design practical AI-assisted business systems that focus on solving real operational problems —
-            turning messy workflows into clear, working solutions using automation, LLM tools, and production-ready systems.
-          </p>
-
-          <div className="mt-7 flex flex-col gap-4 sm:flex-row">
-            <a
-              href={`mailto:${profile.email}`}
-              className="group inline-flex min-h-12 items-center justify-center border border-amber-300 bg-amber-300 px-6 py-3 font-mono text-xs font-semibold uppercase tracking-[0.16em] text-zinc-950 shadow-[0_0_34px_rgba(251,191,36,0.18)] transition hover:bg-amber-200"
-            >
-              Work with me
-              <Icon
-                name="arrow"
-                className="ml-2 h-4 w-4 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-              />
-            </a>
-            <a
-              href="#systems"
-              className="inline-flex min-h-12 items-center justify-center border border-amber-300/22 bg-white/[0.035] px-6 py-3 font-mono text-xs font-semibold uppercase tracking-[0.16em] text-amber-100 backdrop-blur transition hover:border-amber-300/45 hover:bg-amber-300/[0.08]"
-            >
-              Explore systems
-            </a>
-          </div>
-        </div>
-
-        <div
-          className="relative flex min-h-[560px] flex-col justify-center gap-4"
-        >
-          <SystemRadar />
-          <HeroProfileCard />
-          <div>
-            <HeroWorkflowStrip />
-          </div>
-        </div>
-
-        <div
-          className="grid gap-5 md:col-span-2 lg:grid-cols-[auto_1fr] lg:items-start"
-        >
-          <CvShareActions markdown={cvMarkdown} />
-          <div className="flex flex-wrap gap-3">
-            {strengths.map((item) => (
-              <Badge key={item.title}>{item.title}</Badge>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section id="about" className="relative z-10 mx-auto max-w-7xl px-6 py-20 md:px-10">
         <div className="grid gap-8 md:grid-cols-[0.8fr_1.2fr]">
           <SectionTitle
             eyebrow="Executive Summary"
@@ -392,9 +178,13 @@ export default function AkkapolPortfolioPage() {
             <p>{cv.summary}</p>
           </div>
         </div>
-      </section>
+      </ScrollReveal>
 
-      <section id="focus" className="relative z-10 mx-auto max-w-7xl px-6 py-20 md:px-10">
+      <ScrollReveal
+        id="focus"
+        className="relative z-10 mx-auto max-w-7xl px-6 py-20 md:px-10"
+        delay={0.02}
+      >
         <SectionTitle
           eyebrow="Current Focus"
           title="Building 2026-ready AI-integrated business systems for real operations."
@@ -409,9 +199,13 @@ export default function AkkapolPortfolioPage() {
             </div>
           ))}
         </div>
-      </section>
+      </ScrollReveal>
 
-      <section id="skills" className="relative z-10 mx-auto max-w-7xl px-6 py-20 md:px-10">
+      <ScrollReveal
+        id="skills"
+        className="relative z-10 mx-auto max-w-7xl px-6 py-20 md:px-10"
+        delay={0.03}
+      >
         <SectionTitle
           eyebrow="Core Competencies"
           title="A practical stack for AI-assisted systems, workflow automation, and production web delivery."
@@ -430,17 +224,9 @@ export default function AkkapolPortfolioPage() {
             </div>
           ))}
         </div>
-      </section>
+      </ScrollReveal>
 
-      <section id="systems" className="relative z-10 mx-auto max-w-7xl px-6 py-20 md:px-10">
-        <SectionTitle
-          eyebrow="System Operating Model"
-          title="This portfolio reflects how I build systems: clear steps, clear signals, and smooth handoffs."
-        />
-        <WorkflowPreview stages={workflowStages} />
-      </section>
-
-      <section
+      <ScrollReveal
         id="experience"
         className="relative z-10 mx-auto max-w-7xl px-6 py-20 md:px-10"
       >
@@ -472,11 +258,12 @@ export default function AkkapolPortfolioPage() {
             </div>
           ))}
         </div>
-      </section>
+      </ScrollReveal>
 
-      <section
+      <ScrollReveal
         id="education"
         className="relative z-10 mx-auto max-w-7xl px-6 py-20 md:px-10"
+        delay={0.02}
       >
         <SectionTitle
           eyebrow="Education"
@@ -498,9 +285,12 @@ export default function AkkapolPortfolioPage() {
             </div>
           ))}
         </div>
-      </section>
+      </ScrollReveal>
 
-      <section id="contact" className="relative z-10 mx-auto max-w-7xl px-6 py-20 md:px-10">
+      <ScrollReveal
+        id="contact"
+        className="relative z-10 mx-auto max-w-7xl px-6 py-20 md:px-10"
+      >
         <div className="overflow-hidden rounded-lg border border-white/10 bg-white/[0.06] p-8 shadow-2xl shadow-black/30 backdrop-blur md:p-12">
           <div className="grid gap-10 md:grid-cols-[1.1fr_0.9fr]">
             <div>
@@ -552,7 +342,7 @@ export default function AkkapolPortfolioPage() {
             </div>
           </div>
         </div>
-      </section>
+      </ScrollReveal>
     </main>
   );
 }
