@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { cv, cvFiles } from "@/app/_data/cv";
 
 export const metadata = {
@@ -42,6 +43,15 @@ function BulletList({ items }: { items: string[] }) {
 export default function CvPage() {
   return (
     <main className="cv-print-page min-h-screen bg-[#070707] px-4 py-8 text-zinc-100 print:bg-white print:px-0 print:py-0">
+      <div className="mx-auto mb-4 flex max-w-[920px] print:hidden">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/[0.04] px-4 py-2 text-sm font-medium text-zinc-200 transition hover:border-amber-300/40 hover:bg-white/[0.07] hover:text-amber-200"
+        >
+          <span aria-hidden="true">←</span>
+          <span>Back to Home</span>
+        </Link>
+      </div>
       <article className="mx-auto max-w-[920px] overflow-hidden rounded-lg border border-white/10 bg-zinc-950 shadow-2xl shadow-black/50 print:max-w-none print:rounded-none print:border-0 print:bg-white print:shadow-none">
         <header className="relative overflow-hidden bg-black px-8 py-9 print:bg-zinc-950 print:px-8 print:py-7">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(251,191,36,0.18),transparent_36%),linear-gradient(to_right,rgba(255,255,255,0.055)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.055)_1px,transparent_1px)] bg-[size:100%_100%,52px_52px,52px_52px]" />
