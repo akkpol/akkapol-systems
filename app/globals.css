@@ -22,6 +22,9 @@ html[data-theme="dark"],
   --ak-color-accent: #f6b51e;
   --ak-color-accent-soft: #fde68a;
   --ak-color-signal: #8bd8dc;
+  --ak-color-accent-text: #f6b51e;
+  --ak-color-accent-soft-text: #fde68a;
+  --ak-color-signal-text: #8bd8dc;
   --ak-border-subtle: rgba(255, 255, 255, 0.1);
   --ak-border-strong: rgba(255, 255, 255, 0.16);
   --ak-border-secondary: rgba(255, 255, 255, 0.25);
@@ -87,6 +90,9 @@ html[data-theme="light"],
   --ak-color-accent: #ad7a00;
   --ak-color-accent-soft: #d99d17;
   --ak-color-signal: #227b84;
+  --ak-color-accent-text: #7a4f00;
+  --ak-color-accent-soft-text: #8a5d00;
+  --ak-color-signal-text: #17624d;
   --ak-border-subtle: rgba(24, 24, 27, 0.12);
   --ak-border-strong: rgba(24, 24, 27, 0.18);
   --ak-border-secondary: rgba(24, 24, 27, 0.18);
@@ -236,15 +242,15 @@ html {
 }
 
 .ak-text-accent {
-  color: var(--ak-color-accent);
+  color: var(--ak-color-accent-text);
 }
 
 .ak-text-accent-soft {
-  color: var(--ak-color-accent-soft);
+  color: var(--ak-color-accent-soft-text);
 }
 
 .ak-text-signal {
-  color: var(--ak-color-signal);
+  color: var(--ak-color-signal-text);
 }
 
 .ak-theme-shell {

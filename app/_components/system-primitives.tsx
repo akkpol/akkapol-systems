@@ -32,7 +32,7 @@ type SystemActionProps = {
 export function SectionHeading({ eyebrow, title }: SectionHeadingProps) {
   return (
     <div className="mb-8">
-      <p className="ak-type-label ak-text-accent mb-3 opacity-80">{eyebrow}</p>
+      <p className="ak-type-label ak-text-accent mb-3">{eyebrow}</p>
       <h2 className="ak-type-title-section-long ak-text-primary max-w-3xl">{title}</h2>
     </div>
   );
