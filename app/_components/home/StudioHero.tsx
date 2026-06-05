@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { ThemeModeToggle } from "@/app/_components/ThemeModeToggle";
 import { HeroNameMotion } from "@/app/_components/home/HeroNameMotion";
 import { HeroPortraitMotion } from "@/app/_components/home/HeroPortraitMotion";
 import { KineticHeroFX } from "@/app/_components/home/KineticHeroFX";
@@ -171,17 +172,16 @@ function HeroSystemMap() {
 }
 
 export function StudioHero({ email }: { email: string }) {
-  const ctaFocus =
-    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-200/85 focus-visible:ring-offset-2 focus-visible:ring-offset-[#070707]";
+  const ctaFocus = "ak-focus-ring";
 
   return (
     <section
       id="top"
-      className="relative z-10 min-h-[100svh] overflow-hidden bg-[#070707] px-6 pb-0 pt-6 md:px-10 md:pb-[13.5rem] lg:px-14 xl:px-16"
+      className="ak-studio-hero relative z-10 min-h-[100svh] overflow-hidden px-6 pb-0 pt-6 md:px-10 md:pb-[13.5rem] lg:px-14 xl:px-16"
     >
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_63%_24%,rgba(255,255,255,0.065),transparent_28%),radial-gradient(ellipse_at_19%_18%,rgba(246,181,30,0.07),transparent_32%),linear-gradient(90deg,rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(0deg,rgba(255,255,255,0.028)_1px,transparent_1px)] bg-[size:100%_100%,100%_100%,74px_74px,74px_74px] opacity-80 [mask-image:linear-gradient(to_bottom,black,black_76%,transparent_100%)]" />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_72%_38%,transparent_0,transparent_22%,rgba(7,7,7,0.55)_64%,#070707_100%)]" />
-      <div className="pointer-events-none absolute inset-y-0 left-0 w-[36%] bg-gradient-to-r from-[#070707] via-[#070707]/92 to-transparent" />
+      <div className="ak-hero-grid pointer-events-none absolute inset-0 opacity-80 [mask-image:linear-gradient(to_bottom,black,black_76%,transparent_100%)]" />
+      <div className="ak-hero-vignette pointer-events-none absolute inset-0" />
+      <div className="ak-hero-left-fade pointer-events-none absolute inset-y-0 left-0 w-[36%]" />
       <KineticHeroFX />
       <HeroSystemMap />
 
@@ -195,8 +195,9 @@ export function StudioHero({ email }: { email: string }) {
           </span>
         </Link>
 
-        <div className="hidden min-w-[25rem] justify-end md:flex">
-          <div className="relative border-t border-r border-white/16 px-8 py-4 text-right">
+        <div className="flex shrink-0 items-start justify-end gap-4">
+          <ThemeModeToggle />
+          <div className="ak-hero-status-card relative mt-14 hidden min-w-[25rem] border-t border-r border-white/16 px-8 py-4 text-right xl:mt-16 lg:block">
             <span className="absolute -left-1.5 top-3 h-2 w-2 rounded-full bg-amber-300" />
             <p className="ak-type-label text-zinc-500">SYSTEMS THINKER • BUILDER • OPERATOR</p>
           </div>
@@ -226,18 +227,18 @@ export function StudioHero({ email }: { email: string }) {
           <div className="ak-hero-actions mt-8 flex flex-col gap-4 sm:flex-row">
             <Link
               href="/cv"
-              className={`group/cta inline-flex h-14 w-full min-w-0 box-border items-center justify-between rounded-[4px] border border-amber-300 bg-amber-300 px-8 text-base font-medium text-zinc-950 shadow-[0_0_42px_rgba(246,181,30,0.18)] transition duration-300 hover:-translate-y-0.5 hover:bg-amber-200 hover:shadow-[0_0_54px_rgba(246,181,30,0.28)] sm:h-16 sm:w-auto sm:min-w-52 sm:justify-center sm:gap-8 ${ctaFocus}`}
+              className={`ak-cta ak-cta-primary ${ctaFocus}`}
             >
               View CV
-              <ArrowUpRight className="h-6 w-6 transition duration-300 group-hover/cta:-translate-y-0.5 group-hover/cta:translate-x-0.5" />
+              <ArrowUpRight className="ak-cta-icon" />
             </Link>
             <a
               data-hero-cta="conversation"
               href={`mailto:${email}`}
-              className={`group/cta inline-flex h-14 w-full min-w-0 box-border items-center justify-between rounded-[4px] border border-white/25 bg-black/25 px-8 text-base font-medium text-zinc-200 backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:border-white/40 hover:bg-white/[0.065] hover:text-white sm:h-16 sm:w-auto sm:min-w-64 sm:justify-center sm:gap-8 ${ctaFocus}`}
+              className={`ak-cta ak-cta-secondary ${ctaFocus}`}
             >
               Start a conversation
-              <ArrowUpRight className="h-6 w-6 transition duration-300 group-hover/cta:-translate-y-0.5 group-hover/cta:translate-x-0.5" />
+              <ArrowUpRight className="ak-cta-icon" />
             </a>
           </div>
 
@@ -252,24 +253,26 @@ export function StudioHero({ email }: { email: string }) {
           </div>
         </div>
 
-        <HeroPortraitMotion className="ak-hero-portrait-shell pointer-events-none absolute bottom-0 right-0 z-20 hidden h-[80svh] w-[55vw] max-w-[58rem] lg:block">
-          <div className="absolute inset-x-12 bottom-0 h-44 bg-gradient-to-t from-[#070707] via-[#070707]/70 to-transparent" />
-          <div className="absolute inset-y-0 right-0 w-40 bg-gradient-to-l from-[#070707] to-transparent" />
-          <Image
-            src={profileHeroImage}
-            alt="Akkapol Kumpapug portrait"
-            fill
-            preload
-            sizes="(min-width: 1024px) 55vw, 0vw"
-            style={{ transform: "translate3d(0, 0.75rem, 0) scale(1.02)", transformOrigin: "bottom right" }}
-            className="ak-hero-portrait object-contain object-bottom opacity-95"
-          />
+        <HeroPortraitMotion className="ak-hero-portrait-shell pointer-events-none absolute bottom-0 right-0 z-20 hidden h-[70svh] w-[55vw] max-w-[58rem] lg:block">
+          <div className="ak-hero-portrait-position absolute inset-0 translate-y-10 xl:translate-y-12">
+            <div className="ak-portrait-bottom-fade absolute inset-x-12 bottom-0 h-44" />
+            <div className="ak-portrait-side-fade absolute inset-y-0 right-0 w-40" />
+            <Image
+              src={profileHeroImage}
+              alt="Akkapol Kumpapug portrait"
+              fill
+              preload
+              sizes="(min-width: 1024px) 55vw, 0vw"
+              style={{ transform: "translate3d(0, 0.75rem, 0) scale(1.02)", transformOrigin: "bottom right" }}
+              className="ak-hero-portrait object-contain object-bottom opacity-95"
+            />
+          </div>
         </HeroPortraitMotion>
       </div>
 
       <div
         data-hero-panel="what-i-do"
-        className="relative z-30 mt-8 overflow-hidden border-t border-white/16 bg-[#0a0a0a]/94 px-6 py-5 shadow-[0_-30px_90px_rgba(0,0,0,0.65)] backdrop-blur md:absolute md:inset-x-0 md:bottom-0 md:mt-0 md:px-14 xl:px-20"
+        className="ak-hero-bottom-panel relative z-30 mt-8 overflow-hidden border-t border-white/16 px-6 py-5 backdrop-blur md:absolute md:inset-x-0 md:bottom-0 md:mt-0 md:px-14 xl:px-20"
       >
         <div className="absolute -top-[1px] left-0 right-0 h-8 border-t border-white/18 [clip-path:polygon(0_72%,2.5%_72%,4.5%_0,94.5%_0,97%_72%,100%_72%,100%_100%,0_100%)]" />
         <div className="absolute left-1/2 top-2 h-1 w-28 -translate-x-1/2 bg-gradient-to-r from-amber-300 via-amber-300 to-white/20" />

@@ -2,6 +2,7 @@ import { CvShareActions } from "@/app/_components/CvShareActions";
 import { ScrollProgress } from "@/app/_components/HomeMotion";
 import { ScrollReveal } from "@/app/_components/home/ScrollReveal";
 import { StudioHero } from "@/app/_components/home/StudioHero";
+import { ContactRow, SectionHeading, Surface } from "@/app/_components/system-primitives";
 import { cv, cvMarkdown } from "@/app/_data/cv";
 import type { IconName } from "@/app/_data/cv";
 
@@ -146,99 +147,84 @@ function Icon({ name, className = "h-5 w-5" }: { name: IconName; className?: str
   }
 }
 
-function SectionTitle({ eyebrow, title }: { eyebrow: string; title: string }) {
-  return (
-    <div className="mb-8">
-      <p className="ak-type-label mb-3 text-amber-300/80">
-        {eyebrow}
-      </p>
-      <h2 className="ak-type-title-section-long max-w-3xl text-white">
-        {title}
-      </h2>
-    </div>
-  );
-}
-
 export default function AkkapolPortfolioPage() {
   return (
-    <main className="min-h-screen overflow-hidden bg-[#070707] text-zinc-100">
+    <main className="ak-theme-shell">
       <ScrollProgress />
       <StudioHero email={profile.email} />
 
       <ScrollReveal
         id="about"
-        className="relative z-10 mx-auto max-w-7xl px-6 py-20 md:px-10"
+        className="ak-section-frame"
       >
         <div className="grid gap-8 md:grid-cols-[0.8fr_1.2fr]">
-          <SectionTitle
+          <SectionHeading
             eyebrow="Executive Summary"
             title="A practical profile built around execution, workflow design, and solving real business problems."
           />
-          <div className="ak-type-body-lg rounded-lg border border-white/10 bg-white/[0.04] p-8 text-zinc-300 shadow-2xl shadow-black/20 backdrop-blur">
+          <Surface className="ak-type-body-lg" variant="roomy">
             <p>{cv.summary}</p>
-          </div>
+          </Surface>
         </div>
       </ScrollReveal>
 
       <ScrollReveal
         id="focus"
-        className="relative z-10 mx-auto max-w-7xl px-6 py-20 md:px-10"
+        className="ak-section-frame"
         delay={0.02}
       >
-        <SectionTitle
+        <SectionHeading
           eyebrow="Current Focus"
           title="Building 2026-ready AI-integrated business systems for real operations."
         />
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {currentFocus.map((item) => (
-            <div
-              key={item}
-              className="ak-type-body-sm rounded-lg border border-white/10 bg-white/[0.04] p-4 text-zinc-300 backdrop-blur"
-            >
+            <Surface key={item} className="ak-type-body-sm">
               {item}
-            </div>
+            </Surface>
           ))}
         </div>
       </ScrollReveal>
 
       <ScrollReveal
         id="skills"
-        className="relative z-10 mx-auto max-w-7xl px-6 py-20 md:px-10"
+        className="ak-section-frame"
         delay={0.03}
       >
-        <SectionTitle
+        <SectionHeading
           eyebrow="Core Competencies"
           title="A practical stack for AI-assisted systems, workflow automation, and production web delivery."
         />
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {skills.map((skill) => (
-            <div
+            <Surface
               key={skill.title}
-              className="rounded-lg border border-white/10 bg-white/[0.045] p-6 shadow-xl shadow-black/20 backdrop-blur transition hover:-translate-y-1.5"
+              variant="card"
             >
-              <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-lg bg-amber-300/15 text-amber-200">
+              <div className="ak-signal-icon mb-6">
                 <Icon name={skill.icon} className="h-6 w-6" />
               </div>
               <h3 className="ak-type-title-card text-white">{skill.title}</h3>
               <p className="ak-type-body-sm mt-3 text-zinc-400">{skill.items}</p>
-            </div>
+            </Surface>
           ))}
         </div>
       </ScrollReveal>
 
       <ScrollReveal
         id="experience"
-        className="relative z-10 mx-auto max-w-7xl px-6 py-20 md:px-10"
+        className="ak-section-frame"
       >
-        <SectionTitle
+        <SectionHeading
           eyebrow="Experience"
           title="Current role first: building AI systems, workflows, and practical solutions."
         />
         <div className="space-y-4">
           {experience.map((job) => (
-            <div
+            <Surface
               key={`${job.title}-${job.period}`}
-              className="grid gap-6 rounded-lg border border-white/10 bg-white/[0.04] p-6 backdrop-blur md:grid-cols-[0.8fr_1.2fr] md:p-8"
+              className="grid gap-6 md:grid-cols-[0.8fr_1.2fr] md:p-8"
+              variant="roomy"
             >
               <div>
                 <p className="ak-type-body-sm font-medium text-amber-200">{job.period}</p>
@@ -255,25 +241,25 @@ export default function AkkapolPortfolioPage() {
                   </li>
                 ))}
               </ul>
-            </div>
+            </Surface>
           ))}
         </div>
       </ScrollReveal>
 
       <ScrollReveal
         id="education"
-        className="relative z-10 mx-auto max-w-7xl px-6 py-20 md:px-10"
+        className="ak-section-frame"
         delay={0.02}
       >
-        <SectionTitle
+        <SectionHeading
           eyebrow="Education"
           title="A technical foundation across data, production systems, web development, and electronics."
         />
         <div className="grid gap-4 md:grid-cols-2">
           {education.map((item) => (
-            <div
+            <Surface
               key={`${item.program}-${item.period}`}
-              className="ak-type-body-sm rounded-lg border border-white/10 bg-white/[0.04] p-5 text-zinc-300 backdrop-blur"
+              className="ak-type-body-sm p-5"
             >
               <p className="font-semibold text-white">{item.program}</p>
               <p className="mt-1 text-zinc-400">
@@ -282,16 +268,16 @@ export default function AkkapolPortfolioPage() {
               {item.description ? (
                 <p className="mt-3 text-zinc-400">{item.description}</p>
               ) : null}
-            </div>
+            </Surface>
           ))}
         </div>
       </ScrollReveal>
 
       <ScrollReveal
         id="contact"
-        className="relative z-10 mx-auto max-w-7xl px-6 py-20 md:px-10"
+        className="ak-section-frame"
       >
-        <div className="overflow-hidden rounded-lg border border-white/10 bg-white/[0.06] p-8 shadow-2xl shadow-black/30 backdrop-blur md:p-12">
+        <Surface className="ak-surface-strong overflow-hidden md:p-12" variant="roomy">
           <div className="grid gap-10 md:grid-cols-[1.1fr_0.9fr]">
             <div>
               <Icon name="brain" className="mb-6 h-10 w-10 text-amber-200" />
@@ -308,40 +294,24 @@ export default function AkkapolPortfolioPage() {
             </div>
 
             <div className="ak-type-body-sm flex flex-col justify-end gap-4 text-zinc-300">
-              <a
-                href={`mailto:${profile.email}`}
-                className="flex items-center gap-3 rounded-lg bg-black/30 p-4 transition hover:bg-black/45"
-              >
+              <ContactRow href={`mailto:${profile.email}`}>
                 <Icon name="mail" className="h-5 w-5 text-amber-200" /> {profile.email}
-              </a>
-              <a
-                href={`tel:${profile.phone.replace(/\s+/g, "")}`}
-                className="flex items-center gap-3 rounded-lg bg-black/30 p-4 transition hover:bg-black/45"
-              >
+              </ContactRow>
+              <ContactRow href={`tel:${profile.phone.replace(/\s+/g, "")}`}>
                 <Icon name="phone" className="h-5 w-5 text-amber-200" /> {profile.phone}
-              </a>
-              <a
-                href={`https://${profile.linkedin}`}
-                target="_blank"
-                rel="noreferrer"
-                className="flex items-center gap-3 rounded-lg bg-black/30 p-4 transition hover:bg-black/45"
-              >
+              </ContactRow>
+              <ContactRow href={`https://${profile.linkedin}`} target="_blank">
                 <Icon name="arrow" className="h-5 w-5 text-amber-200" /> {profile.linkedin}
-              </a>
-              <a
-                href={`https://${profile.portfolio}`}
-                target="_blank"
-                rel="noreferrer"
-                className="flex items-center gap-3 rounded-lg bg-black/30 p-4 transition hover:bg-black/45"
-              >
+              </ContactRow>
+              <ContactRow href={`https://${profile.portfolio}`} target="_blank">
                 <Icon name="arrow" className="h-5 w-5 text-amber-200" /> {profile.portfolio}
-              </a>
-              <div className="flex items-center gap-3 rounded-lg bg-black/30 p-4">
+              </ContactRow>
+              <ContactRow>
                 <Icon name="map" className="h-5 w-5 text-amber-200" /> {profile.location}
-              </div>
+              </ContactRow>
             </div>
           </div>
-        </div>
+        </Surface>
       </ScrollReveal>
     </main>
   );

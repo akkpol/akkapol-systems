@@ -18,6 +18,25 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const themeBootScript = `
+(() => {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const queryTheme = params.get("theme");
+    const savedTheme = window.localStorage.getItem("ak-theme");
+    const theme = queryTheme === "light" || queryTheme === "dark"
+      ? queryTheme
+      : savedTheme === "light" || savedTheme === "dark"
+        ? savedTheme
+        : "dark";
+    document.documentElement.dataset.theme = theme;
+    document.documentElement.style.colorScheme = theme;
+  } catch {
+    document.documentElement.dataset.theme = "dark";
+  }
+})();
+`;
+
 export const metadata: Metadata = {
   metadataBase: siteUrl,
   title: {
@@ -74,7 +93,12 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      data-theme="dark"
+      suppressHydrationWarning
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeBootScript }} />
+      </head>
       <body className="min-h-full flex flex-col">
         {children}
         <Analytics />
