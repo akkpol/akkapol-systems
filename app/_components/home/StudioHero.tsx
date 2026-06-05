@@ -47,11 +47,11 @@ function HeroSystemMap() {
   return (
     <div
       aria-hidden="true"
-      className="ak-system-map pointer-events-none absolute inset-y-0 right-0 z-[5] hidden w-[56%] overflow-hidden lg:block"
+      className="pointer-events-none absolute inset-y-0 right-0 z-[5] hidden w-[56%] overflow-hidden lg:block"
     >
       <svg
         viewBox="0 0 820 760"
-        className="ak-text-accent absolute right-0 top-20 z-0 h-[74%] w-full opacity-[0.35]"
+        className="ak-system-map ak-text-accent absolute right-0 top-20 z-0 h-[74%] w-full opacity-[0.46]"
         fill="none"
       >
         <defs>
@@ -66,11 +66,13 @@ function HeroSystemMap() {
             <stop offset="1" stopColor="#8bd8dc" stopOpacity="0" />
           </linearGradient>
           <linearGradient id="tracePulse" x1="0" x2="1" y1="0" y2="0">
-            <stop offset="0" stopColor="#8bd8dc" stopOpacity="0" />
-            <stop offset="0.28" stopColor="#8bd8dc" stopOpacity="0.78" />
-            <stop offset="0.56" stopColor="#f6b51e" stopOpacity="0.82" />
-            <stop offset="0.74" stopColor="#fff7d6" stopOpacity="0.62" />
-            <stop offset="1" stopColor="#f6b51e" stopOpacity="0" />
+            <stop offset="0" stopColor="#0f5dff" stopOpacity="0" />
+            <stop offset="0.16" stopColor="#0f5dff" stopOpacity="0.42" />
+            <stop offset="0.34" stopColor="#29d8ff" stopOpacity="0.98" />
+            <stop offset="0.5" stopColor="#c8fbff" stopOpacity="1" />
+            <stop offset="0.64" stopColor="#ffe15c" stopOpacity="0.98" />
+            <stop offset="0.78" stopColor="#ffbb1c" stopOpacity="0.82" />
+            <stop offset="1" stopColor="#ffbb1c" stopOpacity="0" />
           </linearGradient>
         </defs>
         <path
@@ -138,27 +140,27 @@ function HeroSystemMap() {
         </g>
       </svg>
 
-      <div className="absolute left-[8%] top-[42%] z-10 max-w-28 text-right opacity-75">
-        <p className="ak-type-label ak-text-signal opacity-60">CLARIFY</p>
+      <div className="absolute left-[8%] top-[42%] z-10 max-w-28 text-right">
+        <p className="ak-type-label ak-text-signal">CLARIFY</p>
         <p className="ak-text-muted mt-1 text-xs leading-4">Understand goals, constraints, context</p>
       </div>
-      <div className="absolute left-[10%] top-[55%] z-10 max-w-28 text-right opacity-70">
-        <p className="ak-type-label ak-text-signal opacity-[0.55]">DESIGN</p>
+      <div className="absolute left-[10%] top-[55%] z-10 max-w-28 text-right">
+        <p className="ak-type-label ak-text-signal">DESIGN</p>
         <p className="ak-text-muted mt-1 text-xs leading-4">Map systems and workflows</p>
       </div>
-      <div className="absolute right-[10%] top-[20%] z-10 max-w-48 border-l border-white/10 pl-4 opacity-80">
+      <div className="absolute right-[10%] top-[20%] z-10 max-w-48 border-l border-white/10 pl-4">
         <p className="ak-type-label ak-text-body">AMBIGUOUS INPUT</p>
         <p className="ak-text-muted mt-1 text-xs leading-4">Unclear, scattered, hard to scale</p>
       </div>
-      <div className="absolute right-[20%] top-[38%] z-10 max-w-40 opacity-75">
+      <div className="absolute right-[20%] top-[38%] z-10 max-w-40">
         <p className="ak-type-label ak-text-body">BUILD</p>
         <p className="ak-text-muted mt-1 text-xs leading-4">Create intelligent tools and automations</p>
       </div>
-      <div className="absolute right-[7%] top-[55%] z-10 max-w-36 opacity-70">
+      <div className="absolute right-[7%] top-[55%] z-10 max-w-36">
         <p className="ak-type-label ak-text-body">OPERATE</p>
         <p className="ak-text-muted mt-1 text-xs leading-4">Run, refine, and evolve systems</p>
       </div>
-      <div className="ak-text-accent absolute right-[2%] top-[47%] z-10 flex items-center gap-4 opacity-[0.85]">
+      <div className="ak-text-accent absolute right-[2%] top-[47%] z-10 flex items-center gap-4">
         <span className="h-px w-10 bg-amber-300/55" />
         <ArrowUpRight className="h-5 w-5" />
         <p className="ak-type-label">
@@ -244,7 +246,7 @@ export function StudioHero({ email }: { email: string }) {
 
           <div
             aria-hidden="true"
-            className="ak-scroll-cue ak-text-accent mt-9 hidden h-10 items-center gap-4 opacity-75 sm:flex"
+            className="ak-scroll-cue ak-text-accent mt-9 hidden h-10 items-center gap-4 sm:flex"
           >
             <span className="relative h-10 w-px overflow-hidden bg-white/12">
               <span className="ak-scroll-cue-marker absolute left-0 top-0 h-4 w-px bg-amber-300" />

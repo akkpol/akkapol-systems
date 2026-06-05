@@ -22,6 +22,9 @@ html[data-theme="dark"],
   --ak-color-accent: #f6b51e;
   --ak-color-accent-soft: #fde68a;
   --ak-color-signal: #8bd8dc;
+  --ak-color-accent-text: #f6b51e;
+  --ak-color-accent-soft-text: #fde68a;
+  --ak-color-signal-text: #8bd8dc;
   --ak-border-subtle: rgba(255, 255, 255, 0.1);
   --ak-border-strong: rgba(255, 255, 255, 0.16);
   --ak-border-secondary: rgba(255, 255, 255, 0.25);
@@ -87,6 +90,9 @@ html[data-theme="light"],
   --ak-color-accent: #ad7a00;
   --ak-color-accent-soft: #d99d17;
   --ak-color-signal: #227b84;
+  --ak-color-accent-text: #7a4f00;
+  --ak-color-accent-soft-text: #8a5d00;
+  --ak-color-signal-text: #17624d;
   --ak-border-subtle: rgba(24, 24, 27, 0.12);
   --ak-border-strong: rgba(24, 24, 27, 0.18);
   --ak-border-secondary: rgba(24, 24, 27, 0.18);
@@ -236,15 +242,15 @@ html {
 }
 
 .ak-text-accent {
-  color: var(--ak-color-accent);
+  color: var(--ak-color-accent-text);
 }
 
 .ak-text-accent-soft {
-  color: var(--ak-color-accent-soft);
+  color: var(--ak-color-accent-soft-text);
 }
 
 .ak-text-signal {
-  color: var(--ak-color-signal);
+  color: var(--ak-color-signal-text);
 }
 
 .ak-theme-shell {
@@ -740,28 +746,57 @@ html[data-theme="light"] .ak-hero-portrait {
   vector-effect: non-scaling-stroke;
 }
 
+.ak-system-pipeline-pulses {
+  mix-blend-mode: screen;
+}
+
+[data-theme="light"] .ak-system-pipeline-pulses,
+html[data-theme="light"] .ak-system-pipeline-pulses {
+  mix-blend-mode: normal;
+}
+
+[data-theme="light"] .ak-system-pipeline-base,
+html[data-theme="light"] .ak-system-pipeline-base {
+  opacity: 0.92;
+}
+
 .ak-system-pipeline-pulse {
-  stroke-width: 2.65;
-  stroke-dasharray: 0.085 0.915;
+  stroke-width: 3.25;
+  stroke-dasharray: 0.17 0.83;
   stroke-dashoffset: 1;
   opacity: 0;
-  filter: drop-shadow(0 0 10px rgba(139, 216, 220, 0.22)) drop-shadow(0 0 14px rgba(246, 181, 30, 0.16));
+  filter:
+    saturate(1.35)
+    brightness(1.08)
+    drop-shadow(0 0 14px rgba(15, 93, 255, 0.34))
+    drop-shadow(0 0 24px rgba(41, 216, 255, 0.4))
+    drop-shadow(0 0 22px rgba(255, 187, 28, 0.34));
   animation: ak-system-pipeline-pulse 5.6s cubic-bezier(0.22, 1, 0.36, 1) infinite;
 }
 
 .ak-system-pipeline-pulse-b {
   animation-delay: 0.72s;
-  stroke-width: 2.25;
+  stroke-width: 2.8;
 }
 
 .ak-system-pipeline-pulse-c {
   animation-delay: 1.34s;
-  stroke-width: 2.4;
+  stroke-width: 2.95;
 }
 
 .ak-system-pipeline-pulse-d {
   animation-delay: 2.05s;
-  stroke-width: 2.1;
+  stroke-width: 2.7;
+}
+
+[data-theme="light"] .ak-system-pipeline-pulse,
+html[data-theme="light"] .ak-system-pipeline-pulse {
+  filter:
+    saturate(1.5)
+    brightness(1.02)
+    drop-shadow(0 0 8px rgba(15, 93, 255, 0.18))
+    drop-shadow(0 0 14px rgba(41, 216, 255, 0.22))
+    drop-shadow(0 0 12px rgba(255, 187, 28, 0.18));
 }
 
 .ak-system-node {
@@ -807,12 +842,16 @@ html[data-theme="light"] .ak-hero-portrait {
     stroke-dashoffset: 1;
   }
 
-  13% {
-    opacity: 0.72;
+  8% {
+    opacity: 1;
   }
 
-  42% {
-    opacity: 0.58;
+  28% {
+    opacity: 0.96;
+  }
+
+  54% {
+    opacity: 0.68;
   }
 
   68%,

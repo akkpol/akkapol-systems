@@ -70,7 +70,7 @@ export default function CvPage() {
             <div className="hidden md:block">
               <div className="relative aspect-[4/5] overflow-hidden rounded-lg border border-white/10 print:aspect-square">
                 <Image
-                  src="/images/akkapol-profile.png"
+                  src="/images/akkapol-cv-portrait-2026.png"
                   alt="Akkapol Kumpapug"
                   fill
                   preload

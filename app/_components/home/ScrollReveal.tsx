@@ -29,7 +29,7 @@ export function ScrollReveal({
           : {
               clipPath: "inset(12% 0% 0% 0%)",
               filter: "blur(7px)",
-              opacity: 0.42,
+              opacity: 1,
               y: 34,
             }
       }
