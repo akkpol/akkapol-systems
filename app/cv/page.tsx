@@ -188,7 +188,7 @@ export default function CvPage() {
           </div>
         </div>
 
-        <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-white/10 px-8 py-5 text-xs text-zinc-500 print:hidden">
+        <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-white/10 px-8 py-5 text-xs text-zinc-400 print:hidden">
           <span>Ready to share with recruiters and clients.</span>
           <div className="flex gap-3">
             <a className="text-amber-200 hover:text-amber-100" href={cvFiles.pdf} download>
