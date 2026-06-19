@@ -115,7 +115,7 @@ html[data-theme="light"],
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-geist-sans), var(--font-noto-thai-looped);
   --font-mono: var(--font-geist-mono);
 }
 
@@ -128,7 +128,7 @@ html[data-theme="light"],
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), var(--font-noto-thai-looped), Arial, Helvetica, sans-serif;
   overflow-x: hidden;
 }
 
@@ -218,6 +218,24 @@ html {
   letter-spacing: 0.12em;
   line-height: 1rem;
   text-transform: uppercase;
+}
+
+.ak-theme-shell[data-locale="th"] {
+  font-family: var(--font-noto-thai-looped), var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+.ak-theme-shell[data-locale="th"] .ak-type-label {
+  font-family: var(--font-noto-thai-looped), var(--font-geist-mono), sans-serif;
+  letter-spacing: 0;
+  line-height: 1.35;
+  text-transform: none;
+}
+
+.ak-theme-shell[data-locale="th"] .ak-type-body-hero,
+.ak-theme-shell[data-locale="th"] .ak-type-body-lg,
+.ak-theme-shell[data-locale="th"] .ak-type-body,
+.ak-theme-shell[data-locale="th"] .ak-type-body-sm {
+  line-height: 1.8;
 }
 
 .ak-focus-ring:focus-visible {
@@ -344,6 +362,50 @@ html {
   border-color: var(--ak-border-secondary-hover);
   background: var(--ak-surface-secondary-hover);
   transform: translate3d(0, -0.0625rem, 0);
+}
+
+.ak-locale-switch {
+  display: inline-flex;
+  min-height: 2.5rem;
+  align-items: center;
+  gap: 0.25rem;
+  border: 1px solid var(--ak-border-subtle);
+  border-radius: 999px;
+  background: var(--ak-surface-secondary);
+  color: var(--ak-color-secondary-text);
+  padding: 0.25rem;
+  backdrop-filter: blur(12px);
+}
+
+.ak-locale-switch span,
+.ak-locale-switch a {
+  display: inline-flex;
+  min-width: 2.125rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 0.375rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.ak-locale-switch span {
+  background: var(--ak-color-accent);
+  color: var(--ak-color-ink);
+}
+
+.ak-locale-switch a {
+  color: var(--ak-color-secondary-text);
+  transition:
+    background var(--ak-duration-base) var(--ak-ease-premium),
+    color var(--ak-duration-base) var(--ak-ease-premium);
+}
+
+.ak-locale-switch a:hover {
+  background: var(--ak-surface-secondary-hover);
+  color: var(--ak-color-contact-hover-text);
 }
 
 .ak-theme-toggle-track {

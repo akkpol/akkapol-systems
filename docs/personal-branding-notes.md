@@ -220,6 +220,42 @@ A working product-case study exploring how signage businesses can manage custome
 
 This makes it useful as proof without overclaiming product maturity.
 
+### Project evidence refresh — 2026-06-19
+
+Use these as proof points for the website, LinkedIn, Fastwork, and client conversations.
+
+#### Smart Signage
+
+Current framing:
+
+> Smart Signage — Thai sign-shop ERP / workflow product case study
+
+Evidence from `akkpol/smart-signage`:
+
+- LINE-first customer intake and read-only chat mirror.
+- One unified Kanban pipeline for quote, payment, design, production, fulfillment, and done states.
+- Auto-pricing, quote snapshots, payment gate, legal document flow, and entity-split accounting direction.
+- Role-aware operations, append-only audit log, event-driven module boundaries, and headless tests.
+- Deployed at `https://smart-signage.vercel.app`, but repo remains private.
+
+Do not describe it as a finished SaaS product yet. Stronger wording: working private product case study / operational MVP.
+
+#### RoboForge
+
+Current framing:
+
+> RoboForge — Robot owner platform and control MVP
+
+Evidence from `akkpol/roboforge-mvp`:
+
+- Public product demo with Garage, Cockpit, fleet selection, Forge/Neo themes, missions, and beta application.
+- Authenticated owner workspace direction with claim kits, robot ownership, setup progress, sessions, events, and feedback.
+- ESP32 Rover-01 device mode served over local Wi-Fi with a documented `/api/v1` robot protocol.
+- Safety-minded control path: explicit arm, stop/disarm, sequence numbers, command timeout, raised-wheel testing, and bench evidence.
+- Live demo: `https://roboforge-mvp.vercel.app`.
+
+Do not position it as a fully commercial robotics company yet. Stronger wording: public demo plus beta platform for learning how real users claim, connect, and control physical robots.
+
 ## Personal brand pillars
 
 ### Pillar 1 — Practical AI Systems
@@ -292,3 +328,15 @@ Use this as the main brand sentence across platforms:
 Thai equivalent:
 
 > นักสร้างระบบ AI เชิงปฏิบัติ — ออกแบบเว็บไซต์ ระบบ Workflow และเครื่องมือ AI สำหรับธุรกิจที่ต้องการใช้งานจริง
+
+## Website i18n decision — 2026-06-19
+
+The portfolio should be bilingual, not Thai-only.
+
+Implementation direction:
+
+- `/` is the English international-facing page.
+- `/th` is the Thai client-facing page.
+- Keep the same visual system and proof structure across both locales.
+- Use `Noto Sans Thai Looped` for Thai UI/body text because it stays readable for longer Thai paragraphs, service copy, and operational case-study text.
+- Keep the commercial Thai copy grounded in practical SME outcomes: website, workflow system, AI-assisted tools, scoped MVP, and real operations.

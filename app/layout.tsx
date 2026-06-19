@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Noto_Sans_Thai_Looped } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import { LocaleDocumentSync } from "@/app/_components/LocaleDocumentSync";
 import "./globals.css";
 
 const siteUrl = new URL("https://akkapol-systems.vercel.app");
-const siteTitle = "Akkapol Kumpapug | AI Systems Builder";
+const siteTitle = "Akkapol Kumpapug | Creative AI Systems Builder";
 const siteDescription =
-  "Portfolio for Akkapol Kumpapug, an AI systems builder focused on workflow design, operational automation, and production-ready web systems.";
+  "Portfolio for Akkapol Kumpapug, a Creative AI Systems Builder focused on practical websites, workflow systems, AI-assisted tools, and real business operations.";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -16,6 +17,12 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+const notoThaiLooped = Noto_Sans_Thai_Looped({
+  variable: "--font-noto-thai-looped",
+  subsets: ["thai", "latin"],
+  display: "swap",
 });
 
 const themeBootScript = `
@@ -31,8 +38,10 @@ const themeBootScript = `
         : "dark";
     document.documentElement.dataset.theme = theme;
     document.documentElement.style.colorScheme = theme;
+    document.documentElement.lang = window.location.pathname.startsWith("/th") ? "th" : "en";
   } catch {
     document.documentElement.dataset.theme = "dark";
+    document.documentElement.lang = window.location.pathname.startsWith("/th") ? "th" : "en";
   }
 })();
 `;
@@ -49,6 +58,10 @@ export const metadata: Metadata = {
   creator: "Akkapol Kumpapug",
   alternates: {
     canonical: "/",
+    languages: {
+      en: "/",
+      th: "/th",
+    },
   },
   openGraph: {
     type: "website",
@@ -58,7 +71,7 @@ export const metadata: Metadata = {
     description: siteDescription,
     images: [
       {
-        url: "/images/akkapol-profile-2026.png",
+        url: "/images/akkapol-cv-portrait-2026.png",
         width: 1200,
         height: 1500,
         alt: "Akkapol Kumpapug profile portrait",
@@ -69,7 +82,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: siteTitle,
     description: siteDescription,
-    images: ["/images/akkapol-profile-2026.png"],
+    images: ["/images/akkapol-cv-portrait-2026.png"],
   },
   robots: {
     index: true,
@@ -92,7 +105,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${notoThaiLooped.variable} h-full antialiased`}
       data-theme="dark"
       suppressHydrationWarning
     >
@@ -100,6 +113,7 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: themeBootScript }} />
       </head>
       <body className="min-h-full flex flex-col">
+        <LocaleDocumentSync />
         {children}
         <Analytics />
       </body>
