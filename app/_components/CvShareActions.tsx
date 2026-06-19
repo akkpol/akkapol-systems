@@ -7,6 +7,23 @@ import { cvFiles } from "@/app/_data/cv";
 type CopyStatus = "idle" | "copied" | "error";
 
 const iconClassName = "h-4 w-4 shrink-0";
+type CvShareLabels = {
+  copyIdle: string;
+  copyCopied: string;
+  copyError: string;
+  downloadPdf: string;
+  downloadMarkdown: string;
+  viewCv: string;
+};
+
+const defaultLabels: CvShareLabels = {
+  copyIdle: "Copy CV.md",
+  copyCopied: "Copied",
+  copyError: "Copy failed",
+  downloadPdf: "Download PDF",
+  downloadMarkdown: "Download CV.md",
+  viewCv: "View CV",
+};
 
 function ActionIcon({ name }: { name: "copy" | "download" | "view" }) {
   const commonProps = {
@@ -70,8 +87,10 @@ async function copyText(text: string) {
 }
 
 export function CvShareActions({
+  labels = defaultLabels,
   markdown,
 }: {
+  labels?: CvShareLabels;
   markdown: string;
 }) {
   const [copyStatus, setCopyStatus] = React.useState<CopyStatus>("idle");
@@ -89,10 +108,10 @@ export function CvShareActions({
 
   const copyLabel =
     copyStatus === "copied"
-      ? "Copied"
+      ? labels.copyCopied
       : copyStatus === "error"
-        ? "Copy failed"
-        : "Copy CV.md";
+        ? labels.copyError
+        : labels.copyIdle;
 
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
@@ -109,18 +128,18 @@ export function CvShareActions({
         download
       >
         <ActionIcon name="download" />
-        Download PDF
+        {labels.downloadPdf}
       </SystemAction>
       <SystemAction
         href={cvFiles.markdown}
         download
       >
         <ActionIcon name="download" />
-        Download CV.md
+        {labels.downloadMarkdown}
       </SystemAction>
       <SystemAction href={cvFiles.view}>
         <ActionIcon name="view" />
-        View CV
+        {labels.viewCv}
       </SystemAction>
     </div>
   );

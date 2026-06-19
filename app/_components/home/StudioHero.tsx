@@ -5,8 +5,10 @@ import { ThemeModeToggle } from "@/app/_components/ThemeModeToggle";
 import { HeroNameMotion } from "@/app/_components/home/HeroNameMotion";
 import { HeroPortraitMotion } from "@/app/_components/home/HeroPortraitMotion";
 import { KineticHeroFX } from "@/app/_components/home/KineticHeroFX";
+import type { HomeContent, Locale } from "@/app/_data/brand";
 
 const profileHeroImage = "/images/brand/akkapol-hero-transparent.png";
+type HeroCopy = HomeContent["hero"];
 
 function StudioMark() {
   return (
@@ -43,7 +45,7 @@ function ArrowUpRight({ className = "h-5 w-5" }: { className?: string }) {
   );
 }
 
-function HeroSystemMap() {
+function HeroSystemMap({ labels }: { labels: HeroCopy["mapLabels"] }) {
   return (
     <div
       aria-hidden="true"
@@ -141,40 +143,51 @@ function HeroSystemMap() {
       </svg>
 
       <div className="absolute left-[8%] top-[42%] z-10 max-w-28 text-right">
-        <p className="ak-type-label ak-text-signal">CLARIFY</p>
-        <p className="ak-text-muted mt-1 text-xs leading-4">Understand goals, constraints, context</p>
+        <p className="ak-type-label ak-text-signal">{labels.clarify}</p>
+        <p className="ak-text-muted mt-1 text-xs leading-4">{labels.clarifyBody}</p>
       </div>
       <div className="absolute left-[10%] top-[55%] z-10 max-w-28 text-right">
-        <p className="ak-type-label ak-text-signal">DESIGN</p>
-        <p className="ak-text-muted mt-1 text-xs leading-4">Map systems and workflows</p>
+        <p className="ak-type-label ak-text-signal">{labels.design}</p>
+        <p className="ak-text-muted mt-1 text-xs leading-4">{labels.designBody}</p>
       </div>
       <div className="absolute right-[10%] top-[20%] z-10 max-w-48 border-l border-white/10 pl-4">
-        <p className="ak-type-label ak-text-body">AMBIGUOUS INPUT</p>
-        <p className="ak-text-muted mt-1 text-xs leading-4">Unclear, scattered, hard to scale</p>
+        <p className="ak-type-label ak-text-body">{labels.ambiguous}</p>
+        <p className="ak-text-muted mt-1 text-xs leading-4">{labels.ambiguousBody}</p>
       </div>
       <div className="absolute right-[20%] top-[38%] z-10 max-w-40">
-        <p className="ak-type-label ak-text-body">BUILD</p>
-        <p className="ak-text-muted mt-1 text-xs leading-4">Create intelligent tools and automations</p>
+        <p className="ak-type-label ak-text-body">{labels.build}</p>
+        <p className="ak-text-muted mt-1 text-xs leading-4">{labels.buildBody}</p>
       </div>
       <div className="absolute right-[7%] top-[55%] z-10 max-w-36">
-        <p className="ak-type-label ak-text-body">OPERATE</p>
-        <p className="ak-text-muted mt-1 text-xs leading-4">Run, refine, and evolve systems</p>
+        <p className="ak-type-label ak-text-body">{labels.operate}</p>
+        <p className="ak-text-muted mt-1 text-xs leading-4">{labels.operateBody}</p>
       </div>
       <div className="ak-text-accent absolute right-[2%] top-[47%] z-10 flex items-center gap-4">
         <span className="h-px w-10 bg-amber-300/55" />
         <ArrowUpRight className="h-5 w-5" />
         <p className="ak-type-label">
-          ELEGANT SYSTEMS.
+          {labels.result[0]}
           <br />
-          REAL RESULTS.
+          {labels.result[1]}
         </p>
       </div>
     </div>
   );
 }
 
-export function StudioHero({ email }: { email: string }) {
+export function StudioHero({
+  copy,
+  email,
+  locale,
+}: {
+  copy: HeroCopy;
+  email: string;
+  locale: Locale;
+}) {
   const ctaFocus = "ak-focus-ring";
+  const alternateLocaleHref = locale === "th" ? "/" : "/th";
+  const currentLocaleLabel = locale === "th" ? "TH" : "EN";
+  const alternateLocaleLabel = locale === "th" ? "EN" : "TH";
 
   return (
     <section
@@ -185,7 +198,7 @@ export function StudioHero({ email }: { email: string }) {
       <div className="ak-hero-vignette pointer-events-none absolute inset-0" />
       <div className="ak-hero-left-fade pointer-events-none absolute inset-y-0 left-0 w-[36%]" />
       <KineticHeroFX />
-      <HeroSystemMap />
+      <HeroSystemMap labels={copy.mapLabels} />
 
       <header className="relative z-30 flex items-start justify-between gap-5">
         <Link href="#top" className={`ak-text-primary group flex items-center gap-5 ${ctaFocus}`}>
@@ -193,15 +206,24 @@ export function StudioHero({ email }: { email: string }) {
           <span className="h-8 w-px bg-white/18" aria-hidden="true" />
           <span className="ak-type-label ak-text-muted flex items-center gap-4 transition group-hover:text-[var(--ak-color-fg)]">
             <span className="h-2 w-2 rounded-full bg-amber-300 shadow-[0_0_18px_rgba(246,181,30,0.45)]" aria-hidden="true" />
-            SYSTEMS STUDIO
+            {copy.brand}
           </span>
         </Link>
 
         <div className="flex shrink-0 items-start justify-end gap-4">
+          <nav
+            className="ak-locale-switch"
+            aria-label="Language"
+          >
+            <span aria-current="true">{currentLocaleLabel}</span>
+            <Link href={alternateLocaleHref} className={ctaFocus}>
+              {alternateLocaleLabel}
+            </Link>
+          </nav>
           <ThemeModeToggle />
           <div className="ak-hero-status-card relative mt-14 hidden min-w-[25rem] border-t border-r border-white/16 px-8 py-4 text-right xl:mt-16 lg:block">
             <span className="absolute -left-1.5 top-3 h-2 w-2 rounded-full bg-amber-300" />
-            <p className="ak-type-label ak-text-muted">SYSTEMS THINKER • BUILDER • OPERATOR</p>
+            <p className="ak-type-label ak-text-muted">{copy.status}</p>
           </div>
         </div>
       </header>
@@ -219,19 +241,19 @@ export function StudioHero({ email }: { email: string }) {
           </div>
 
           <p className="ak-type-title-hero ak-text-accent mt-5">
-            Creative AI Systems Builder
+            {copy.role}
           </p>
           <p className="ak-type-body-hero ak-text-body mt-5 max-w-full">
-            Systems, workflows, and intelligent tools
-            <br className="hidden sm:block" /> for real business operations
+            {copy.body[0]}
+            <br className="hidden sm:block" /> {copy.body[1]}
           </p>
 
           <div className="ak-hero-actions mt-8 flex flex-col gap-4 sm:flex-row">
             <Link
-              href="/cv"
+              href="#services"
               className={`ak-cta ak-cta-primary ${ctaFocus}`}
             >
-              View CV
+              {copy.primaryCta}
               <ArrowUpRight className="ak-cta-icon" />
             </Link>
             <a
@@ -239,7 +261,7 @@ export function StudioHero({ email }: { email: string }) {
               href={`mailto:${email}`}
               className={`ak-cta ak-cta-secondary ${ctaFocus}`}
             >
-              Start a conversation
+              {copy.secondaryCta}
               <ArrowUpRight className="ak-cta-icon" />
             </a>
           </div>
@@ -281,18 +303,16 @@ export function StudioHero({ email }: { email: string }) {
         <div className="relative mx-auto grid w-full max-w-[92rem] gap-8 md:grid-cols-[0.43fr_0.31fr_0.26fr] md:items-end">
           <div>
             <div className="mb-7 flex items-center gap-4">
-              <p className="ak-type-label ak-text-accent">WHAT I DO</p>
+              <p className="ak-type-label ak-text-accent">{copy.bottomEyebrow}</p>
               <span className="h-px flex-1 bg-white/18" />
             </div>
             <h2 className="ak-type-title-panel ak-text-primary">
-              I build systems that
-              <span className="block">run your business.</span>
+              {copy.bottomTitle[0]}
+              <span className="block">{copy.bottomTitle[1]}</span>
             </h2>
           </div>
           <p className="ak-type-body ak-text-muted w-full max-w-[22rem] [overflow-wrap:anywhere] md:col-start-2 md:max-w-md">
-            I partner with founders and operators to turn ambiguity into structure,
-            designing and building systems that streamline operations and scale with
-            confidence.
+            {copy.bottomBody}
           </p>
           <div className="hidden min-h-32 overflow-hidden md:block">
             <div className="relative ml-auto h-40 max-w-md opacity-65">
