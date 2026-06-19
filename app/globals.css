@@ -115,7 +115,7 @@ html[data-theme="light"],
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans), var(--font-noto-thai-looped);
+  --font-sans: var(--font-geist-sans), var(--font-line-seed-thai);
   --font-mono: var(--font-geist-mono);
 }
 
@@ -128,7 +128,7 @@ html[data-theme="light"],
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-geist-sans), var(--font-noto-thai-looped), Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), var(--font-line-seed-thai), Arial, Helvetica, sans-serif;
   overflow-x: hidden;
 }
 
@@ -221,14 +221,24 @@ html {
 }
 
 .ak-theme-shell[data-locale="th"] {
-  font-family: var(--font-noto-thai-looped), var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  font-family: var(--font-line-seed-thai), var(--font-geist-sans), Tahoma, Arial, Helvetica, sans-serif;
 }
 
 .ak-theme-shell[data-locale="th"] .ak-type-label {
-  font-family: var(--font-noto-thai-looped), var(--font-geist-mono), sans-serif;
+  font-family: var(--font-line-seed-thai), var(--font-geist-mono), sans-serif;
+  font-weight: 700;
   letter-spacing: 0;
   line-height: 1.35;
   text-transform: none;
+}
+
+.ak-theme-shell[data-locale="th"] .ak-type-title-hero,
+.ak-theme-shell[data-locale="th"] .ak-type-title-panel,
+.ak-theme-shell[data-locale="th"] .ak-type-title-section,
+.ak-theme-shell[data-locale="th"] .ak-type-title-section-long,
+.ak-theme-shell[data-locale="th"] .ak-type-title-card {
+  font-weight: 700;
+  line-height: 1.2;
 }
 
 .ak-theme-shell[data-locale="th"] .ak-type-body-hero,

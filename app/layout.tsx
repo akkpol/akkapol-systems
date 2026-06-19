@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Noto_Sans_Thai_Looped } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import { Analytics } from "@vercel/analytics/next";
 import { LocaleDocumentSync } from "@/app/_components/LocaleDocumentSync";
 import "./globals.css";
@@ -19,10 +20,21 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const notoThaiLooped = Noto_Sans_Thai_Looped({
-  variable: "--font-noto-thai-looped",
-  subsets: ["thai", "latin"],
+const lineSeedSansThai = localFont({
+  variable: "--font-line-seed-thai",
   display: "swap",
+  src: [
+    {
+      path: "./fonts/line-seed-sans-th/LINESeedSansTH_W_Rg.woff2",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "./fonts/line-seed-sans-th/LINESeedSansTH_W_Bd.woff2",
+      weight: "700",
+      style: "normal",
+    },
+  ],
 });
 
 const themeBootScript = `
@@ -105,7 +117,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${notoThaiLooped.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${lineSeedSansThai.variable} h-full antialiased`}
       data-theme="dark"
       suppressHydrationWarning
     >

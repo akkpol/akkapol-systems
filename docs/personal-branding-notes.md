@@ -338,5 +338,5 @@ Implementation direction:
 - `/` is the English international-facing page.
 - `/th` is the Thai client-facing page.
 - Keep the same visual system and proof structure across both locales.
-- Use `Noto Sans Thai Looped` for Thai UI/body text because it stays readable for longer Thai paragraphs, service copy, and operational case-study text.
+- Use self-hosted `LINE Seed Sans TH` for Thai UI/body text because it has a more modern commercial feel than Noto while staying readable for service copy and operational case-study text.
 - Keep the commercial Thai copy grounded in practical SME outcomes: website, workflow system, AI-assisted tools, scoped MVP, and real operations.
