@@ -11,7 +11,7 @@
   "dependencies": {
     "@vercel/analytics": "^2.0.1",
     "framer-motion": "^12.40.0",
-    "next": "16.2.6",
+    "next": "^16.2.9",
     "react": "19.2.4",
     "react-dom": "19.2.4"
   },
@@ -24,6 +24,6 @@
     "eslint-config-next": "16.2.6",
     "tailwindcss": "^4",
     "typescript": "^5",
-    "vercel": "^54.9.0"
+    "vercel": "^50.41.0"
   }
 }
