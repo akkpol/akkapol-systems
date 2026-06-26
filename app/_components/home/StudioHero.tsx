@@ -13,16 +13,15 @@ type HeroCopy = HomeContent["hero"];
 function StudioMark() {
   return (
     <svg
-      aria-hidden="true"
-      viewBox="0 0 88 52"
-      className="ak-text-primary h-8 w-14 md:h-9 md:w-16"
-      fill="none"
+      aria-label="Akkapol Systems logo"
+      viewBox="0 0 520 200"
+      className="h-9 w-auto fill-current md:h-10"
     >
-      <path d="M7 43 27 9h10L16 43H7Z" fill="currentColor" />
-      <path d="M31 43 51 9h10L41 43H31Z" fill="currentColor" opacity="0.92" />
-      <path d="M47 43 67 9h10L58 43H47Z" fill="currentColor" opacity="0.88" />
-      <path d="M34 31h25" stroke="currentColor" strokeWidth="5" strokeLinecap="square" />
-      <path d="M59 18 78 43" stroke="currentColor" strokeWidth="6" strokeLinecap="square" />
+      <path d="M25 175 85 25 145 175Z" />
+      <path d="M155 25h60l60 150h-60Z" />
+      <path d="M295 25h55v150h-55Z" />
+      <path d="M370 25h130l-130 130Z" />
+      <path d="M370 95 500 175H370Z" />
     </svg>
   );
 }
@@ -250,7 +249,7 @@ export function StudioHero({
 
           <div className="ak-hero-actions mt-8 flex flex-col gap-4 sm:flex-row">
             <Link
-              href="#services"
+              href="#work"
               className={`ak-cta ak-cta-primary ${ctaFocus}`}
             >
               {copy.primaryCta}

@@ -277,32 +277,6 @@ function SelectedWorkSection({ content }: { content: HomeContent["sections"]["wo
   );
 }
 
-function ProcessSection({ content }: { content: HomeContent["sections"]["process"] }) {
-  return (
-    <ScrollReveal id="process" className="ak-section-frame" delay={0.03}>
-      <Surface className="ak-surface-strong md:p-10" variant="roomy">
-        <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
-          <div>
-            <p className="ak-type-label ak-text-accent mb-4">{content.eyebrow}</p>
-            <h2 className="ak-type-title-section-long ak-text-primary">{content.title}</h2>
-            <p className="ak-type-body-lg ak-text-body mt-6">{content.body}</p>
-          </div>
-          <div className="grid gap-3">
-            {content.steps.map((step, index) => (
-              <div key={step} className="ak-contact-row">
-                <span className="ak-type-label ak-text-accent-soft">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-                <span className="ak-type-body-sm ak-text-body">{step}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </Surface>
-    </ScrollReveal>
-  );
-}
-
 export function AkkapolPortfolioPage({ locale = "en" }: { locale?: Locale }) {
   const content = homeContent[locale];
   const sections = content.sections;
@@ -311,10 +285,6 @@ export function AkkapolPortfolioPage({ locale = "en" }: { locale?: Locale }) {
     <main className="ak-theme-shell" data-locale={locale} lang={locale}>
       <ScrollProgress />
       <StudioHero copy={content.hero} email={profile.email} locale={locale} />
-
-      <ServicesSection content={sections.services} locale={locale} />
-      <SelectedWorkSection content={sections.work} />
-      <ProcessSection content={sections.process} />
 
       <ScrollReveal id="about" className="ak-section-frame">
         <div className="grid gap-8 md:grid-cols-[0.8fr_1.2fr]">
@@ -325,31 +295,8 @@ export function AkkapolPortfolioPage({ locale = "en" }: { locale?: Locale }) {
         </div>
       </ScrollReveal>
 
-      <ScrollReveal id="focus" className="ak-section-frame" delay={0.02}>
-        <SectionHeading eyebrow={sections.focus.eyebrow} title={sections.focus.title} />
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {sections.focus.items.map((item) => (
-            <Surface key={item} className="ak-type-body-sm">
-              {item}
-            </Surface>
-          ))}
-        </div>
-      </ScrollReveal>
-
-      <ScrollReveal id="skills" className="ak-section-frame" delay={0.03}>
-        <SectionHeading eyebrow={sections.skills.eyebrow} title={sections.skills.title} />
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          {sections.skills.items.map((skill) => (
-            <Surface key={skill.title} variant="card">
-              <div className="ak-signal-icon mb-6">
-                <Icon name={skill.icon} className="h-6 w-6" />
-              </div>
-              <h3 className="ak-type-title-card ak-text-primary">{skill.title}</h3>
-              <p className="ak-type-body-sm ak-text-muted mt-3">{skill.items}</p>
-            </Surface>
-          ))}
-        </div>
-      </ScrollReveal>
+      <SelectedWorkSection content={sections.work} />
+      <ServicesSection content={sections.services} locale={locale} />
 
       <ScrollReveal id="experience" className="ak-section-frame">
         <SectionHeading eyebrow={sections.experience.eyebrow} title={sections.experience.title} />
