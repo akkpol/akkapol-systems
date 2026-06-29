@@ -160,7 +160,7 @@ export const homeContent: Record<Locale, HomeContent> = {
       role: "Creative AI Systems Builder",
       body: ["I help turn unclear business operations into practical websites,", "workflow systems, and AI-assisted tools that can be tested, used, and improved."],
       primaryCta: "View proof",
-      secondaryCta: "Start scoped conversation",
+      secondaryCta: "Ask me anything",
       mapLabels: {
         clarify: "CLARIFY",
         clarifyBody: "Make the real problem visible",
@@ -185,7 +185,7 @@ export const homeContent: Record<Locale, HomeContent> = {
         title: "Start with a clear, useful scope before turning the idea into a bigger system.",
         body:
           "The best first step is usually small enough to test, but concrete enough to change how the work feels. These are the ways I can help without making the project bigger than it needs to be.",
-        primaryAction: "Start a scoped conversation",
+        primaryAction: "Ask me anything",
         secondaryAction: "View proof",
         offers: [
           {
@@ -466,7 +466,7 @@ export const homeContent: Record<Locale, HomeContent> = {
       role: "นักสร้างระบบ AI เชิงปฏิบัติ",
       body: ["ผมช่วยเปลี่ยนงานธุรกิจที่กระจัดกระจายให้กลายเป็นเว็บไซต์", "ระบบ Workflow และเครื่องมือ AI ที่ใช้งานจริง ทดสอบได้ และต่อยอดได้"],
       primaryCta: "ดูผลงาน",
-      secondaryCta: "คุยขอบเขตงาน",
+      secondaryCta: "สอบถามเพิ่มเติม",
       mapLabels: {
         clarify: "ทำให้ชัด",
         clarifyBody: "เห็นปัญหาจริงก่อนเริ่มสร้าง",
@@ -491,7 +491,7 @@ export const homeContent: Record<Locale, HomeContent> = {
         title: "เริ่มจากขอบเขตที่ชัดและมีประโยชน์ ก่อนค่อยต่อยอดเป็นระบบที่ใหญ่ขึ้น.",
         body:
           "หลายโปรเจกต์ไม่จำเป็นต้องเริ่มจากระบบใหญ่ทันที สิ่งที่คุ้มกว่าคือเริ่มจากส่วนที่ทดสอบได้จริง ช่วยให้เจ้าของหรือทีมเห็นภาพ และค่อยขยายจากสิ่งที่ใช้งานแล้ว.",
-        primaryAction: "คุยขอบเขตงาน",
+        primaryAction: "สอบถามเพิ่มเติม",
         secondaryAction: "ดูผลงาน",
         offers: [
           {

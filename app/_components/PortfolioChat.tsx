@@ -3,6 +3,7 @@
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import { useEffect, useRef, useState } from "react";
+import { useChatState } from "@/lib/ChatContext";
 
 function MessageIcon({ role }: { role: string }) {
   return (
@@ -13,7 +14,7 @@ function MessageIcon({ role }: { role: string }) {
 }
 
 export function PortfolioChat() {
-  const [open, setOpen] = useState(false);
+  const { open, setOpen } = useChatState();
   const { messages, sendMessage, status } = useChat({
     transport: new DefaultChatTransport({ api: "/api/chat" }),
   });
