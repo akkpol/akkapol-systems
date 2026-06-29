@@ -5,6 +5,20 @@ import { DefaultChatTransport } from "ai";
 import { useEffect, useRef, useState } from "react";
 import { useChatState } from "@/lib/ChatContext";
 
+/** Get or create a stable device ID in localStorage */
+function getDeviceId(): string {
+  const key = "ak-device-id";
+  let id: string | null = null;
+  try {
+    id = localStorage.getItem(key);
+  } catch { /* noop */ }
+  if (!id) {
+    id = crypto.randomUUID();
+    try { localStorage.setItem(key, id); } catch { /* noop */ }
+  }
+  return id;
+}
+
 function MessageIcon({ role }: { role: string }) {
   return (
     <span className="text-sm shrink-0 select-none">
@@ -15,8 +29,16 @@ function MessageIcon({ role }: { role: string }) {
 
 export function PortfolioChat() {
   const { open, setOpen } = useChatState();
+  const deviceId = getDeviceId();
   const { messages, sendMessage, status } = useChat({
-    transport: new DefaultChatTransport({ api: "/api/chat" }),
+    transport: new DefaultChatTransport({
+      api: "/api/chat",
+      body: { deviceId },
+      prepareSendMessagesRequest: ({ id, messages, trigger, messageId }) => ({
+        headers: { "X-Device-Id": deviceId },
+        body: { messages, id, trigger, messageId, deviceId },
+      }),
+    }),
   });
   const [input, setInput] = useState("");
   const bottomRef = useRef<HTMLDivElement>(null);
