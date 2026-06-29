@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import { Analytics } from "@vercel/analytics/next";
 import { LocaleDocumentSync } from "@/app/_components/LocaleDocumentSync";
+import { PortfolioChat } from "@/app/_components/PortfolioChat";
 import "./globals.css";
 
 const siteUrl = new URL("https://akkapol-systems.vercel.app");
@@ -128,6 +129,7 @@ export default function RootLayout({
         <LocaleDocumentSync />
         {children}
         <Analytics />
+        <PortfolioChat />
       </body>
     </html>
   );
