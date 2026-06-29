@@ -151,7 +151,7 @@ export function PortfolioChat() {
               className="text-center py-8 text-sm"
               style={{ color: "var(--ak-color-muted)" }}
             >
-              👋 Hi! ถามเกี่ยวกับงานของ Akkapol ได้เลย
+              👋 วันนี้อยากให้ผมช่วยอะไรดีครับ หรือปรึกษาเรื่องอะไรดีครับ
             </div>
           )}
           {messages.map((message) => (
