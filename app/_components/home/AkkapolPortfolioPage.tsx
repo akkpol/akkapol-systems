@@ -1,3 +1,5 @@
+"use client";
+
 import { CvShareActions } from "@/app/_components/CvShareActions";
 import { ScrollProgress } from "@/app/_components/HomeMotion";
 import { ScrollReveal } from "@/app/_components/home/ScrollReveal";
@@ -6,6 +8,7 @@ import { ContactRow, SectionHeading, Surface, SystemAction } from "@/app/_compon
 import { homeContent, type HomeContent, type Locale } from "@/app/_data/brand";
 import { cv, cvMarkdown } from "@/app/_data/cv";
 import type { IconName } from "@/app/_data/cv";
+import { useChatState } from "@/lib/ChatContext";
 
 const profile = cv.profile;
 
@@ -160,9 +163,11 @@ function Icon({ name, className = "h-5 w-5" }: { name: IconName; className?: str
 function ServicesSection({
   content,
   locale,
+  onOpenChat,
 }: {
   content: HomeContent["sections"]["services"];
   locale: Locale;
+  onOpenChat: () => void;
 }) {
   const bestForLabel = locale === "th" ? "เหมาะกับ:" : "Best for:";
 
@@ -173,7 +178,7 @@ function ServicesSection({
           <SectionHeading eyebrow={content.eyebrow} title={content.title} />
           <p className="ak-type-body ak-text-body max-w-xl">{content.body}</p>
           <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-            <SystemAction href={`mailto:${profile.email}`} intent="primary">
+            <SystemAction onClick={onOpenChat} intent="primary">
               {content.primaryAction}
             </SystemAction>
             <SystemAction href="#work">{content.secondaryAction}</SystemAction>
@@ -280,6 +285,8 @@ function SelectedWorkSection({ content }: { content: HomeContent["sections"]["wo
 export function AkkapolPortfolioPage({ locale = "en" }: { locale?: Locale }) {
   const content = homeContent[locale];
   const sections = content.sections;
+  const { setOpen } = useChatState();
+  const openChat = () => setOpen(true);
 
   return (
     <main className="ak-theme-shell" data-locale={locale} lang={locale}>
@@ -296,7 +303,7 @@ export function AkkapolPortfolioPage({ locale = "en" }: { locale?: Locale }) {
       </ScrollReveal>
 
       <SelectedWorkSection content={sections.work} />
-      <ServicesSection content={sections.services} locale={locale} />
+      <ServicesSection content={sections.services} locale={locale} onOpenChat={openChat} />
 
       <ScrollReveal id="experience" className="ak-section-frame">
         <SectionHeading eyebrow={sections.experience.eyebrow} title={sections.experience.title} />

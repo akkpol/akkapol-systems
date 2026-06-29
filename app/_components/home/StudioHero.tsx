@@ -6,6 +6,7 @@ import { HeroNameMotion } from "@/app/_components/home/HeroNameMotion";
 import { HeroPortraitMotion } from "@/app/_components/home/HeroPortraitMotion";
 import { KineticHeroFX } from "@/app/_components/home/KineticHeroFX";
 import type { HomeContent, Locale } from "@/app/_data/brand";
+import { useChatState } from "@/lib/ChatContext";
 
 const profileHeroImage = "/images/brand/akkapol-hero-transparent.png";
 type HeroCopy = HomeContent["hero"];
@@ -183,6 +184,7 @@ export function StudioHero({
   email: string;
   locale: Locale;
 }) {
+  const { setOpen } = useChatState();
   const ctaFocus = "ak-focus-ring";
   const alternateLocaleHref = locale === "th" ? "/" : "/th";
   const currentLocaleLabel = locale === "th" ? "TH" : "EN";
@@ -255,14 +257,14 @@ export function StudioHero({
               {copy.primaryCta}
               <ArrowUpRight className="ak-cta-icon" />
             </Link>
-            <a
+            <button
               data-hero-cta="conversation"
-              href={`mailto:${email}`}
+              onClick={() => setOpen(true)}
               className={`ak-cta ak-cta-secondary ${ctaFocus}`}
             >
               {copy.secondaryCta}
               <ArrowUpRight className="ak-cta-icon" />
-            </a>
+            </button>
           </div>
 
           <div

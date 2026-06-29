@@ -4,6 +4,7 @@ import localFont from "next/font/local";
 import { Analytics } from "@vercel/analytics/next";
 import { LocaleDocumentSync } from "@/app/_components/LocaleDocumentSync";
 import { PortfolioChat } from "@/app/_components/PortfolioChat";
+import { ChatProvider } from "@/lib/ChatContext";
 import "./globals.css";
 
 const siteUrl = new URL("https://akkapol-systems.vercel.app");
@@ -127,9 +128,11 @@ export default function RootLayout({
       </head>
       <body className="min-h-full flex flex-col">
         <LocaleDocumentSync />
-        {children}
-        <Analytics />
-        <PortfolioChat />
+        <ChatProvider>
+          {children}
+          <Analytics />
+          <PortfolioChat />
+        </ChatProvider>
       </body>
     </html>
   );
