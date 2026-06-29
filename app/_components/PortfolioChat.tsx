@@ -232,6 +232,21 @@ export function PortfolioChat() {
             </button>
           </div>
         </form>
+        <p
+          className="px-3 pb-2 text-[10px] leading-relaxed"
+          style={{ color: "var(--ak-color-muted)" }}
+        >
+          ข้อความของคุณจะถูกบันทึกเพื่อให้ Akkapol ติดตามกลับ{` `}
+          <a
+            href="/privacy"
+            target="_blank"
+            rel="noreferrer"
+            className="underline hover:opacity-80"
+            style={{ color: "var(--ak-color-accent)" }}
+          >
+            นโยบายความเป็นส่วนตัว
+          </a>
+        </p>
       </div>
     </>
   );
