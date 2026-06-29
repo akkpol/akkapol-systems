@@ -1,5 +1,11 @@
+import {
+  convertToModelMessages,
+  createUIMessageStreamResponse,
+  streamText,
+  toUIMessageStream,
+  type UIMessage,
+} from "ai";
 import { deepseek } from "@ai-sdk/deepseek";
-import { streamText } from "ai";
 import { saveChatLead } from "@/lib/chat-storage";
 
 const SYSTEM = `You are Akkapol's AI assistant on his portfolio website (akkapol-systems.vercel.app).
@@ -13,19 +19,22 @@ Akkapol Kumpapug is a Creative AI Systems Builder based in Thailand. His service
 
 Be concise, professional, bilingual (ตอบภาษาเดียวกับที่ user ถาม). Direct leads to contact via the contact links on the page. Never make up pricing — say "please contact for a quote." If someone asks for pricing or wants to hire, politely ask for their email so Akkapol can follow up.`;
 
+export const maxDuration = 30;
+
 export async function POST(req: Request) {
-  const { messages, id: sessionId } = await req.json();
+  const { messages, id: sessionId }: { messages: UIMessage[]; id?: string } =
+    await req.json();
 
   const result = streamText({
-    model: deepseek("deepseek-v4-flash"),
+    model: deepseek("deepseek-chat"),
     system: SYSTEM,
-    messages,
-    onEnd: async (event) => {
+    messages: await convertToModelMessages(messages),
+    onFinish: async (event) => {
       try {
         const sid = sessionId || crypto.randomUUID();
         await saveChatLead({
           sessionId: sid,
-          messages: JSON.stringify(event.steps),
+          messages: JSON.stringify(messages),
           messageCount: messages?.length ?? 0,
           finishReason: event.finishReason,
           tokensUsed: event.usage?.totalTokens ?? 0,
@@ -36,5 +45,7 @@ export async function POST(req: Request) {
     },
   });
 
-  return result.toTextStreamResponse();
+  return createUIMessageStreamResponse({
+    stream: toUIMessageStream({ stream: result.stream }),
+  });
 }
