@@ -151,7 +151,7 @@ export function PortfolioChat() {
               className="text-center py-8 text-sm"
               style={{ color: "var(--ak-color-muted)" }}
             >
-              👋 วันนี้อยากให้ผมช่วยอะไรดีครับ หรือปรึกษาเรื่องอะไรดีครับ
+              👋 สวัสดีครับ วันนี้อยากให้ผมช่วยอะไรดี?
             </div>
           )}
           {messages.map((message) => (
