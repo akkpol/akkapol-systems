@@ -377,6 +377,10 @@ export function AkkapolPortfolioPage({ locale = "en" }: { locale?: Locale }) {
               <ContactRow>
                 <Icon name="map" className="ak-text-accent-soft h-5 w-5" /> {profile.location}
               </ContactRow>
+              <ContactRow href={locale === "th" ? "/th/privacy" : "/privacy"} target="_blank">
+                <span className="ak-text-accent-soft h-5 w-5 inline-flex items-center justify-center text-xs font-bold">🔒</span>{" "}
+                {locale === "th" ? "นโยบายความเป็นส่วนตัว" : "Privacy Policy"}
+              </ContactRow>
             </div>
           </div>
         </Surface>
