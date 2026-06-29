@@ -1,6 +1,6 @@
 import { deepseek } from "@ai-sdk/deepseek";
 import { streamText } from "ai";
-import { getSupabase } from "@/lib/supabase/client";
+import { saveChatLead } from "@/lib/chat-storage";
 
 const SYSTEM = `You are Akkapol's AI assistant on his portfolio website (akkapol-systems.vercel.app).
 
@@ -22,15 +22,14 @@ export async function POST(req: Request) {
     messages,
     onEnd: async (event) => {
       try {
-        const supabase = getSupabase();
-        const saved = await supabase.from("chat_leads").insert({
-          session_id: sessionId || crypto.randomUUID(),
+        const sid = sessionId || crypto.randomUUID();
+        await saveChatLead({
+          sessionId: sid,
           messages: JSON.stringify(event.steps),
-          message_count: messages?.length ?? 0,
-          finish_reason: event.finishReason,
-          tokens_used: event.usage?.totalTokens ?? 0,
+          messageCount: messages?.length ?? 0,
+          finishReason: event.finishReason,
+          tokensUsed: event.usage?.totalTokens ?? 0,
         });
-        console.log("[chat] Saved lead:", sessionId, saved.status);
       } catch (err) {
         console.error("[chat] Failed to save lead:", err);
       }
