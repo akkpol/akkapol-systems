@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:security": "node --test --experimental-strip-types lib/*.test.mts"
   },
   "dependencies": {
     "@ai-sdk/deepseek": "^3.0.1",

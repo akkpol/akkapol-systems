@@ -291,7 +291,7 @@ export function AkkapolPortfolioPage({ locale = "en" }: { locale?: Locale }) {
   return (
     <main className="ak-theme-shell" data-locale={locale} lang={locale}>
       <ScrollProgress />
-      <StudioHero copy={content.hero} email={profile.email} locale={locale} />
+      <StudioHero copy={content.hero} locale={locale} />
 
       <ScrollReveal id="about" className="ak-section-frame">
         <div className="grid gap-8 md:grid-cols-[0.8fr_1.2fr]">
