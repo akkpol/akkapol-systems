@@ -202,6 +202,7 @@ export function PortfolioChat() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="พิมพ์คำถาม..."
+              maxLength={2000}
               disabled={status === "streaming"}
               className="
                 flex-1 px-3 py-2 text-sm rounded-md

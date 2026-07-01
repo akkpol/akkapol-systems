@@ -177,11 +177,9 @@ function HeroSystemMap({ labels }: { labels: HeroCopy["mapLabels"] }) {
 
 export function StudioHero({
   copy,
-  email,
   locale,
 }: {
   copy: HeroCopy;
-  email: string;
   locale: Locale;
 }) {
   const { setOpen } = useChatState();

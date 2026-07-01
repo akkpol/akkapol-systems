@@ -17,9 +17,10 @@ const sections = [
           management). These are stored privately via Vercel Blob.
         </li>
         <li>
-          <strong>Device ID</strong> — A random anonymous ID generated in your
-          browser is used to rate-limit the chat. It contains no personal
-          information and cannot identify you.
+          <strong>Abuse-prevention identifier</strong> — We use an anonymous
+          browser-generated ID and limited request metadata (such as network or
+          browser signals) to rate-limit the chat and reduce abuse. We do not
+          use this for advertising or profile building.
         </li>
         <li>
           <strong>Page views</strong> — We use Vercel Analytics to count visits
@@ -51,8 +52,9 @@ const sections = [
           access-controlled object storage on AWS in the US region).
         </li>
         <li>
-          We retain chat data for up to <strong>12 months</strong> after the
-          last message, then it is automatically deleted.
+          We retain chat data only as long as needed for follow-up and review.
+          Automated retention cleanup is not yet enabled in this repository, so
+          you can request deletion at any time.
         </li>
         <li>
           Rate-limit counters reset daily and are not linked to any identity.

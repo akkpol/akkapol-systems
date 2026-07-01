@@ -13,9 +13,13 @@ export async function saveChatLead(data: {
   try {
     const { put } = await import("@vercel/blob");
     const blobPath = `chat-leads/${data.sessionId}.json`;
-    const blob = await put(blobPath, JSON.stringify(data, null, 2), {
+    const blob = await put(blobPath, JSON.stringify({
+      ...data,
+      savedAt: new Date().toISOString(),
+    }, null, 2), {
       contentType: "application/json",
       access: "private",
+      addRandomSuffix: false,
     });
     console.log("[chat] Saved to Blob:", blob.url);
     return blob;
