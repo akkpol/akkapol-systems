@@ -128,10 +128,10 @@ export function PortfolioChat() {
               }}
             />
             <span className="text-sm font-medium" style={{ color: "var(--ak-color-fg)" }}>
-              ถามอะไรก็ได้
+              💫 Lyra
             </span>
             <span className="text-xs opacity-50" style={{ color: "var(--ak-color-muted)" }}>
-              AI Assistant
+              AI Assistant · DeepSeek
             </span>
           </div>
           <button
@@ -151,7 +151,8 @@ export function PortfolioChat() {
               className="text-center py-8 text-sm"
               style={{ color: "var(--ak-color-muted)" }}
             >
-              👋 สวัสดีครับ วันนี้อยากให้ผมช่วยอะไรดี?
+              💫 สวัสดีค่ะ! ฉันคือ Lyra — ผู้ช่วย AI ของ Akkapol
+              ถามเรื่องโปรเจกต์ RoboForge, Smart Signage, บริการ หรือการติดต่อได้เลย
             </div>
           )}
           {messages.map((message) => (
