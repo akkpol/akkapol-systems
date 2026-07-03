@@ -185,8 +185,8 @@ export const homeContent: Record<Locale, HomeContent> = {
         title: "Start with a clear, useful scope before turning the idea into a bigger system.",
         body:
           "The best first step is usually small enough to test, but concrete enough to change how the work feels. These are the ways I can help without making the project bigger than it needs to be.",
-        primaryAction: "Ask me anything",
-        secondaryAction: "View proof",
+        primaryAction: "Start a conversation",
+        secondaryAction: "View my work",
         offers: [
           {
             title: "Business Website",
@@ -491,7 +491,7 @@ export const homeContent: Record<Locale, HomeContent> = {
         title: "เริ่มจากขอบเขตที่ชัดและมีประโยชน์ ก่อนค่อยต่อยอดเป็นระบบที่ใหญ่ขึ้น.",
         body:
           "หลายโปรเจกต์ไม่จำเป็นต้องเริ่มจากระบบใหญ่ สิ่งที่คุ้มกว่าคือเริ่มจากส่วนเล็กที่ใช้ได้จริงก่อน ช่วยให้เจ้าของหรือทีมเห็นภาพ แล้วค่อยขยายจากสิ่งที่ใช้แล้ว.",
-        primaryAction: "สอบถามเพิ่มเติม",
+        primaryAction: "คุยขอบเขตงาน",
         secondaryAction: "ดูผลงาน",
         offers: [
           {
