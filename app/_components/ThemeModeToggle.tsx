@@ -13,6 +13,8 @@ function applyTheme(theme: ThemeMode) {
   document.documentElement.dataset.theme = theme;
   document.documentElement.style.colorScheme = theme;
   window.localStorage.setItem("ak-theme", theme);
+  // Also save as cookie for SSR first-load
+  document.cookie = `ak-theme=${theme}; path=/; max-age=${365 * 24 * 60 * 60}; SameSite=Lax`;
   window.dispatchEvent(new Event("ak-theme-change"));
 }
 

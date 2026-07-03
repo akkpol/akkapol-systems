@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { ThemeModeToggle } from "@/app/_components/ThemeModeToggle";
+import { saveLocalePreference } from "@/app/_components/LocaleDocumentSync";
 import { HeroNameMotion } from "@/app/_components/home/HeroNameMotion";
 import { HeroPortraitMotion } from "@/app/_components/home/HeroPortraitMotion";
 import { KineticHeroFX } from "@/app/_components/home/KineticHeroFX";
@@ -215,7 +216,11 @@ export function StudioHero({
             aria-label="Language"
           >
             <span aria-current="true">{currentLocaleLabel}</span>
-            <Link href={alternateLocaleHref} className={ctaFocus}>
+            <Link
+              href={alternateLocaleHref}
+              className={ctaFocus}
+              onClick={() => saveLocalePreference(locale === "th" ? "en" : "th")}
+            >
               {alternateLocaleLabel}
             </Link>
           </nav>

@@ -45,11 +45,15 @@ const themeBootScript = `
     const params = new URLSearchParams(window.location.search);
     const queryTheme = params.get("theme");
     const savedTheme = window.localStorage.getItem("ak-theme");
+    // Fallback: read from cookie if localStorage is empty (SSR first load)
+    const cookieTheme = document.cookie.match(/(?:^|; )ak-theme=([^;]*)/)?.[1];
     const theme = queryTheme === "light" || queryTheme === "dark"
       ? queryTheme
       : savedTheme === "light" || savedTheme === "dark"
         ? savedTheme
-        : "dark";
+        : cookieTheme === "light" || cookieTheme === "dark"
+          ? cookieTheme
+          : "dark";
     document.documentElement.dataset.theme = theme;
     document.documentElement.style.colorScheme = theme;
     document.documentElement.lang = window.location.pathname.startsWith("/th") ? "th" : "en";
