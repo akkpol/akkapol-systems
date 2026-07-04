@@ -152,7 +152,7 @@ export function PortfolioChat() {
               style={{ color: "var(--ak-color-muted)" }}
             >
               💫 สวัสดีค่ะ! ฉันคือ Lyra — ผู้ช่วย AI ของ Akkapol
-              ถามเรื่องโปรเจกต์ RoboForge, Smart Signage, บริการ หรือการติดต่อได้เลย
+              ถามเรื่องบริการ เว็บไซต์ธุรกิจ Workflow MVP หรือการติดต่อได้เลย
             </div>
           )}
           {messages.map((message) => (

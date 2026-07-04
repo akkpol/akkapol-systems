@@ -40,6 +40,10 @@ export function LocaleDocumentSync() {
     const browserLocale = detectBrowserLocale();
     const currentLocale = pathname.startsWith("/th") ? "th" : "en";
 
+    // Skip redirect on non-locale-specific paths (CV, privacy, API, etc.)
+    const isLocalePath = pathname === "/" || pathname.startsWith("/th");
+    if (!isLocalePath) return;
+
     // If user has saved preference and it doesn't match current → redirect
     if (savedLocale && savedLocale !== currentLocale) {
       redirected.current = true;

@@ -4,11 +4,10 @@ import { CvShareActions } from "@/app/_components/CvShareActions";
 import { ScrollProgress } from "@/app/_components/HomeMotion";
 import { ScrollReveal } from "@/app/_components/home/ScrollReveal";
 import { StudioHero } from "@/app/_components/home/StudioHero";
-import { ContactRow, SectionHeading, Surface, SystemAction } from "@/app/_components/system-primitives";
+import { ContactRow, SectionHeading, Surface } from "@/app/_components/system-primitives";
 import { homeContent, type HomeContent, type Locale } from "@/app/_data/brand";
 import { cv, cvMarkdown } from "@/app/_data/cv";
 import type { IconName } from "@/app/_data/cv";
-import { useChatState } from "@/lib/ChatContext";
 
 const profile = cv.profile;
 
@@ -24,16 +23,7 @@ function assertPortfolioData() {
       "each locale hero should contain two body lines",
     ],
     [
-      localeEntries.every(([, content]) => content.sections.services.offers.length >= 3),
-      "each locale should contain at least 3 service offers",
-    ],
-    [
-      localeEntries.every(([, content]) => content.sections.work.items.length >= 2),
-      "each locale should contain at least 2 selected work items",
-    ],
-    [
-      localeEntries.every(([, content]) =>
-        content.sections.skills.items.every((skill) => skill.title && skill.items && skill.icon),
+      localeEntries.every(([, content]) => content.sections.skills.items.every((skill) => skill.title && skill.items && skill.icon),
       ),
       "every localized skill needs title, items, and icon",
     ],
@@ -160,150 +150,14 @@ function Icon({ name, className = "h-5 w-5" }: { name: IconName; className?: str
   }
 }
 
-function ServicesSection({
-  content,
-  locale,
-  onOpenChat,
-}: {
-  content: HomeContent["sections"]["services"];
-  locale: Locale;
-  onOpenChat: () => void;
-}) {
-  const bestForLabel = locale === "th" ? "เหมาะกับ:" : "Best for:";
-
-  return (
-    <ScrollReveal id="services" className="ak-section-frame" delay={0.01}>
-      <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr]">
-        <div>
-          <SectionHeading eyebrow={content.eyebrow} title={content.title} />
-          <p className="ak-type-body ak-text-body max-w-xl">{content.body}</p>
-          <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-            <SystemAction onClick={onOpenChat} intent="primary">
-              {content.primaryAction}
-            </SystemAction>
-            <SystemAction href="#work">{content.secondaryAction}</SystemAction>
-          </div>
-        </div>
-
-        <div className="grid gap-4">
-          {content.offers.map((offer) => (
-            <Surface
-              key={offer.title}
-              as="article"
-              className="grid gap-5 md:grid-cols-[auto_1fr]"
-              variant="card"
-            >
-              <div className="ak-signal-icon">
-                <Icon name={offer.icon} className="h-6 w-6" />
-              </div>
-              <div>
-                <h3 className="ak-type-title-card ak-text-primary">{offer.title}</h3>
-                <p className="ak-type-body-sm ak-text-body mt-2">{offer.outcome}</p>
-                <p className="ak-type-body-sm ak-text-accent-soft mt-3 font-medium">
-                  {bestForLabel} {offer.bestFor}
-                </p>
-                <ul className="ak-type-body-sm ak-text-muted mt-4 grid gap-2 sm:grid-cols-2">
-                  {offer.scope.map((item) => (
-                    <li key={item} className="flex gap-2">
-                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-300" />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </Surface>
-          ))}
-        </div>
-      </div>
-    </ScrollReveal>
-  );
-}
-
-function SelectedWorkSection({ content }: { content: HomeContent["sections"]["work"] }) {
-  return (
-    <ScrollReveal id="work" className="ak-section-frame" delay={0.02}>
-      <SectionHeading eyebrow={content.eyebrow} title={content.title} />
-      <div className="grid gap-4 lg:grid-cols-2">
-        {content.items.map((work) => (
-          <Surface
-            key={work.title}
-            as="article"
-            className="flex h-full flex-col gap-6"
-            variant="card"
-          >
-            <div className="flex items-start justify-between gap-5">
-              <div className="ak-signal-icon">
-                <Icon name={work.icon} className="h-6 w-6" />
-              </div>
-              <p className="ak-type-label ak-text-signal max-w-[12rem] text-right">
-                {work.status}
-              </p>
-            </div>
-            <div>
-              <h3 className="ak-type-title-card ak-text-primary">{work.title}</h3>
-              <p className="ak-type-body ak-text-body mt-3">{work.description}</p>
-            </div>
-            <ul className="ak-type-body-sm ak-text-muted grid gap-3">
-              {work.proofPoints.map((point) => (
-                <li key={point} className="flex gap-3">
-                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-300" />
-                  <span>{point}</span>
-                </li>
-              ))}
-            </ul>
-            <div className="mt-auto flex flex-wrap gap-2">
-              {work.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="ak-type-label ak-text-muted rounded-full border border-white/10 px-3 py-2"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-              {work.links.map((link) => (
-                <a
-                  key={`${work.title}-${link.href}`}
-                  href={link.href}
-                  target={link.external ? "_blank" : undefined}
-                  rel={link.external ? "noreferrer" : undefined}
-                  className="ak-action ak-action-secondary"
-                >
-                  {link.label}
-                  <Icon name="arrow" className="h-4 w-4" />
-                </a>
-              ))}
-            </div>
-          </Surface>
-        ))}
-      </div>
-    </ScrollReveal>
-  );
-}
-
 export function AkkapolPortfolioPage({ locale = "en" }: { locale?: Locale }) {
   const content = homeContent[locale];
   const sections = content.sections;
-  const { setOpen } = useChatState();
-  const openChat = () => setOpen(true);
 
   return (
     <main className="ak-theme-shell" data-locale={locale} lang={locale}>
       <ScrollProgress />
       <StudioHero copy={content.hero} locale={locale} />
-
-      <ScrollReveal id="about" className="ak-section-frame">
-        <div className="grid gap-8 md:grid-cols-[0.8fr_1.2fr]">
-          <SectionHeading eyebrow={sections.about.eyebrow} title={sections.about.title} />
-          <Surface className="ak-type-body-lg" variant="roomy">
-            <p>{sections.about.summary}</p>
-          </Surface>
-        </div>
-      </ScrollReveal>
-
-      <SelectedWorkSection content={sections.work} />
-      <ServicesSection content={sections.services} locale={locale} onOpenChat={openChat} />
 
       <ScrollReveal id="experience" className="ak-section-frame">
         <SectionHeading eyebrow={sections.experience.eyebrow} title={sections.experience.title} />

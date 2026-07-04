@@ -254,7 +254,7 @@ export function StudioHero({
 
           <div className="ak-hero-actions mt-8 flex flex-col gap-4 sm:flex-row">
             <Link
-              href="#work"
+              href="/cv"
               className={`ak-cta ak-cta-primary ${ctaFocus}`}
             >
               {copy.primaryCta}
