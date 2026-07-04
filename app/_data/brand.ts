@@ -132,23 +132,6 @@ export type HomeContent = {
   };
 };
 
-const sharedWorkLinks = {
-  smartSignage: [
-    {
-      label: "Live app",
-      href: "https://smart-signage.vercel.app",
-      external: true,
-    },
-  ],
-  roboForge: [
-    {
-      label: "Live demo",
-      href: "https://roboforge-mvp.vercel.app",
-      external: true,
-    },
-  ],
-};
-
 export const homeContent: Record<Locale, HomeContent> = {
   en: {
     localeLabel: "EN",
@@ -159,7 +142,7 @@ export const homeContent: Record<Locale, HomeContent> = {
       status: "CREATIVE TECHNOLOGIST • SYSTEMS BUILDER",
       role: "Creative AI Systems Builder",
       body: ["I help turn unclear business operations into practical websites,", "workflow systems, and AI-assisted tools that can be tested, used, and improved."],
-      primaryCta: "View my work",
+      primaryCta: "View CV",
       secondaryCta: "Start a conversation",
       mapLabels: {
         clarify: "CLARIFY",
@@ -181,88 +164,17 @@ export const homeContent: Record<Locale, HomeContent> = {
     },
     sections: {
       services: {
-        eyebrow: "Ways to Work Together",
-        title: "Start with a clear, useful scope before turning the idea into a bigger system.",
-        body:
-          "The best first step is usually small enough to test, but concrete enough to change how the work feels. These are the ways I can help without making the project bigger than it needs to be.",
-        primaryAction: "Start a conversation",
-        secondaryAction: "View my work",
-        offers: [
-          {
-            title: "Business Website",
-            icon: "code",
-            outcome:
-              "A clear website that explains what the business does, builds trust, and gives people an easy way to reach out.",
-            bestFor: "SMEs or solo operators who need a credible online presence without a long agency process.",
-            scope: [
-              "Positioning and page flow",
-              "Responsive Next.js build",
-              "Contact path or lead capture",
-              "Deployment and handoff",
-            ],
-          },
-          {
-            title: "Workflow System MVP",
-            icon: "workflow",
-            outcome:
-              "A focused operational prototype for intake, quotation, status tracking, dashboards, or team handoff.",
-            bestFor: "Teams that are doing too much inside chat, spreadsheets, or unclear job status.",
-            scope: [
-              "Workflow mapping first",
-              "Smallest useful admin flow",
-              "Role-aware actions",
-              "Clear state changes",
-            ],
-          },
-          {
-            title: "AI Workflow Audit",
-            icon: "brain",
-            outcome:
-              "A practical review of repeated work, AI-assisted steps, automation fit, and a short action plan.",
-            bestFor: "Owners who want to use AI carefully, without buying vague automation.",
-            scope: [
-              "Current workflow review",
-              "AI fit and risk check",
-              "Human-in-the-loop design",
-              "Next useful MVP plan",
-            ],
-          },
-        ],
+        eyebrow: "",
+        title: "",
+        body: "",
+        primaryAction: "",
+        secondaryAction: "",
+        offers: [],
       },
       work: {
-        eyebrow: "Selected Work",
-        title:
-          "Proof that the work is not just strategy: I turn ideas into systems people can inspect, use, and improve.",
-        items: [
-          {
-            title: "Smart Signage",
-            status: "Private working product case study",
-            icon: "workflow",
-            description:
-              "A working product case study for Thai sign-shop operations, built around LINE-first customer intake, quotation flow, payment gates, production visibility, and audit-aware handoff.",
-            proofPoints: [
-              "Turns a messy sign-shop pipeline into visible workflow states a team can follow.",
-              "Connects customer intake, quotation approval, receipts, production status, and job history.",
-              "Keeps sensitive actions explicit with roles, audit logs, and operational gates.",
-            ],
-            tags: ["Workflow clarity", "LINE intake", "ERP MVP", "Audit log"],
-            links: sharedWorkLinks.smartSignage,
-          },
-          {
-            title: "RoboForge",
-            status: "Public demo + robot owner beta platform",
-            icon: "sparkles",
-            description:
-              "A public demo and beta platform exploring how robot owners claim, set up, and control a physical device through a mobile-first product experience.",
-            proofPoints: [
-              "Connects product storytelling with real owner workspace and setup flows.",
-              "Keeps live motor commands local to the robot Wi-Fi while storing beta evidence in Supabase.",
-              "Defines a careful control protocol for status, arming, drive, stop, and device identity.",
-            ],
-            tags: ["Product judgment", "ESP32", "Owner workflow", "Safety-minded control"],
-            links: sharedWorkLinks.roboForge,
-          },
-        ],
+        eyebrow: "",
+        title: "",
+        items: [],
       },
       process: {
         eyebrow: "How I Work",
@@ -277,10 +189,9 @@ export const homeContent: Record<Locale, HomeContent> = {
         ],
       },
       about: {
-        eyebrow: "Personal Positioning",
-        title: "I sit between creative product thinking, business operations, and full-stack execution.",
-        summary:
-          "My background runs through software development, SharePoint and Power Platform automation, front-end engineering, operations management, design work, and hands-on AI-assisted development. That mix helps me see more than the screen: I can map the business flow, shape the product experience, and build the first version with enough structure for real people to use.",
+        eyebrow: "",
+        title: "",
+        summary: "",
       },
       focus: {
         eyebrow: "Brand Pillars",
@@ -465,7 +376,7 @@ export const homeContent: Record<Locale, HomeContent> = {
       status: "CREATIVE TECHNOLOGIST • นักสร้างระบบ",
       role: "นักสร้างระบบ AI — เว็บไซต์ · Workflow · เครื่องมืออัจฉริยะสำหรับ SME",
       body: ["ผมช่วยเปลี่ยนงานธุรกิจที่ยุ่งจนจับต้นชนปลายไม่ถูกให้เป็นระบบที่ใช้งานได้จริง", "ไม่ว่าจะเป็นเว็บไซต์ที่อธิบายธุรกิจได้ชัด ระบบหลังบ้านที่ทีมใช้ร่วมกัน หรือเครื่องมือ AI ที่ช่วยลดงานซ้ำ — เริ่มจากของเล็กที่ทดสอบได้ก่อนทุกครั้ง"],
-      primaryCta: "ดูผลงาน",
+      primaryCta: "ดู CV",
       secondaryCta: "คุยขอบเขตงาน",
       mapLabels: {
         clarify: "ทำให้ชัด",
@@ -487,97 +398,17 @@ export const homeContent: Record<Locale, HomeContent> = {
     },
     sections: {
       services: {
-        eyebrow: "รูปแบบงานที่เริ่มคุยกันได้",
-        title: "เริ่มจากขอบเขตที่ชัดและมีประโยชน์ ก่อนค่อยต่อยอดเป็นระบบที่ใหญ่ขึ้น.",
-        body:
-          "หลายโปรเจกต์ไม่จำเป็นต้องเริ่มจากระบบใหญ่ สิ่งที่คุ้มกว่าคือเริ่มจากส่วนเล็กที่ใช้ได้จริงก่อน ช่วยให้เจ้าของหรือทีมเห็นภาพ แล้วค่อยขยายจากสิ่งที่ใช้แล้ว.",
-        primaryAction: "คุยขอบเขตงาน",
-        secondaryAction: "ดูผลงาน",
-        offers: [
-          {
-            title: "เว็บไซต์ธุรกิจ",
-            icon: "code",
-            outcome:
-              "เว็บไซต์ที่ลูกค้าเปิดแล้วเข้าใจทันทีว่าคุณทำอะไร ติดต่อคุณยังไง — ไม่ใช่แค่สวย แต่ช่วยให้ขายของได้",
-            bestFor: "เจ้าของธุรกิจที่ยังไม่มีเว็บ หรือมีแล้วแต่รู้สึกว่าลูกค้าไม่ค่อยติดต่อมา",
-            scope: [
-              "วาง positioning และลำดับเนื้อหาที่อ่านแล้วเข้าใจ",
-              "พัฒนาเว็บ responsive รองรับมือถือ",
-              "วางช่องทางติดต่อหรือรับ lead ที่ใช้งานได้จริง",
-              "Deploy และส่งมอบ ดูแลต่อเนื่องได้",
-            ],
-          },
-          {
-            title: "ระบบหลังบ้านเวอร์ชันแรก",
-            icon: "workflow",
-            outcome:
-              "ต้นแบบระบบรับข้อมูลลูกค้า ออกใบเสนอราคา ติดตามสถานะงาน และส่งต่องานให้ทีม — โดยไม่ต้องลงทุนสร้างระบบใหญ่ก่อน",
-            bestFor: "ทีมที่งานกระจายอยู่ในแชต Excel หรือไม่รู้ว่างานแต่ละชิ้นอยู่ขั้นตอนไหน",
-            scope: [
-              "ทำ workflow ให้เห็นภาพก่อนเริ่มสร้าง",
-              "สร้าง admin flow ที่ทีมใช้ได้จริง",
-              "แยกบทบาทและ action สำคัญ",
-              "ทำให้รู้สถานะงานแบบ real-time",
-            ],
-          },
-          {
-            title: "AI Workflow Audit",
-            icon: "brain",
-            outcome:
-              "เช็คดูว่างานส่วนไหนที่ AI ช่วยได้จริง จุดไหนที่ยังต้องใช้คน พร้อมแผนสั้นๆ สำหรับเริ่มทำ — ไม่ใช่ AI ทุกอย่าง แต่ AI ตรงจุดที่คุ้ม",
-            bestFor: "เจ้าของธุรกิจที่อยากใช้ AI แบบมีทิศทาง ไม่อยากซื้อ automation แบบเหวี่ยงแห",
-            scope: [
-              "ดู workflow ปัจจุบันว่ามีงานอะไรบ้าง",
-              "ประเมินว่า AI เหมาะกับจุดไหน",
-              "ออกแบบให้มีคนคุมในจุดสำคัญ",
-              "กำหนด MVP ถัดไปที่คุ้มที่สุด",
-            ],
-          },
-        ],
+        eyebrow: "",
+        title: "",
+        body: "",
+        primaryAction: "",
+        secondaryAction: "",
+        offers: [],
       },
       work: {
-        eyebrow: "ผลงานที่เลือกมา",
-        title: "ตัวอย่างงานที่แสดงวิธีคิดของผม: ทำโจทย์ให้ชัด ออกแบบ flow แล้วสร้างระบบที่ลองใช้ได้จริง.",
-        items: [
-          {
-            title: "Smart Signage",
-            status: "Private working product case study",
-            icon: "workflow",
-            description:
-              "Working product case study สำหรับงาน operation ของร้านป้ายไทย ครอบคลุมการรับลูกค้าผ่าน LINE, ใบเสนอราคา, payment gate, สถานะผลิต และ handoff งานที่ตรวจสอบได้.",
-            proofPoints: [
-              "แปลง pipeline ร้านป้ายที่กระจัดกระจายให้เป็นสถานะงานที่ทีมเห็นร่วมกัน.",
-              "เชื่อมการรับข้อมูลลูกค้า การอนุมัติราคา ใบเสร็จ สถานะผลิต และประวัติงาน.",
-              "แยก action สำคัญด้วย role, audit log และ gate เพื่อให้ operation คุมได้มากขึ้น.",
-            ],
-            tags: ["Workflow clarity", "LINE intake", "ERP MVP", "Audit log"],
-            links: [
-              {
-                ...sharedWorkLinks.smartSignage[0],
-                label: "เปิดแอป",
-              },
-            ],
-          },
-          {
-            title: "RoboForge",
-            status: "Public demo + robot owner beta platform",
-            icon: "sparkles",
-            description:
-              "Public demo และ beta platform ที่สำรวจว่าเจ้าของ robot จะ claim, setup และควบคุมอุปกรณ์จริงผ่าน product experience ที่เข้าใจง่ายได้อย่างไร.",
-            proofPoints: [
-              "เชื่อม product storytelling กับ owner workspace และ setup flow ที่จับต้องได้.",
-              "แยก live motor commands ให้อยู่บน local robot Wi-Fi และเก็บ beta evidence ใน Supabase.",
-              "กำหนด control protocol สำหรับ status, arming, drive, stop และ identity ของอุปกรณ์.",
-            ],
-            tags: ["Product judgment", "ESP32", "Owner workflow", "Safety-minded control"],
-            links: [
-              {
-                ...sharedWorkLinks.roboForge[0],
-                label: "เปิดเดโม",
-              },
-            ],
-          },
-        ],
+        eyebrow: "",
+        title: "",
+        items: [],
       },
       process: {
         eyebrow: "วิธีทำงาน",
@@ -592,10 +423,9 @@ export const homeContent: Record<Locale, HomeContent> = {
         ],
       },
       about: {
-        eyebrow: "ตัวตนของงาน",
-        title: "ผมอยู่ตรงกลางระหว่าง product thinking, business operation และการสร้างระบบจริง.",
-        summary:
-          "ประสบการณ์ของผมเชื่อมหลายด้านเข้าด้วยกัน: software development, SharePoint และ Power Platform automation, front-end engineering, operations management, งาน design และการใช้ AI ช่วยคิด/สร้าง/ทดลองระบบ จุดแข็งคือผมไม่ได้มองแค่หน้าเว็บหรือโค้ด แต่มอง flow ของธุรกิจ วิธีที่ทีมทำงาน และสิ่งที่ควรสร้างเป็นเวอร์ชันแรกให้คนใช้ได้จริง.",
+        eyebrow: "",
+        title: "",
+        summary: "",
       },
       focus: {
         eyebrow: "หลักคิดของแบรนด์",
