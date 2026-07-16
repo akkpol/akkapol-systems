@@ -17,6 +17,12 @@ const sections = [
           management). These are stored privately via Vercel Blob.
         </li>
         <li>
+          <strong>Lead details</strong> — If you share contact details or express
+          clear hiring intent, structured details such as your email, phone,
+          service interest, and a short inquiry summary may be stored in a
+          private Google Sheet for follow-up.
+        </li>
+        <li>
           <strong>Abuse-prevention identifier</strong> — We use an anonymous
           browser-generated ID and limited request metadata (such as network or
           browser signals) to rate-limit the chat and reduce abuse. We do not
@@ -39,7 +45,11 @@ const sections = [
       <ul className="space-y-2">
         <li>Chat messages are reviewed to respond to inquiries and improve services.</li>
         <li>Analytics data helps us understand which parts of the site are useful.</li>
-        <li>We do <strong>not</strong> sell, share, or use your data for advertising.</li>
+        <li>
+          We do <strong>not</strong> sell or use your data for advertising. Data
+          is disclosed only to the service providers described below as needed
+          to operate the chat and lead workflow.
+        </li>
       </ul>
     ),
   },
@@ -50,6 +60,11 @@ const sections = [
         <li>
           Chat records are stored in <strong>Vercel Blob</strong> (private,
           access-controlled object storage on AWS in the US region).
+        </li>
+        <li>
+          Structured lead records are stored in a private,
+          access-controlled <strong>Google Sheet</strong>. Full chat transcripts
+          are not copied into the Sheet.
         </li>
         <li>
           We retain chat data only as long as needed for follow-up and review.
@@ -114,6 +129,18 @@ const sections = [
           </a>.
         </li>
         <li>
+          <strong>Google</strong> — Private spreadsheet storage for structured
+          lead management. See{` `}
+          <a
+            href="https://policies.google.com/privacy"
+            target="_blank"
+            rel="noreferrer"
+            className="text-amber-200 hover:text-amber-100 underline"
+          >
+            Google Privacy Policy
+          </a>.
+        </li>
+        <li>
           We do <strong>not</strong> use advertising networks, social media
           pixels, or third-party trackers.
         </li>
@@ -166,7 +193,7 @@ export default function PrivacyPage() {
             How Your Data Is Handled
           </h1>
           <p className="mt-3 text-sm text-zinc-400">
-            Last updated: June 29, 2026
+            Last updated: July 16, 2026
           </p>
         </header>
 

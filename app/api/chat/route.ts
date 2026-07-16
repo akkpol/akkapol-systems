@@ -12,6 +12,8 @@ import {
   validateChatPayload,
 } from "@/lib/chat-security";
 import { saveChatLead } from "@/lib/chat-storage";
+import { extractChatLead } from "@/lib/chat-lead";
+import { saveChatLeadToGoogleSheets } from "@/lib/google-sheets-leads";
 import { consumeDailyLimit } from "@/lib/ratelimit-daily";
 
 const LYRA = `คุณคือ Lyra — ผู้ช่วย AI ของ Akkapol Kumpapug บนเว็บ akkapol-systems.vercel.app
@@ -143,6 +145,11 @@ export async function POST(req: Request) {
           finishReason: event.finishReason,
           tokensUsed: event.usage?.totalTokens ?? 0,
         });
+
+        const lead = extractChatLead(payload.value.messages, sid);
+        if (lead) {
+          await saveChatLeadToGoogleSheets(lead);
+        }
       } catch (err) {
         console.error("[chat] Failed to save lead:", err);
       }
