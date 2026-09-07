@@ -5,16 +5,11 @@ import {
   toUIMessageStream,
 } from "ai";
 import { deepseek } from "@ai-sdk/deepseek";
-import {
-  getRateLimitKey,
-  isAllowedOrigin,
-  MAX_REQUEST_BYTES,
-  validateChatPayload,
-} from "@/lib/chat-security";
 import { saveChatLead } from "@/lib/chat-storage";
 import { extractChatLead } from "@/lib/chat-lead";
 import { saveChatLeadToGoogleSheets } from "@/lib/google-sheets-leads";
 import { consumeDailyLimit } from "@/lib/ratelimit-daily";
+import { createChatPostHandler } from "./handler";
 
 const LYRA = `คุณคือ Lyra — ผู้ช่วย AI ของ Akkapol Kumpapug บนเว็บ akkapol-systems.vercel.app
 
@@ -76,87 +71,31 @@ A: ได้ — สื่อสารภาษาอังกฤษได้ �
 4. **เก็บ lead** — ถ้ามีคนสนใจจ้าง ให้ขออีเมลหรือแนะนำให้ติดต่อผ่าน contact links
 5. **ภาษาเดียวกับผู้ใช้** — ไทยตอบไทย อังกฤษตอบอังกฤษ`;
 
-const DAILY_LIMIT = 30;
-const TOTAL_DAILY_BUDGET = 500;
-
 export const maxDuration = 30;
 
-export async function POST(req: Request) {
-  if (!isAllowedOrigin(req.headers.get("origin"), req.headers.get("host"))) {
-    return Response.json(
-      { error: "Invalid request origin." },
-      { status: 403 },
-    );
-  }
-
-  const contentLength = Number(req.headers.get("content-length") ?? 0);
-  if (Number.isFinite(contentLength) && contentLength > MAX_REQUEST_BYTES) {
-    return Response.json(
-      { error: "Chat request is too large." },
-      { status: 413 },
-    );
-  }
-
-  const body = await req.json().catch(() => null);
-  const payload = validateChatPayload(body);
-  if (!payload.ok) {
-    return Response.json(
-      { error: payload.error },
-      { status: payload.status },
-    );
-  }
-
-  const rateLimitKey = getRateLimitKey(req.headers, payload.value.deviceId);
-  const perDevice = await consumeDailyLimit(rateLimitKey, DAILY_LIMIT);
-  if (!perDevice.allowed) {
-    return Response.json(
-      { error: "คุณถามครบจำนวนสูงสุดของวันนี้แล้ว (30 ข้อความ) พรุ่งนี้กลับมาใหม่นะ 🙏" },
-      {
-        status: 429,
-        headers: {
-          "X-Daily-Limit": String(perDevice.limit),
-          "X-Daily-Used": String(perDevice.count),
-          "X-Daily-Remaining": String(perDevice.remaining),
-        },
+export const POST = createChatPostHandler({
+  isChatConfigured: () => Boolean(process.env.DEEPSEEK_API_KEY),
+  sessionSecret: process.env.CHAT_SESSION_SECRET,
+  streamChat: async (messages, onFinish, abortSignal) => {
+    const result = streamText({
+      model: deepseek("deepseek-chat"),
+      system: LYRA,
+      messages: await convertToModelMessages(messages),
+      abortSignal,
+      experimental_download: async () => {
+        throw new Error("Remote file downloads are disabled for portfolio chat.");
       },
-    );
-  }
-
-  const globalBudget = await consumeDailyLimit("_total", TOTAL_DAILY_BUDGET);
-  if (!globalBudget.allowed) {
-    console.warn("[chat] Global daily budget reached, rejecting");
-    return Response.json(
-      { error: "ขออภัย ช่วงนี้มีคนใช้บริการเยอะ พรุ่งนี้กลับมาใหม่นะ 🙏" },
-      { status: 429 },
-    );
-  }
-
-  const result = streamText({
-    model: deepseek("deepseek-chat"),
-    system: LYRA,
-    messages: await convertToModelMessages(payload.value.messages),
-    onFinish: async (event) => {
-      try {
-        const sid = payload.value.sessionId || crypto.randomUUID();
-        await saveChatLead({
-          sessionId: sid,
-          messages: JSON.stringify(payload.value.messages),
-          messageCount: payload.value.messages.length,
-          finishReason: event.finishReason,
-          tokensUsed: event.usage?.totalTokens ?? 0,
-        });
-
-        const lead = extractChatLead(payload.value.messages, sid);
-        if (lead) {
-          await saveChatLeadToGoogleSheets(lead);
-        }
-      } catch (err) {
-        console.error("[chat] Failed to save lead:", err);
-      }
-    },
-  });
-
-  return createUIMessageStreamResponse({
-    stream: toUIMessageStream({ stream: result.stream }),
-  });
-}
+      onFinish,
+    });
+    return createUIMessageStreamResponse({
+      stream: toUIMessageStream({
+        stream: result.stream,
+        onError: () => "Lyra is temporarily unavailable.",
+      }),
+    });
+  },
+  consumeDailyLimit,
+  saveTranscript: saveChatLead,
+  extractLead: extractChatLead,
+  saveStructuredLead: saveChatLeadToGoogleSheets,
+});

@@ -21,6 +21,13 @@ export class CounterWriteConflictError extends Error {
   }
 }
 
+export class RateLimitUnavailableError extends Error {
+  constructor(message = "The shared rate-limit store is unavailable.") {
+    super(message);
+    this.name = "RateLimitUnavailableError";
+  }
+}
+
 export interface CounterStore {
   readonly source: "blob" | "memory";
   readCounter(path: string): Promise<CounterSnapshot>;
@@ -39,8 +46,9 @@ function toCounterPath(key: string, date = todayKey()): string {
 class MemoryCounterStore implements CounterStore {
   readonly source = "memory" as const;
 
-  private counters = new Map<string, number>();
+  private counters = new Map<string, { count: number; etag: string }>();
   private lastDate = "";
+  private version = 0;
 
   private rotate(date: string) {
     if (this.lastDate !== date) {
@@ -52,7 +60,7 @@ class MemoryCounterStore implements CounterStore {
   async readCounter(path: string): Promise<CounterSnapshot> {
     const date = todayKey();
     this.rotate(date);
-    return { count: this.counters.get(path) ?? 0 };
+    return this.counters.get(path) ?? { count: 0 };
   }
 
   async createCounter(path: string, count: number): Promise<void> {
@@ -63,13 +71,20 @@ class MemoryCounterStore implements CounterStore {
       throw new CounterWriteConflictError();
     }
 
-    this.counters.set(path, count);
+    this.version += 1;
+    this.counters.set(path, { count, etag: `memory-${this.version}` });
   }
 
-  async updateCounter(path: string, count: number): Promise<void> {
+  async updateCounter(path: string, count: number, etag: string): Promise<void> {
     const date = todayKey();
     this.rotate(date);
-    this.counters.set(path, count);
+    const current = this.counters.get(path);
+    if (!current || current.etag !== etag) {
+      throw new CounterWriteConflictError();
+    }
+
+    this.version += 1;
+    this.counters.set(path, { count, etag: `memory-${this.version}` });
   }
 }
 
@@ -179,14 +194,27 @@ export async function consumeLimitWithStore(
 
 export async function consumeDailyLimit(key: string, limit: number): Promise<LimitResult> {
   const path = toCounterPath(key);
+  const allowMemoryFallback = process.env.NODE_ENV !== "production";
 
   try {
     const blobStore = await createBlobCounterStore();
     if (blobStore) {
       return await consumeLimitWithStore(blobStore, path, limit);
     }
+
+    if (!allowMemoryFallback) {
+      throw new RateLimitUnavailableError("BLOB_READ_WRITE_TOKEN is not configured.");
+    }
   } catch (error) {
-    console.error("[ratelimit] Blob-backed rate limit failed; falling back to memory:", error);
+    if (!allowMemoryFallback) {
+      console.error("[ratelimit] Shared rate limit is unavailable:", error);
+      if (error instanceof RateLimitUnavailableError) {
+        throw error;
+      }
+      throw new RateLimitUnavailableError();
+    }
+
+    console.warn("[ratelimit] Blob-backed rate limit failed; using local development fallback:", error);
   }
 
   return consumeLimitWithStore(memoryCounterStore, path, limit);
