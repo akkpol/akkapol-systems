@@ -38,4 +38,3 @@
 
 Use Vercel deployment history to promote the last known-good deployment. Then
 verify the main routes and Lyra fallback before closing the incident.
-

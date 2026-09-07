@@ -58,4 +58,3 @@ Production setup:
 
 Keep the private key server-side. Never prefix these variables with
 `NEXT_PUBLIC_` or commit the service-account JSON file.
-

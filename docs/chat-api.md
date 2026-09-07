@@ -67,4 +67,3 @@ upstream details.
 
 Remote file downloads are disabled. Raw transcripts remain private in Vercel
 Blob; only structured lead fields are sent to Google Sheets when configured.
-

@@ -183,4 +183,3 @@ test("resolveChatSession only reuses a session with a valid server signature", (
   const rejected = resolveChatSession(first.sessionId, "0".repeat(64), "test-secret");
   assert.notEqual(rejected.sessionId, first.sessionId);
 });
-

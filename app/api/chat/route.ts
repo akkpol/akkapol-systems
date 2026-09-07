@@ -99,4 +99,3 @@ export const POST = createChatPostHandler({
   extractLead: extractChatLead,
   saveStructuredLead: saveChatLeadToGoogleSheets,
 });
-

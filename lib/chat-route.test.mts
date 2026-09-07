@@ -129,4 +129,3 @@ test("POST saves the transcript and structured lead after the stream finishes", 
   assert.equal(calls.transcripts.length, 0); assert.equal(calls.leads.length, 0); assert.equal(await response.text(), "deferred stream"); await finish?.({ finishReason: "stop", usage: { totalTokens: 23 } });
   assert.deepEqual(calls.transcripts[0], { sessionId: "session_1", messages: JSON.stringify([message]), messageCount: 1, finishReason: "stop", tokensUsed: 23 }); assert.equal(calls.leads[0]?.sessionId, "session_1");
 });
-

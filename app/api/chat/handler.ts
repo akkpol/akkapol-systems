@@ -141,4 +141,3 @@ export function createChatPostHandler(dependencies: ChatRouteDependencies) {
     return response;
   };
 }
-

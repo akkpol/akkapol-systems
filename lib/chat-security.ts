@@ -291,4 +291,3 @@ export function resolveChatSession(
     sessionToken: secret ? signSessionId(sessionId, secret) : undefined,
   };
 }
-
