@@ -2,8 +2,10 @@ import test from "node:test";
 import assert from "node:assert/strict";
 
 import {
+  consumeDailyLimit,
   consumeLimitWithStore,
   CounterWriteConflictError,
+  RateLimitUnavailableError,
   type CounterStore,
 } from "./ratelimit-daily.ts";
 
@@ -80,3 +82,51 @@ test("consumeLimitWithStore retries after a write conflict", async () => {
   assert.equal(result.count, 3);
   assert.equal(result.remaining, 1);
 });
+
+test("consumeDailyLimit fails closed in production without shared storage", async () => {
+  const environment = process.env as Record<string, string | undefined>;
+  const previousNodeEnv = environment.NODE_ENV;
+  const previousToken = environment.BLOB_READ_WRITE_TOKEN;
+
+  environment.NODE_ENV = "production";
+  delete environment.BLOB_READ_WRITE_TOKEN;
+
+  try {
+    await assert.rejects(
+      () => consumeDailyLimit("production-client", 3),
+      RateLimitUnavailableError,
+    );
+  } finally {
+    if (previousNodeEnv === undefined) delete environment.NODE_ENV;
+    else environment.NODE_ENV = previousNodeEnv;
+
+    if (previousToken === undefined) delete environment.BLOB_READ_WRITE_TOKEN;
+    else environment.BLOB_READ_WRITE_TOKEN = previousToken;
+  }
+});
+
+test("consumeDailyLimit development fallback supports repeated reservations", async () => {
+  const environment = process.env as Record<string, string | undefined>;
+  const previousNodeEnv = environment.NODE_ENV;
+  const previousToken = environment.BLOB_READ_WRITE_TOKEN;
+
+  environment.NODE_ENV = "test";
+  delete environment.BLOB_READ_WRITE_TOKEN;
+
+  try {
+    const key = `development-client-${Date.now()}`;
+    const first = await consumeDailyLimit(key, 3);
+    const second = await consumeDailyLimit(key, 3);
+
+    assert.equal(first.count, 1);
+    assert.equal(second.count, 2);
+    assert.equal(second.remaining, 1);
+  } finally {
+    if (previousNodeEnv === undefined) delete environment.NODE_ENV;
+    else environment.NODE_ENV = previousNodeEnv;
+
+    if (previousToken === undefined) delete environment.BLOB_READ_WRITE_TOKEN;
+    else environment.BLOB_READ_WRITE_TOKEN = previousToken;
+  }
+});
+

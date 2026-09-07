@@ -74,21 +74,29 @@ A: ได้ — สื่อสารภาษาอังกฤษได้ �
 export const maxDuration = 30;
 
 export const POST = createChatPostHandler({
-  streamChat: async (messages, onFinish) => {
+  isChatConfigured: () => Boolean(process.env.DEEPSEEK_API_KEY),
+  sessionSecret: process.env.CHAT_SESSION_SECRET,
+  streamChat: async (messages, onFinish, abortSignal) => {
     const result = streamText({
       model: deepseek("deepseek-chat"),
       system: LYRA,
       messages: await convertToModelMessages(messages),
+      abortSignal,
+      experimental_download: async () => {
+        throw new Error("Remote file downloads are disabled for portfolio chat.");
+      },
       onFinish,
     });
-
     return createUIMessageStreamResponse({
-      stream: toUIMessageStream({ stream: result.stream }),
+      stream: toUIMessageStream({
+        stream: result.stream,
+        onError: () => "Lyra is temporarily unavailable.",
+      }),
     });
   },
   consumeDailyLimit,
   saveTranscript: saveChatLead,
   extractLead: extractChatLead,
   saveStructuredLead: saveChatLeadToGoogleSheets,
-  randomUUID: () => crypto.randomUUID(),
 });
+

@@ -2,22 +2,55 @@
 
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useChatState } from "@/lib/ChatContext";
+
+const DEVICE_ID_KEY = "ak-device-id";
+const CHAT_SESSION_ID_KEY = "ak-chat-session-id";
+const CHAT_SESSION_TOKEN_KEY = "ak-chat-session-token";
 
 /** Get or create a stable device ID in localStorage */
 function getDeviceId(): string {
-  const key = "ak-device-id";
+  if (typeof window === "undefined") return "server-render";
+
   let id: string | null = null;
   try {
-    id = localStorage.getItem(key);
+    id = localStorage.getItem(DEVICE_ID_KEY);
   } catch { /* noop */ }
   if (!id) {
     id = crypto.randomUUID();
-    try { localStorage.setItem(key, id); } catch { /* noop */ }
+    try { localStorage.setItem(DEVICE_ID_KEY, id); } catch { /* noop */ }
   }
   return id;
 }
+
+function getChatSession(): { sessionId?: string; sessionToken?: string } {
+  if (typeof window === "undefined") return {};
+
+  try {
+    return {
+      sessionId: localStorage.getItem(CHAT_SESSION_ID_KEY) ?? undefined,
+      sessionToken: localStorage.getItem(CHAT_SESSION_TOKEN_KEY) ?? undefined,
+    };
+  } catch {
+    return {};
+  }
+}
+
+const chatFetch: typeof fetch = async (input, init) => {
+  const response = await fetch(input, init);
+  const sessionId = response.headers.get("x-chat-session-id");
+  const sessionToken = response.headers.get("x-chat-session-token");
+
+  if (sessionId && sessionToken) {
+    try {
+      localStorage.setItem(CHAT_SESSION_ID_KEY, sessionId);
+      localStorage.setItem(CHAT_SESSION_TOKEN_KEY, sessionToken);
+    } catch { /* noop */ }
+  }
+
+  return response;
+};
 
 function MessageIcon({ role }: { role: string }) {
   return (
@@ -29,16 +62,29 @@ function MessageIcon({ role }: { role: string }) {
 
 export function PortfolioChat() {
   const { open, setOpen } = useChatState();
-  const deviceId = getDeviceId();
-  const { messages, sendMessage, status } = useChat({
-    transport: new DefaultChatTransport({
-      api: "/api/chat",
-      body: { deviceId },
-      prepareSendMessagesRequest: ({ id, messages, trigger, messageId }) => ({
-        headers: { "X-Device-Id": deviceId },
-        body: { messages, id, trigger, messageId, deviceId },
-      }),
+  const transport = useMemo(() => new DefaultChatTransport({
+    api: "/api/chat",
+    fetch: chatFetch,
+    prepareSendMessagesRequest: ({ id, messages, trigger, messageId }) => ({
+      body: {
+        messages,
+        id,
+        trigger,
+        messageId,
+        deviceId: getDeviceId(),
+        ...getChatSession(),
+      },
     }),
+  }), []);
+  const {
+    clearError,
+    error,
+    messages,
+    regenerate,
+    sendMessage,
+    status,
+  } = useChat({
+    transport,
   });
   const [input, setInput] = useState("");
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -51,6 +97,7 @@ export function PortfolioChat() {
     e.preventDefault();
     const text = input.trim();
     if (!text) return;
+    clearError();
     sendMessage({ text });
     setInput("");
   };
@@ -62,7 +109,7 @@ export function PortfolioChat() {
         onClick={() => setOpen(!open)}
         aria-label="Open chat"
         className={`
-          fixed bottom-6 right-6 z-50
+          fixed bottom-6 right-6 z-50 print:hidden
           w-14 h-14 rounded-full
           flex items-center justify-center
           transition-all duration-300
@@ -96,7 +143,7 @@ export function PortfolioChat() {
       {/* Chat panel */}
       <div
         className={`
-          fixed bottom-6 right-6 z-50
+          fixed bottom-6 right-6 z-50 print:hidden
           w-[22rem] max-w-[calc(100vw-3rem)]
           h-[32rem] max-h-[calc(100vh-6rem)]
           rounded-lg
@@ -189,6 +236,39 @@ export function PortfolioChat() {
               {message.role === "user" && <MessageIcon role="user" />}
             </div>
           ))}
+          {error && (
+            <div
+              role="alert"
+              className="rounded-lg border px-3 py-3 text-xs leading-relaxed"
+              style={{
+                borderColor: "color-mix(in srgb, var(--ak-color-accent) 45%, transparent)",
+                background: "var(--ak-surface-panel)",
+                color: "var(--ak-color-fg)",
+              }}
+            >
+              <p>Lyra ใช้งานไม่ได้ชั่วคราว กรุณาลองอีกครั้ง หรือติดต่อ Akkapol ทางอีเมล</p>
+              <div className="mt-2 flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    clearError();
+                    void regenerate();
+                  }}
+                  className="rounded-md border px-2.5 py-1.5 font-medium"
+                  style={{ borderColor: "var(--ak-border-subtle)" }}
+                >
+                  ลองอีกครั้ง
+                </button>
+                <a
+                  href="mailto:akkapol.kumpapug@gmail.com"
+                  className="rounded-md px-2.5 py-1.5 font-medium underline"
+                  style={{ color: "var(--ak-color-accent)" }}
+                >
+                  ส่งอีเมล
+                </a>
+              </div>
+            </div>
+          )}
           <div ref={bottomRef} />
         </div>
 
@@ -253,3 +333,4 @@ export function PortfolioChat() {
     </>
   );
 }
+
