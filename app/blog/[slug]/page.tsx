@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -52,6 +53,8 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
 
   const description = buildExcerpt(post);
   const url = `/blog/${post.slug}`;
+  const imageUrl = post.image ? `${siteUrl}${post.image}` : undefined;
+  const imageAlt = post.imageAlt ?? post.title;
 
   return {
     title: post.title,
@@ -72,11 +75,15 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
       publishedTime: post.date,
       authors: ["Akkapol Kumpapug"],
       tags: post.tags,
+      ...(imageUrl
+        ? { images: [{ url: imageUrl, width: 1200, height: 630, alt: imageAlt }] }
+        : {}),
     },
     twitter: {
-      card: "summary",
+      card: imageUrl ? "summary_large_image" : "summary",
       title: post.title,
       description,
+      ...(imageUrl ? { images: [imageUrl] } : {}),
     },
   };
 }
@@ -125,6 +132,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     dateModified: post.date,
     inLanguage: "en",
     keywords: post.tags.join(", "),
+    ...(post.image ? { image: [`${siteUrl}${post.image}`] } : {}),
     url: postUrl,
     mainEntityOfPage: { "@type": "WebPage", "@id": postUrl },
     author: { "@type": "Person", name: "Akkapol Kumpapug", url: siteUrl },
@@ -168,6 +176,20 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
             <hr className="mt-9 border-t border-[var(--ak-border-subtle)]" />
           </header>
+
+          {post.image ? (
+            <figure className="ak-surface ak-surface-strong mt-8 overflow-hidden">
+              <Image
+                src={post.image}
+                alt={post.imageAlt ?? post.title}
+                width={1200}
+                height={630}
+                className="h-auto w-full"
+                priority
+                sizes="(max-width: 760px) 100vw, 760px"
+              />
+            </figure>
+          ) : null}
 
           {outline.length >= 2 ? (
             <nav
