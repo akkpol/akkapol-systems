@@ -87,11 +87,17 @@ export const POST = createChatPostHandler({
         throw new Error("Remote file downloads are disabled for portfolio chat.");
       },
       onFinish,
+      onError: (error) => {
+        console.error("[chat] DeepSeek stream error:", error);
+      },
     });
     return createUIMessageStreamResponse({
       stream: toUIMessageStream({
         stream: result.stream,
-        onError: () => "Lyra is temporarily unavailable.",
+        onError: (error) => {
+          console.error("[chat] UI stream error:", error);
+          return "Lyra is temporarily unavailable.";
+        },
       }),
     });
   },
