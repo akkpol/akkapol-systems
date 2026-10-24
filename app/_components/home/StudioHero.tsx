@@ -270,6 +270,18 @@ export function StudioHero({
             </button>
           </div>
 
+          <Link
+            href="/blog"
+            className={`ak-type-label ak-text-muted group mt-7 inline-flex items-center gap-3 transition hover:text-[var(--ak-color-accent-text)] ${ctaFocus}`}
+          >
+            <span
+              aria-hidden="true"
+              className="h-px w-8 bg-[var(--ak-color-accent)] opacity-70 transition-all group-hover:w-10"
+            />
+            <span>{locale === "th" ? "บทความ" : "Writing"}</span>
+            <ArrowUpRight className="h-3.5 w-3.5 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+          </Link>
+
           <div
             aria-hidden="true"
             className="ak-scroll-cue ak-text-accent mt-9 hidden h-10 items-center gap-4 sm:flex"

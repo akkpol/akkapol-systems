@@ -1,0 +1,17 @@
+# dsh-blog-writer bundle patch.
+#
+# Inserts the plugin row into any profile that selects this bundle. The row
+# config is the complete config for the Host half; override it in the profile's
+# own cordis.patch.yml (same row id) or with `dsh --patch` when a different
+# blog checkout is needed.
+#
+# contentDir: absolute path to the blog's Markdown directory. The Host appends
+# `<slug>.md` and never leaves this directory. Created on first save.
+# siteUrl: public root of the blog used to build the `url` field returned to
+# the conversation UI. Leave empty to return a relative URL.
+- insert:
+    - id: dsh-blog-writer
+      name: dsh-blog-writer
+      config:
+        contentDir: 'D:/Projects/akkapol-systems/content/blog'
+        siteUrl: 'http://localhost:3000'

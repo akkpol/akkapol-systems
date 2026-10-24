@@ -13,14 +13,14 @@
 
 ## Executive Summary
 
-AI-integrated systems builder with a background in full-stack development, SharePoint and Power Platform automation, workflow systems, and operational problem-solving. Experienced in designing practical AI-assisted business systems that combine LLM tooling, agentic development workflows, cloud infrastructure, CRM-style operational flows, customer intake, quotation/status tracking, and production-ready web systems. Strong foundation in real-world enterprise systems execution, legacy system support, front-end engineering, and operations management. Focused on turning business ambiguity into clear workflow states, usable interfaces, customer visibility, and scalable operational processes.
+AI-integrated systems builder with a background in full-stack development, SharePoint and Power Platform automation, workflow systems, and operational problem-solving. Experienced in developing enterprise and business workflow systems, integrating legacy data, and turning operational requirements into practical software. Current work includes CRM-style flows, customer intake, quotation and status tracking, cloud infrastructure, and AI-assisted development. Currently expanding knowledge of Microsoft Dynamics 365 Business Central, with a focus on ERP operations, inventory, purchasing, sales, service, and workflow integration.
 
 ---
 
 ## Current Focus
 
-- 2026-ready AI-integrated business systems
-- Agentic workflow design
+- Enterprise and ERP workflow systems
+- Microsoft Dynamics 365 Business Central (currently learning)
 - SME operational automation
 - Customer intake systems
 - Quotation and status tracking
@@ -31,6 +31,7 @@ AI-integrated systems builder with a background in full-stack development, Share
 
 ## Core Competencies
 
+- Business Process Analysis / ERP Workflows / System Integration
 - LLM Integration & AI Workflow Orchestration
 - Agentic Workflow Design
 - AI-assisted coding, debugging & prototyping
@@ -89,7 +90,7 @@ Grounded in real operational and business experience.
 - Developed and maintained enterprise systems on SharePoint 2019 On-Premise.
 - Automated workflows using Power Automate.
 - Built custom forms and interfaces using JavaScript, jQuery, HTML, and CSS.
-- Integrated SharePoint lists, legacy data, and business requirements.
+- Gathered business requirements and integrated SharePoint lists with legacy data and operational workflows.
 - Collaborated with cross-functional teams.
 
 ## Front-End Developer

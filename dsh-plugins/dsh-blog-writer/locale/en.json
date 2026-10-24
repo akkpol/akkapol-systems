@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Blog Writer",
+    "description": "Publish the last assistant answer from the current conversation to the project's Markdown blog."
+  }
+}
