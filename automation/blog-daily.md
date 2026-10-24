@@ -1,7 +1,9 @@
 # Daily blog automation (DSH local)
 
-This is the working contract for the daily AI/dev blog task. A DSH scheduled
-prompt fires every day at 08:30 Asia/Bangkok. Read and execute this file fully.
+This is the working contract for the daily AI/dev blog task. Windows Task
+Scheduler launches `scripts/run-blog-daily.ps1` every day at 08:30 Asia/Bangkok.
+That runner calls `dsh headless` with full local access, then the headless agent
+reads and executes this file fully.
 
 ## Goal
 
