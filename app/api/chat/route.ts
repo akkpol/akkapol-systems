@@ -83,9 +83,9 @@ export const POST = createChatPostHandler({
       system: LYRA,
       messages: await convertToModelMessages(messages),
       abortSignal,
-      experimental_download: async () => {
-        throw new Error("Remote file downloads are disabled for portfolio chat.");
-      },
+      // Chat input is text-only; never fetch remote files. Returning null for
+      // each entry lets the SDK pass URLs through without aborting the stream.
+      experimental_download: async (downloads) => downloads.map(() => null),
       onFinish,
       onError: (error) => {
         console.error("[chat] DeepSeek stream error:", error);
