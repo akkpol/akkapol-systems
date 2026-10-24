@@ -2,8 +2,13 @@
 
 This is the working contract for the daily AI/dev blog task. Windows Task
 Scheduler launches `scripts/run-blog-daily.ps1` every day at 08:30 Asia/Bangkok.
-That runner calls `dsh headless` with full local access, then the headless agent
-reads and executes this file fully.
+
+The runner is split in two phases:
+
+1. `dsh headless` executes **sections 1-4** below (research, choose, write,
+   cover) and then stops.
+2. The runner executes **sections 5-6** (checks, commit, push, review PR) so a
+   headless time limit cannot lose the draft.
 
 ## Goal
 
@@ -119,9 +124,16 @@ This writes `public/images/blog/<slug>/cover.png` at 1200x630 and prints the
 JSON path. The frontmatter must point at that exact path. Keep the cover text
 short and readable.
 
-## 5. Verify before opening a PR
+## Stop here — runner handoff
 
-Run all of these from the repo root:
+Stop immediately after the post and cover exist. Do **not** run tests, lint,
+build, git, commit, push, or open a PR. The Windows runner validates and
+publishes the draft. If no story is worth publishing, say `SKIP` and stop
+without creating files.
+
+## 5. Verify before opening a PR (runner only)
+
+The runner runs all of these from the repo root. The headless writer must not:
 
 ```powershell
 npm run test:security
@@ -139,9 +151,10 @@ Also confirm:
 
 If any check fails, fix it. If it still fails, stop without opening a PR.
 
-## 6. Open a review PR
+## 6. Open a review PR (runner only)
 
-Use a branch named `blog/daily-YYYY-MM-DD-<slug>`.
+The runner opens a branch named `blog/daily-YYYY-MM-DD-<slug>` and a PR. The
+headless writer must stop before this section.
 
 1. Create the branch from `main`.
 2. Commit the post and cover.

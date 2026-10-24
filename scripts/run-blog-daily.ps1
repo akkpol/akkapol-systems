@@ -22,18 +22,41 @@ function Write-Log([string]$message) {
   Add-Content -LiteralPath $logPath -Value $line
 }
 
+function Invoke-Capture([string]$label, [scriptblock]$action) {
+  Write-Log ('Starting ' + $label)
+  $previous = $ErrorActionPreference
+  $ErrorActionPreference = 'Continue'
+  & $action 2>&1 | ForEach-Object { Add-Content -LiteralPath $logPath -Value ([string]$_) }
+  $exitCode = $LASTEXITCODE
+  $ErrorActionPreference = $previous
+  Write-Log ($label + ' exit code: ' + $exitCode)
+  return $exitCode
+}
+
 try {
   Write-Log 'Starting DSH daily blog automation.'
   Write-Log ('Repo: ' + $repo)
   Write-Log ('DryRun: ' + $DryRun)
 
   if (-not $DryRun) {
+    $branch = (git rev-parse --abbrev-ref HEAD).Trim()
+    if ($branch -ne 'main') {
+      Write-Log ('Switching from ' + $branch + ' to main.')
+      $previousGitErrorAction = $ErrorActionPreference
+      $ErrorActionPreference = 'Continue'
+      git switch main 2>&1 | ForEach-Object { Write-Log ('GIT ' + $_) }
+      $switchExit = $LASTEXITCODE
+      $ErrorActionPreference = $previousGitErrorAction
+      if ($switchExit -ne 0) { Write-Log 'Could not switch to main.'; exit 2 }
+    }
+
     $dirty = @(git status --porcelain)
     if ($dirty.Count -gt 0) {
       Write-Log 'Working tree is not clean; refusing to run.'
       $dirty | ForEach-Object { Write-Log ('DIRTY ' + $_) }
       exit 2
     }
+
     Write-Log 'Fetching origin/main.'
     $previousGitErrorAction = $ErrorActionPreference
     $ErrorActionPreference = 'Continue'
@@ -49,7 +72,7 @@ try {
   if ($DryRun) {
     $prompt = 'Reply with exactly AUTOMATION_READY and do not use tools.'
   } else {
-    $prompt = 'Read D:\Projects\akkapol-systems\automation\blog-daily.md and execute it fully for today. Use fresh web research to pick one interesting AI/dev/automation story, write one original English post with a locally generated branded cover, run the required checks, and open a review PR against main. Do not merge the PR. If no story is worth publishing or checks fail, stop and report the reason. Work autonomously without asking questions.'
+    $prompt = 'Read D:\Projects\akkapol-systems\automation\blog-daily.md and execute ONLY sections 1 through 4 for today: research, choose one story, write the post, and generate the cover. Do NOT run tests, lint, build, git, commit, push, or open a PR; the runner handles those after you stop. Stop immediately after the post and cover exist. If no story is worth publishing, say SKIP and stop. Work autonomously without asking questions.'
   }
 
   Write-Log 'Invoking DSH headless.'
@@ -59,7 +82,40 @@ try {
   $code = $LASTEXITCODE
   $ErrorActionPreference = $previousErrorAction
   Write-Log ('DSH headless exit code: ' + $code)
-  exit $code
+
+  if ($DryRun) { exit $code }
+
+  $status = @(git status --porcelain)
+  $postLine = $status | Where-Object { $_ -match 'content/blog/[a-z0-9-]+\.md$' } | Select-Object -First 1
+  if (-not $postLine) {
+    Write-Log 'No new blog post was produced; stopping.'
+    $status | ForEach-Object { Write-Log ('STATUS ' + $_) }
+    exit 5
+  }
+
+  $relativePost = ($postLine -replace '^\s*\S+\s+', '').Trim()
+  $slug = [System.IO.Path]::GetFileNameWithoutExtension($relativePost)
+  Write-Log ('Detected post: ' + $slug)
+
+  $checks = @(
+    @('run', 'test:security'),
+    @('run', 'lint'),
+    @('run', 'build'),
+    @('run', 'test:metadata')
+  )
+  foreach ($checkArgs in $checks) {
+    $label = 'npm ' + ($checkArgs -join ' ')
+    $checkExit = Invoke-Capture $label { & npm @checkArgs }
+    if ($checkExit -ne 0) {
+      Write-Log ('Check failed: ' + $label)
+      exit 6
+    }
+  }
+
+  $publishExit = Invoke-Capture 'blog publish' { & node scripts/blog-publish.mjs --slug $slug }
+  if ($publishExit -ne 0) { exit 7 }
+  Write-Log 'Daily blog automation completed.'
+  exit 0
 } catch {
   Write-Log ('ERROR: ' + $_.Exception.Message)
   exit 1
