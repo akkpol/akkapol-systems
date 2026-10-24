@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { formatBlogDate, listPosts, type BlogPost } from "@/lib/blog";
+import { SiteHeader } from "@/app/_components/SiteHeader";
+import { BlogStream } from "@/app/blog/_components/BlogStream";
+import { collectPostTags, formatBlogDate, listPosts, toBlogCardData } from "@/lib/blog";
 
 // Posts are read from content/blog at build time. New Markdown files are
 // published by the next rebuild/redeploy.
@@ -31,51 +33,6 @@ export const metadata: Metadata = {
     description: blogDescription,
   },
 };
-
-function PostTags({ tags }: { tags: string[] }) {
-  if (tags.length === 0) return null;
-
-  return (
-    <ul className="flex flex-wrap gap-2" aria-label="Tags">
-      {tags.map((tag) => (
-        <li
-          key={tag}
-          className="rounded-full border border-[var(--ak-border-subtle)] bg-[var(--ak-surface-secondary)] px-2.5 py-0.5 text-xs ak-text-muted"
-        >
-          {tag}
-        </li>
-      ))}
-    </ul>
-  );
-}
-
-function PostCard({ post }: { post: BlogPost }) {
-  return (
-    <Link
-      href={`/blog/${post.slug}`}
-      className="ak-surface ak-surface-card ak-focus-ring group flex h-full flex-col gap-3"
-    >
-      <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
-        <time dateTime={post.date} className="ak-type-label ak-text-muted">
-          {formatBlogDate(post.date)}
-        </time>
-        <span className="ak-type-label ak-text-subtle">{post.readingMinutes} min read</span>
-      </div>
-
-      <h2 className="ak-type-title-card ak-text-primary transition group-hover:text-[var(--ak-color-accent-text)]">
-        {post.title}
-      </h2>
-
-      {post.description ? (
-        <p className="text-sm leading-6 ak-text-body">{post.description}</p>
-      ) : null}
-
-      <div className="mt-auto pt-3">
-        <PostTags tags={post.tags} />
-      </div>
-    </Link>
-  );
-}
 
 function EmptyState() {
   return (
@@ -133,46 +90,67 @@ function EmptyState() {
 
 export default function BlogIndexPage() {
   const posts = listPosts();
+  const notes = posts.map(toBlogCardData);
+  const tags = collectPostTags(posts);
+  const newestDate = posts[0]?.date;
 
   return (
     <main className="ak-theme-shell" data-locale="en" lang="en">
-      <div className="ak-section-frame pb-0 pt-8 md:pt-10">
-        <Link
-          href="/"
-          className="ak-focus-ring group inline-flex items-center gap-2 rounded-full border border-[var(--ak-border-strong)] bg-[var(--ak-surface-panel)] px-4 py-2 text-sm font-medium ak-text-body transition hover:border-[var(--ak-color-accent)] hover:text-[var(--ak-color-accent-text)]"
-        >
-          <span aria-hidden="true" className="transition group-hover:-translate-x-0.5">
-            ←
-          </span>
-          <span>Back to Home</span>
-        </Link>
-      </div>
+      <SiteHeader current="blog" />
 
-      <section className="ak-section-frame pt-10 md:pt-14">
-        <header className="max-w-3xl">
-          <p className="ak-type-label ak-text-accent">Writing</p>
-          <h1 className="ak-type-title-section ak-text-primary mt-4">
-            Notes from the system studio
-          </h1>
-          <p className="ak-type-body-lg ak-text-body mt-6">
-            {blogDescription}
-          </p>
-          {posts.length > 0 ? (
-            <p className="ak-type-label ak-text-subtle mt-6">
-              {posts.length} {posts.length === 1 ? "note" : "notes"} · newest first
-            </p>
-          ) : null}
-        </header>
+      <section className="ak-section-frame">
+        <div className="pt-4 md:pt-6">
+          <header className="max-w-3xl">
+            <p className="ak-type-label ak-text-accent">Writing</p>
+            <h1 className="ak-type-title-section ak-text-primary mt-4">
+              Notes from the system studio
+            </h1>
+            <p className="ak-type-body-lg ak-text-body mt-6">{blogDescription}</p>
 
-        {posts.length === 0 ? (
-          <EmptyState />
-        ) : (
-          <div className="mt-10 grid gap-4 sm:grid-cols-2">
-            {posts.map((post) => (
-              <PostCard key={post.slug} post={post} />
-            ))}
+            {notes.length > 0 ? (
+              <div className="mt-7 flex flex-wrap items-center gap-x-3 gap-y-2">
+                <span className="ak-type-label ak-text-muted">
+                  {notes.length} {notes.length === 1 ? "note" : "notes"}
+                </span>
+                <span aria-hidden="true" className="h-1 w-1 rounded-full bg-[var(--ak-color-subtle)]" />
+                <span className="ak-type-label ak-text-muted">
+                  {tags.length} {tags.length === 1 ? "topic" : "topics"}
+                </span>
+                {newestDate ? (
+                  <>
+                    <span aria-hidden="true" className="h-1 w-1 rounded-full bg-[var(--ak-color-subtle)]" />
+                    <span className="ak-type-label ak-text-muted">
+                      newest {formatBlogDate(newestDate)}
+                    </span>
+                  </>
+                ) : null}
+              </div>
+            ) : null}
+          </header>
+
+          {notes.length === 0 ? <EmptyState /> : <BlogStream notes={notes} tags={tags} />}
+        </div>
+
+        <footer className="mt-16 border-t border-[var(--ak-border-subtle)] pt-8">
+          <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+            <div className="max-w-xl">
+              <p className="ak-type-label ak-text-accent">Working in the open</p>
+              <p className="ak-type-body-sm ak-text-muted mt-3">
+                Notes come from real project work and long sessions with AI
+                assistants. If a workflow problem is worth writing about, it is
+                usually worth solving.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <a href="mailto:akkapol.kumpapug@gmail.com" className="ak-action ak-action-primary ak-focus-ring">
+                Start a conversation
+              </a>
+              <Link href="/" className="ak-action ak-action-secondary ak-focus-ring">
+                Back to the portfolio
+              </Link>
+            </div>
           </div>
-        )}
+        </footer>
       </section>
     </main>
   );
