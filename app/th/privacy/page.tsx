@@ -22,7 +22,7 @@ const sections = [
         <li>
           <strong>ข้อความในแชท</strong> — เมื่อคุณใช้ AI Chat บนเว็บนี้ ข้อความ
           ของคุณจะถูกบันทึกเพื่อให้ Akkapol ติดตามกลับ (การจัดการลูกค้าเป้าหมาย)
-          ข้อมูลถูกเก็บแบบส่วนตัวผ่าน Vercel Blob
+          ข้อมูลถูกเก็บแบบส่วนตัวใน Neon Postgres
         </li>
         <li>
           <strong>ข้อมูลลูกค้าเป้าหมาย</strong> — หากคุณให้ช่องทางติดต่อหรือ
@@ -70,8 +70,13 @@ const sections = [
     content: (
       <ul className="space-y-2">
         <li>
-          ข้อความในแชทถูกเก็บใน <strong>Vercel Blob</strong> (พื้นที่จัดเก็บ
-          แบบส่วนตัว ควบคุมการเข้าถึง บน AWS ในเขตสหรัฐอเมริกา)
+          ข้อความในแชทถูกเก็บใน <strong>Neon Postgres</strong> (ฐานข้อมูล
+          Postgres แบบ managed ที่ควบคุมการเข้าถึงได้ ใน region Singapore)
+        </li>
+        <li>
+          ข้อความแชทที่สร้างก่อนการเปลี่ยนมาใช้ Neon อาจยังอยู่ใน
+          <strong> Vercel Blob</strong> แบบส่วนตัวจนกว่าจะถูกลบด้วยตัวเอง
+          และแอปพลิเคชันจะไม่ใช้งานข้อมูลเหล่านั้นแล้ว
         </li>
         <li>
           ข้อมูลลูกค้าเป้าหมายแบบมีโครงสร้างถูกเก็บใน
@@ -126,6 +131,18 @@ const sections = [
             className="text-amber-200 hover:text-amber-100 underline"
           >
             นโยบายความเป็นส่วนตัวของ Vercel
+          </a>
+        </li>
+        <li>
+          <strong>Neon</strong> — ฐานข้อมูล Postgres แบบ managed สำหรับ transcript
+          ของแชทและตัวนับ rate limit ดู{" "}
+          <a
+            href="https://neon.com/privacy-policy"
+            target="_blank"
+            rel="noreferrer"
+            className="text-amber-200 hover:text-amber-100 underline"
+          >
+            นโยบายความเป็นส่วนตัวของ Neon
           </a>
         </li>
         <li>

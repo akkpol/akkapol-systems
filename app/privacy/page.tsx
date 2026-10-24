@@ -22,7 +22,7 @@ const sections = [
         <li>
           <strong>Chat messages</strong> — When you use the AI chat on this site,
           your messages are saved to help Akkapol follow up on inquiries (lead
-          management). These are stored privately via Vercel Blob.
+          management). These are stored privately in Neon Postgres.
         </li>
         <li>
           <strong>Lead details</strong> — If you share contact details or express
@@ -72,8 +72,14 @@ const sections = [
     content: (
       <ul className="space-y-2">
         <li>
-          Chat records are stored in <strong>Vercel Blob</strong> (private,
-          access-controlled object storage on AWS in the US region).
+          Chat records are stored in <strong>Neon Postgres</strong> (private,
+          access-controlled managed Postgres in the Neon project&apos;s Singapore
+          region).
+        </li>
+        <li>
+          Transcripts created before the Neon cutover may remain in private
+          <strong> Vercel Blob</strong> storage until they are manually deleted.
+          They are no longer used by the application.
         </li>
         <li>
           Structured lead records are stored in a private,
@@ -128,6 +134,18 @@ const sections = [
             className="text-amber-200 hover:text-amber-100 underline"
           >
             Vercel Privacy Policy
+          </a>.
+        </li>
+        <li>
+          <strong>Neon</strong> — Managed Postgres database for chat transcripts
+          and rate-limit counters. See{" "}
+          <a
+            href="https://neon.com/privacy-policy"
+            target="_blank"
+            rel="noreferrer"
+            className="text-amber-200 hover:text-amber-100 underline"
+          >
+            Neon Privacy Policy
           </a>.
         </li>
         <li>

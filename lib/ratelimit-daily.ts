@@ -1,25 +1,14 @@
-const BLOB_PREFIX = "ratelimit";
-const MAX_RETRIES = 5;
+import { resolveDatabaseUrl } from "./database-url.ts";
 
-type CounterSnapshot = {
-  count: number;
-  etag?: string;
-};
+export type LimitSource = "postgres" | "memory";
 
-type LimitResult = {
+export type LimitResult = {
   allowed: boolean;
   count: number;
   remaining: number;
   limit: number;
-  source: "blob" | "memory";
+  source: LimitSource;
 };
-
-export class CounterWriteConflictError extends Error {
-  constructor(message = "Counter write conflicted with a concurrent update.") {
-    super(message);
-    this.name = "CounterWriteConflictError";
-  }
-}
 
 export class RateLimitUnavailableError extends Error {
   constructor(message = "The shared rate-limit store is unavailable.") {
@@ -28,194 +17,118 @@ export class RateLimitUnavailableError extends Error {
   }
 }
 
-export interface CounterStore {
-  readonly source: "blob" | "memory";
-  readCounter(path: string): Promise<CounterSnapshot>;
-  createCounter(path: string, count: number): Promise<void>;
-  updateCounter(path: string, count: number, etag: string): Promise<void>;
+export interface RateLimitStore {
+  readonly source: LimitSource;
+  increment(key: string, limit: number): Promise<{ count: number; reserved: boolean }>;
 }
+
+const INCREMENT_COUNTER = [
+  "insert into rate_limits (key, day, count)",
+  "values ($1, (now() at time zone 'utc')::date, 1)",
+  "on conflict (key, day) do update",
+  "  set count = rate_limits.count + 1",
+  "  where rate_limits.count < $2",
+  "returning count",
+].join("\n");
+
+const READ_COUNTER = [
+  "select count from rate_limits",
+  "where key = $1",
+  "  and day = (now() at time zone 'utc')::date",
+].join("\n");
 
 function todayKey(): string {
   return new Date().toISOString().slice(0, 10);
 }
 
-function toCounterPath(key: string, date = todayKey()): string {
-  return `${BLOB_PREFIX}/${date}/${key}.json`;
-}
-
-class MemoryCounterStore implements CounterStore {
+class MemoryRateLimitStore implements RateLimitStore {
   readonly source = "memory" as const;
 
-  private counters = new Map<string, { count: number; etag: string }>();
-  private lastDate = "";
-  private version = 0;
+  private counters = new Map<string, number>();
+  private currentDay = todayKey();
 
-  private rotate(date: string) {
-    if (this.lastDate !== date) {
+  private rotateDay() {
+    const day = todayKey();
+    if (day !== this.currentDay) {
       this.counters.clear();
-      this.lastDate = date;
+      this.currentDay = day;
     }
   }
 
-  async readCounter(path: string): Promise<CounterSnapshot> {
-    const date = todayKey();
-    this.rotate(date);
-    return this.counters.get(path) ?? { count: 0 };
-  }
+  async increment(key: string, limit: number) {
+    this.rotateDay();
+    const current = this.counters.get(key) ?? 0;
 
-  async createCounter(path: string, count: number): Promise<void> {
-    const date = todayKey();
-    this.rotate(date);
-
-    if (this.counters.has(path)) {
-      throw new CounterWriteConflictError();
+    if (current >= limit) {
+      return { count: current, reserved: false };
     }
 
-    this.version += 1;
-    this.counters.set(path, { count, etag: `memory-${this.version}` });
-  }
-
-  async updateCounter(path: string, count: number, etag: string): Promise<void> {
-    const date = todayKey();
-    this.rotate(date);
-    const current = this.counters.get(path);
-    if (!current || current.etag !== etag) {
-      throw new CounterWriteConflictError();
-    }
-
-    this.version += 1;
-    this.counters.set(path, { count, etag: `memory-${this.version}` });
+    const next = current + 1;
+    this.counters.set(key, next);
+    return { count: next, reserved: true };
   }
 }
 
-const memoryCounterStore = new MemoryCounterStore();
+const memoryRateLimitStore = new MemoryRateLimitStore();
 
-async function createBlobCounterStore(): Promise<CounterStore | null> {
-  if (!process.env.BLOB_READ_WRITE_TOKEN) {
-    return null;
-  }
-
-  const { BlobPreconditionFailedError, get, put } = await import("@vercel/blob");
-
+function createPostgresRateLimitStore(): RateLimitStore {
   return {
-    source: "blob",
-    async readCounter(path: string): Promise<CounterSnapshot> {
-      const result = await get(path, { access: "private" });
-      if (!result || result.statusCode !== 200 || !result.stream) {
-        return { count: 0 };
+    source: "postgres",
+    async increment(key, limit) {
+      const { getPool } = await import("./db.ts");
+      const pool = getPool();
+      const inserted = await pool.query<{ count: number }>(INCREMENT_COUNTER, [key, limit]);
+
+      if (inserted.rows[0]) {
+        return { count: Number(inserted.rows[0].count), reserved: true };
       }
 
-      const payload = await new Response(result.stream).json().catch(() => null);
-      const count = typeof payload?.count === "number" && payload.count >= 0
-        ? payload.count
-        : 0;
-
+      const current = await pool.query<{ count: number }>(READ_COUNTER, [key]);
       return {
-        count,
-        etag: result.blob.etag,
+        count: Number(current.rows[0]?.count ?? limit),
+        reserved: false,
       };
-    },
-    async createCounter(path: string, count: number): Promise<void> {
-      try {
-        await put(path, JSON.stringify({ count }), {
-          contentType: "application/json",
-          access: "private",
-          addRandomSuffix: false,
-          allowOverwrite: false,
-        });
-      } catch (error) {
-        if (error instanceof BlobPreconditionFailedError) {
-          throw new CounterWriteConflictError();
-        }
-        throw error;
-      }
-    },
-    async updateCounter(path: string, count: number, etag: string): Promise<void> {
-      try {
-        await put(path, JSON.stringify({ count }), {
-          contentType: "application/json",
-          access: "private",
-          addRandomSuffix: false,
-          allowOverwrite: true,
-          ifMatch: etag,
-        });
-      } catch (error) {
-        if (error instanceof BlobPreconditionFailedError) {
-          throw new CounterWriteConflictError();
-        }
-        throw error;
-      }
     },
   };
 }
 
 export async function consumeLimitWithStore(
-  store: CounterStore,
-  path: string,
+  store: RateLimitStore,
+  key: string,
   limit: number,
-  maxRetries = MAX_RETRIES,
 ): Promise<LimitResult> {
-  for (let attempt = 0; attempt < maxRetries; attempt += 1) {
-    const current = await store.readCounter(path);
-    if (current.count >= limit) {
-      return {
-        allowed: false,
-        count: current.count,
-        remaining: 0,
-        limit,
-        source: store.source,
-      };
-    }
+  const result = await store.increment(key, limit);
 
-    try {
-      if (current.etag) {
-        await store.updateCounter(path, current.count + 1, current.etag);
-      } else {
-        await store.createCounter(path, current.count + 1);
-      }
-
-      return {
-        allowed: true,
-        count: current.count + 1,
-        remaining: Math.max(0, limit - (current.count + 1)),
-        limit,
-        source: store.source,
-      };
-    } catch (error) {
-      if (error instanceof CounterWriteConflictError) {
-        continue;
-      }
-      throw error;
-    }
-  }
-
-  throw new Error(`Failed to reserve a rate-limit slot after ${maxRetries} attempts.`);
+  return {
+    allowed: result.reserved,
+    count: result.count,
+    remaining: Math.max(0, limit - result.count),
+    limit,
+    source: store.source,
+  };
 }
 
 export async function consumeDailyLimit(key: string, limit: number): Promise<LimitResult> {
-  const path = toCounterPath(key);
   const allowMemoryFallback = process.env.NODE_ENV !== "production";
 
-  try {
-    const blobStore = await createBlobCounterStore();
-    if (blobStore) {
-      return await consumeLimitWithStore(blobStore, path, limit);
-    }
-
-    if (!allowMemoryFallback) {
-      throw new RateLimitUnavailableError("BLOB_READ_WRITE_TOKEN is not configured.");
-    }
-  } catch (error) {
-    if (!allowMemoryFallback) {
-      console.error("[ratelimit] Shared rate limit is unavailable:", error);
-      if (error instanceof RateLimitUnavailableError) {
-        throw error;
+  if (resolveDatabaseUrl()) {
+    try {
+      return await consumeLimitWithStore(createPostgresRateLimitStore(), key, limit);
+    } catch (error) {
+      if (!allowMemoryFallback) {
+        console.error("[ratelimit] Neon rate limit is unavailable:", error);
+        if (error instanceof RateLimitUnavailableError) throw error;
+        throw new RateLimitUnavailableError();
       }
-      throw new RateLimitUnavailableError();
-    }
 
-    console.warn("[ratelimit] Blob-backed rate limit failed; using local development fallback:", error);
+      console.warn(
+        "[ratelimit] Neon rate limit failed; using local development fallback:",
+        error,
+      );
+    }
+  } else if (!allowMemoryFallback) {
+    throw new RateLimitUnavailableError("DATABASE_URL is not configured.");
   }
 
-  return consumeLimitWithStore(memoryCounterStore, path, limit);
+  return consumeLimitWithStore(memoryRateLimitStore, key, limit);
 }

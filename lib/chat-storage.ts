@@ -1,3 +1,5 @@
+import { resolveDatabaseUrl } from "./database-url.ts";
+
 export type ChatTranscriptData = {
   sessionId: string;
   messages: string;
@@ -6,56 +8,60 @@ export type ChatTranscriptData = {
   tokensUsed?: number;
 };
 
-type TranscriptPutOptions = {
-  contentType: string;
-  access: "private";
-  addRandomSuffix: boolean;
-  allowOverwrite: boolean;
-};
-
-type TranscriptPut = (
-  path: string,
-  body: string,
-  options: TranscriptPutOptions,
-) => Promise<unknown>;
+export interface TranscriptStore {
+  insert(data: ChatTranscriptData): Promise<void>;
+}
 
 export type SaveChatLeadDependencies = {
-  put?: TranscriptPut;
-  hasBlobToken?: boolean;
+  store?: TranscriptStore;
+  hasDatabase?: boolean;
 };
+
+const INSERT_TRANSCRIPT = [
+  "insert into chat_transcripts",
+  "  (session_id, messages, message_count, finish_reason, tokens_used)",
+  "values",
+  "  ($1::uuid, $2::jsonb, $3, $4, $5)",
+].join("\n");
+
+export function createPostgresTranscriptStore(): TranscriptStore {
+  return {
+    async insert(data) {
+      const { getPool } = await import("./db.ts");
+      await getPool().query(INSERT_TRANSCRIPT, [
+        data.sessionId,
+        data.messages,
+        data.messageCount,
+        data.finishReason ?? null,
+        data.tokensUsed ?? 0,
+      ]);
+    },
+  };
+}
 
 export async function saveChatLead(
   data: ChatTranscriptData,
   dependencies: SaveChatLeadDependencies = {},
 ) {
-  const hasBlobToken = dependencies.hasBlobToken
-    ?? Boolean(process.env.BLOB_READ_WRITE_TOKEN);
+  const hasDatabase = dependencies.hasDatabase
+    ?? (Boolean(dependencies.store) || Boolean(resolveDatabaseUrl()));
 
-  if (!hasBlobToken) {
-    console.log("[chat] Blob not configured — skipping save:", data.sessionId);
+  if (!hasDatabase) {
+    console.log("[chat] Database not configured — skipping transcript:", data.sessionId);
     return null;
   }
 
   try {
-    const put: TranscriptPut = dependencies.put
-      ?? ((await import("@vercel/blob")).put as unknown as TranscriptPut);
-    const blobPath = `chat-leads/${data.sessionId}.json`;
-    const blob = await put(blobPath, JSON.stringify({
-      ...data,
-      savedAt: new Date().toISOString(),
-    }, null, 2), {
-      contentType: "application/json",
-      access: "private",
-      addRandomSuffix: false,
-      // One rolling transcript per chat session. Without this, Vercel Blob
-      // rejects every write after the first one for the same pathname.
-      allowOverwrite: true,
-    });
-    const blobUrl = (blob as { url?: unknown } | null)?.url;
-    console.log("[chat] Saved to Blob:", typeof blobUrl === "string" ? blobUrl : data.sessionId);
-    return blob;
+    const store = dependencies.store ?? createPostgresTranscriptStore();
+    await store.insert(data);
+    console.log("[chat] Saved transcript:", data.sessionId);
+    return true;
   } catch (err) {
-    console.error("[chat] Blob save failed (chat still works):", err);
+    console.error(
+      "[chat] Transcript save failed (chat still works):",
+      data.sessionId,
+      err instanceof Error ? err.message : err,
+    );
     return null;
   }
 }

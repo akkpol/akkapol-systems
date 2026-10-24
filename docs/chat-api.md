@@ -54,7 +54,7 @@ Content type: `application/json`
 - `429 Too Many Requests`: per-client limit of 30 requests per day or global
   budget of 500 requests per day is exhausted.
 - `503 Service Unavailable`: the AI provider is not configured, the production
-  session secret is missing, or the shared production rate-limit store is
+  session secret is missing, or the Neon Postgres rate-limit store is
   unavailable.
 
 Errors use a JSON body shaped as `{ "error": "user-safe message" }`. Provider
@@ -63,18 +63,19 @@ upstream details.
 
 ### Stored transcript
 
-After the stream finishes, the server writes the latest request window to
-`chat-leads/{sessionId}.json` in private Vercel Blob storage. The file is
-overwritten on each request, so it contains the most recent conversation window
-rather than an append-only full history. Structured lead fields are written to
-Google Sheets separately.
+After the stream finishes, the server appends one row to the private
+`chat_transcripts` table in Neon Postgres. The row contains the latest request
+window, finish reason, and token usage. Rows are append-only, so earlier
+requests remain available for review. Transcripts created in Vercel Blob before
+the Neon cutover are not imported. Structured lead fields are written to Google
+Sheets separately.
 
 ### Production requirements
 
 - `DEEPSEEK_API_KEY`
-- `BLOB_READ_WRITE_TOKEN`
+- `DATABASE_URL` (injected by the Neon Vercel integration)
 - `CHAT_SESSION_SECRET` (generate a long random value and keep it server-side)
 - Optional Google Sheets variables listed in [`.env.example`](../.env.example)
 
-Remote file downloads are disabled. Raw transcripts remain private in Vercel
-Blob; only structured lead fields are sent to Google Sheets when configured.
+Remote file downloads are disabled. Raw transcripts remain private in Neon
+Postgres; only structured lead fields are sent to Google Sheets when configured.

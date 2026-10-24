@@ -56,17 +56,17 @@ Frontmatter is a `---` delimited block with `title` (required), `description`,
 [content/blog/README.md](content/blog/README.md) for the full format, supported
 Markdown syntax, and slug rules.
 
-`next dev` reads the directory on every request, so new posts appear without a
-restart. A production build only contains the posts present at build time (and
-`sitemap.xml` is generated then), so publish new posts with a rebuild/redeploy.
+The blog is read from `content/blog` at build time. New posts therefore need a
+new build/redeploy; `sitemap.xml` is generated in the same build.
 
 ## AI Chat Leads in Google Sheets
 
-Lyra keeps the most recent conversation window per session in private Vercel
-Blob storage and writes only structured leads to a private Google Sheet. A lead
-is created when a user shares contact details or states explicit hiring intent.
-Later messages from the same chat update that row without overwriting the
-operator-managed `status`, `follow_up_at`, or `notes` fields.
+Lyra stores new chat transcript rows in a private Neon Postgres database and
+writes only structured leads to a private Google Sheet. A lead is created when a
+user shares contact details or states explicit hiring intent. Later messages from
+the same chat update that row without overwriting the operator-managed
+`status`, `follow_up_at`, or `notes` fields. Existing transcripts in Vercel
+Blob are not imported by this setup.
 
 Production setup:
 
@@ -75,9 +75,11 @@ Production setup:
 3. Share the lead spreadsheet with the service account email as an Editor.
 4. Add `GOOGLE_SHEETS_SPREADSHEET_ID`, `GOOGLE_SHEETS_CLIENT_EMAIL`, and
    `GOOGLE_SHEETS_PRIVATE_KEY` to the Vercel project environment.
-5. Configure `DEEPSEEK_API_KEY`, `BLOB_READ_WRITE_TOKEN`, and a long random
-   `CHAT_SESSION_SECRET` for the chat endpoint.
-6. Redeploy the application.
+5. Configure `DEEPSEEK_API_KEY`, `DATABASE_URL` (injected by the Neon Vercel
+   integration), and a long random `CHAT_SESSION_SECRET` for the chat endpoint.
+6. Apply the Neon schema to the production/default branch with
+   `npm run db:migrate` (see [db/README.md](db/README.md)).
+7. Redeploy the application.
 
 Keep the private key server-side. Never prefix these variables with
 `NEXT_PUBLIC_` or commit the service-account JSON file.
