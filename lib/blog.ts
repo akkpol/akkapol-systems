@@ -691,3 +691,184 @@ export function listPosts(): BlogPost[] {
 export function getPostBySlug(slug: string): BlogPost | null {
   return loadPostFromDirectory(getBlogContentDirectory(), slug);
 }
+
+/* -------------------------------------------------------------------------- */
+/* Index helpers (pure)                                                       */
+/* -------------------------------------------------------------------------- */
+
+/** Serializable card data for client components that cannot import this module. */
+export type BlogCardData = {
+  slug: string;
+  title: string;
+  description: string;
+  date: string;
+  dateLabel: string;
+  readingMinutes: number;
+  tags: string[];
+  aiAssisted: boolean;
+};
+
+export type BlogOutlineEntry = {
+  id: string;
+  text: string;
+  level: 1 | 2 | 3 | 4 | 5 | 6;
+};
+
+export type BlogTagCount = {
+  tag: string;
+  count: number;
+};
+
+/** Strip inline Markdown so an outline shows readable heading text. */
+function headingPlainText(text: string): string {
+  return parseInlineMarkdown(text)
+    .map((token) => token.value)
+    .join("");
+}
+
+/**
+ * Turn heading text into a stable anchor id.
+ *
+ * Keeps Unicode letters and digits (so Thai headings survive), drops
+ * punctuation, and falls back to `section` when nothing is left.
+ */
+export function slugifyHeading(text: string): string {
+  const slug = headingPlainText(text)
+    .normalize("NFC")
+    .toLowerCase()
+    .replace(/[\u0000-\u001f\u007f]/g, "")
+    .replace(/[^\p{L}\p{N}\p{M}\s_-]+/gu, "")
+    .trim()
+    .replace(/[\s_]+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
+  return slug.length > 0 ? slug : "section";
+}
+
+/**
+ * Assign an anchor id to every heading block, keyed by block index.
+ *
+ * Repeated headings get `-2`, `-3`, … suffixes. The Markdown renderer and the
+ * page outline both call this with the same parsed blocks, so anchors always
+ * match the rendered ids.
+ */
+export function assignHeadingIds(blocks: MarkdownBlock[]): Map<number, string> {
+  const ids = new Map<number, string>();
+  const seen = new Map<string, number>();
+
+  blocks.forEach((block, index) => {
+    if (block.type !== "heading") return;
+    const base = slugifyHeading(block.text);
+    const count = (seen.get(base) ?? 0) + 1;
+    seen.set(base, count);
+    ids.set(index, count === 1 ? base : `${base}-${count}`);
+  });
+
+  return ids;
+}
+
+/** Headings that are worth listing in a page outline, with their anchor ids. */
+export function collectBlogOutline(
+  blocks: MarkdownBlock[],
+  maxLevel: 1 | 2 | 3 | 4 | 5 | 6 = 3,
+): BlogOutlineEntry[] {
+  const ids = assignHeadingIds(blocks);
+  const outline: BlogOutlineEntry[] = [];
+
+  blocks.forEach((block, index) => {
+    if (block.type !== "heading" || block.level > maxLevel) return;
+    const id = ids.get(index);
+    if (!id) return;
+    outline.push({ id, text: headingPlainText(block.text), level: block.level });
+  });
+
+  return outline;
+}
+
+export function toBlogCardData(post: BlogPost): BlogCardData {
+  return {
+    slug: post.slug,
+    title: post.title,
+    description: post.description,
+    date: post.date,
+    dateLabel: formatBlogDate(post.date),
+    readingMinutes: post.readingMinutes,
+    tags: post.tags,
+    aiAssisted: post.source === "dsh",
+  };
+}
+
+/** Tag list for the index filter, most-used first and de-duplicated by case. */
+export function collectPostTags(posts: BlogPost[]): BlogTagCount[] {
+  const counts = new Map<string, BlogTagCount>();
+
+  for (const post of posts) {
+    for (const tag of post.tags) {
+      const key = tag.toLowerCase();
+      const existing = counts.get(key);
+      if (existing) {
+        existing.count += 1;
+      } else {
+        counts.set(key, { tag, count: 1 });
+      }
+    }
+  }
+
+  return [...counts.values()].sort(
+    (left, right) => right.count - left.count || left.tag.localeCompare(right.tag),
+  );
+}
+
+function sortPostsByDateDesc(posts: BlogPost[]): BlogPost[] {
+  return [...posts].sort((left, right) => {
+    const dateDelta = Date.parse(right.date) - Date.parse(left.date);
+    if (dateDelta !== 0) return dateDelta;
+    return left.slug.localeCompare(right.slug);
+  });
+}
+
+/**
+ * Newer/older siblings of a post in a newest-first list. Both bounds return
+ * `null` when the post is unknown.
+ */
+export function getAdjacentPosts(
+  posts: BlogPost[],
+  slug: string,
+): { newer: BlogPost | null; older: BlogPost | null } {
+  const ordered = sortPostsByDateDesc(posts);
+  const index = ordered.findIndex((post) => post.slug === slug);
+  if (index === -1) return { newer: null, older: null };
+
+  return {
+    newer: index > 0 ? ordered[index - 1] : null,
+    older: index < ordered.length - 1 ? ordered[index + 1] : null,
+  };
+}
+
+/**
+ * Posts that share at least one tag with `slug`, ranked by shared-tag count and
+ * then recency. Returns an empty list when nothing overlaps.
+ */
+export function getRelatedPosts(posts: BlogPost[], slug: string, limit = 2): BlogPost[] {
+  const current = posts.find((post) => post.slug === slug);
+  if (!current || current.tags.length === 0 || limit <= 0) return [];
+
+  const currentTags = new Set(current.tags.map((tag) => tag.toLowerCase()));
+
+  return posts
+    .filter((post) => post.slug !== slug)
+    .map((post) => ({
+      post,
+      score: post.tags.filter((tag) => currentTags.has(tag.toLowerCase())).length,
+    }))
+    .filter((entry) => entry.score > 0)
+    .sort((left, right) => {
+      if (right.score !== left.score) return right.score - left.score;
+      const dateDelta = Date.parse(right.post.date) - Date.parse(left.post.date);
+      if (dateDelta !== 0) return dateDelta;
+      return left.post.slug.localeCompare(right.post.slug);
+    })
+    .slice(0, limit)
+    .map((entry) => entry.post);
+}

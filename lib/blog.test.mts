@@ -5,9 +5,14 @@ import path from "node:path";
 import test from "node:test";
 
 import {
+  assignHeadingIds,
   BLOG_SLUG_PATTERN,
+  collectBlogOutline,
+  collectPostTags,
   estimateReadingMinutes,
   formatBlogDate,
+  getAdjacentPosts,
+  getRelatedPosts,
   isIso8601Date,
   isValidBlogSlug,
   loadPostFromDirectory,
@@ -19,8 +24,11 @@ import {
   parseInlineMarkdown,
   parseMarkdown,
   sanitizeLinkHref,
+  slugifyHeading,
   splitFrontmatter,
+  toBlogCardData,
 } from "./blog.ts";
+import type { BlogPost } from "./blog.ts";
 
 function createTempBlogDirectory(files: Record<string, string>): string {
   const directory = mkdtempSync(path.join(os.tmpdir(), "akkapol-blog-"));
@@ -476,4 +484,153 @@ test("loadPostFromDirectory returns published posts only", () => {
   } finally {
     rmSync(directory, { recursive: true, force: true });
   }
+});
+
+/* -------------------------------------------------------------------------- */
+/* Heading anchors, outline, tags, and post relationships                     */
+/* -------------------------------------------------------------------------- */
+
+type TestPostOptions = {
+  slug: string;
+  date: string;
+  title?: string;
+  description?: string;
+  tags?: string[];
+  source?: string;
+  body?: string;
+  readingMinutes?: number;
+};
+
+function makePost({
+  slug,
+  date,
+  title = slug,
+  description = "",
+  tags = [],
+  source,
+  body = "Body.",
+  readingMinutes = 1,
+}: TestPostOptions): BlogPost {
+  return {
+    slug,
+    title,
+    description,
+    date,
+    tags,
+    draft: false,
+    body,
+    readingMinutes,
+    ...(source ? { source } : {}),
+  };
+}
+
+test("slugifyHeading produces stable, unicode-safe anchors", () => {
+  assert.equal(
+    slugifyHeading("Building a DSH conversation view"),
+    "building-a-dsh-conversation-view",
+  );
+  assert.equal(slugifyHeading("What's next?"), "whats-next");
+  assert.equal(slugifyHeading("A/B testing"), "ab-testing");
+  assert.equal(slugifyHeading("`code` and **bold**"), "code-and-bold");
+  assert.equal(slugifyHeading("บันทึกภาษาไทย"), "บันทึกภาษาไทย");
+  assert.equal(slugifyHeading("   "), "section");
+  assert.equal(slugifyHeading("!!!"), "section");
+  assert.equal(slugifyHeading("🎉"), "section");
+});
+
+test("assignHeadingIds de-duplicates repeated headings by block index", () => {
+  const blocks = parseMarkdown("## Intro\n\nText\n\n## Intro\n\nMore\n\n### Deep\n");
+  const ids = assignHeadingIds(blocks);
+
+  assert.deepEqual([...ids.keys()], [0, 2, 4]);
+  assert.deepEqual([...ids.values()], ["intro", "intro-2", "deep"]);
+});
+
+test("collectBlogOutline filters deep headings and keeps renderer ids", () => {
+  const blocks = parseMarkdown(
+    "# Lead\n\n## Setup\n\n### Details\n\n#### Too deep\n\n## Setup\n",
+  );
+  const ids = assignHeadingIds(blocks);
+  const outline = collectBlogOutline(blocks);
+
+  assert.deepEqual(outline, [
+    { id: "lead", text: "Lead", level: 1 },
+    { id: "setup", text: "Setup", level: 2 },
+    { id: "details", text: "Details", level: 3 },
+    { id: "setup-2", text: "Setup", level: 2 },
+  ]);
+  assert.equal(ids.get(4), "setup-2");
+});
+
+test("collectPostTags de-duplicates by case and sorts by count", () => {
+  const posts = [
+    makePost({ slug: "a", date: "2026-01-01", tags: ["AI", "Systems"] }),
+    makePost({ slug: "b", date: "2026-01-02", tags: ["ai", "Blog"] }),
+    makePost({ slug: "c", date: "2026-01-03", tags: ["AI"] }),
+  ];
+
+  assert.deepEqual(collectPostTags(posts), [
+    { tag: "AI", count: 3 },
+    { tag: "Blog", count: 1 },
+    { tag: "Systems", count: 1 },
+  ]);
+});
+
+test("getAdjacentPosts returns newer and older siblings with bounds", () => {
+  const newest = makePost({ slug: "newest", date: "2026-03-01" });
+  const middle = makePost({ slug: "middle", date: "2026-02-01" });
+  const oldest = makePost({ slug: "oldest", date: "2026-01-01" });
+  const posts = [middle, oldest, newest];
+
+  assert.deepEqual(getAdjacentPosts(posts, "middle"), { newer: newest, older: oldest });
+  assert.deepEqual(getAdjacentPosts(posts, "newest"), { newer: null, older: middle });
+  assert.deepEqual(getAdjacentPosts(posts, "oldest"), { newer: middle, older: null });
+  assert.deepEqual(getAdjacentPosts(posts, "missing"), { newer: null, older: null });
+});
+
+test("getRelatedPosts ranks by shared tags then recency", () => {
+  const current = makePost({ slug: "current", date: "2026-04-01", tags: ["AI", "Workflow"] });
+  const twoShared = makePost({ slug: "two-shared", date: "2026-01-01", tags: ["AI", "Workflow"] });
+  const oneOld = makePost({ slug: "one-old", date: "2026-02-01", tags: ["AI"] });
+  const oneNew = makePost({ slug: "one-new", date: "2026-03-01", tags: ["workflow"] });
+  const unrelated = makePost({ slug: "unrelated", date: "2026-03-02", tags: ["Design"] });
+  const posts = [current, oneOld, unrelated, oneNew, twoShared];
+
+  assert.deepEqual(
+    getRelatedPosts(posts, "current").map((post) => post.slug),
+    ["two-shared", "one-new"],
+  );
+  assert.deepEqual(
+    getRelatedPosts(posts, "current", 3).map((post) => post.slug),
+    ["two-shared", "one-new", "one-old"],
+  );
+  assert.deepEqual(getRelatedPosts(posts, "current", 0), []);
+  assert.deepEqual(getRelatedPosts(posts, "unrelated"), []);
+  assert.deepEqual(getRelatedPosts(posts, "missing"), []);
+});
+
+test("toBlogCardData serializes card fields without the body", () => {
+  const post = makePost({
+    slug: "note",
+    date: "2026-10-24T10:30:00+07:00",
+    title: "Note",
+    description: "A note.",
+    tags: ["AI"],
+    source: "dsh",
+    readingMinutes: 3,
+  });
+
+  const card = toBlogCardData(post);
+  assert.deepEqual(card, {
+    slug: "note",
+    title: "Note",
+    description: "A note.",
+    date: "2026-10-24T10:30:00+07:00",
+    dateLabel: "October 24, 2026",
+    readingMinutes: 3,
+    tags: ["AI"],
+    aiAssisted: true,
+  });
+  assert.equal("body" in card, false);
+  assert.equal(toBlogCardData(makePost({ slug: "plain", date: "2026-10-24" })).aiAssisted, false);
 });

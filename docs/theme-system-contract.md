@@ -108,6 +108,8 @@ Use CSS classes for repeated visual rules:
 - `ak-surface-card`: repeated card items with premium hover lift.
 - `ak-contact-row`: contact rows and secondary action rows.
 - `ak-signal-icon`: accent icon container.
+- `ak-nav-pill`: pill navigation link for interior pages (blog, shared headers); `[aria-current="page"]` marks the active section.
+- `ak-tag` / `ak-tag-button`: metadata chips for post tags and the interactive topic-filter buttons (`[aria-pressed="true"]` is the active state).
 - `ak-action`, `ak-action-primary`, `ak-action-secondary`: general page actions.
 - `ak-cta`, `ak-cta-primary`, `ak-cta-secondary`: hero CTA contract.
 
@@ -116,6 +118,7 @@ Use CSS classes for repeated visual rules:
 `StudioHero` is both a product hero and the brand's signature visual system. Treat it like a layered composition, not a normal content section.
 
 - Keep the top row as a navigation safe area. The theme toggle may stay there, but status labels, portrait edges, and decorative map details should not crowd it.
+- The hero header may carry a Blog navigation pill next to the language switch. Hide it below the `sm` breakpoint with a wrapper element (not `hidden` on `.ak-nav-pill`, whose custom `display` would win) and keep the under-CTA writing link for small screens, so mobile has exactly one visible blog entry point.
 - Keep exact text, CTA labels, profile image placement, and navigation controls deterministic in TSX/CSS.
 - Keep visual atmosphere, pipeline energy, system map motion, and hover sheen as polish layers that cannot rewrite or move critical content.
 - When moving the desktop portrait or status label, use one visible source of truth in `StudioHero.tsx`. Do not leave duplicate position rules in `globals.css`.

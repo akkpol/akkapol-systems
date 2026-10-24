@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 
 import {
+  assignHeadingIds,
   parseInlineMarkdown,
   parseMarkdown,
   type MarkdownBlock,
@@ -66,54 +67,59 @@ const headingClassNames: Record<1 | 2 | 3 | 4 | 5 | 6, string> = {
   6: "mt-8 mb-3 text-sm font-semibold uppercase tracking-wide ak-text-muted",
 };
 
-function renderHeading(block: Extract<MarkdownBlock, { type: "heading" }>, key: number): ReactNode {
+function renderHeading(
+  block: Extract<MarkdownBlock, { type: "heading" }>,
+  key: number,
+  id: string | undefined,
+): ReactNode {
   const children = renderInline(parseInlineMarkdown(block.text));
-  const className = headingClassNames[block.level];
+  const className = `${headingClassNames[block.level]} scroll-mt-24`;
+  // The page already renders the post title as its <h1>, so body headings are
+  // demoted one level to keep exactly one top-level heading per page.
+  const level = block.level === 1 ? 2 : block.level;
 
-  switch (block.level) {
-    case 1:
-      return (
-        <h1 key={key} className={className}>
-          {children}
-        </h1>
-      );
+  switch (level) {
     case 2:
       return (
-        <h2 key={key} className={className}>
+        <h2 key={key} id={id} className={className}>
           {children}
         </h2>
       );
     case 3:
       return (
-        <h3 key={key} className={className}>
+        <h3 key={key} id={id} className={className}>
           {children}
         </h3>
       );
     case 4:
       return (
-        <h4 key={key} className={className}>
+        <h4 key={key} id={id} className={className}>
           {children}
         </h4>
       );
     case 5:
       return (
-        <h5 key={key} className={className}>
+        <h5 key={key} id={id} className={className}>
           {children}
         </h5>
       );
     default:
       return (
-        <h6 key={key} className={className}>
+        <h6 key={key} id={id} className={className}>
           {children}
         </h6>
       );
   }
 }
 
-function renderBlock(block: MarkdownBlock, index: number): ReactNode {
+function renderBlock(
+  block: MarkdownBlock,
+  index: number,
+  headingId: string | undefined,
+): ReactNode {
   switch (block.type) {
     case "heading":
-      return renderHeading(block, index);
+      return renderHeading(block, index, headingId);
     case "paragraph":
       return (
         <p key={index} className="mt-5 text-base leading-7 ak-text-body">
@@ -186,5 +192,11 @@ export function Markdown({ source }: { source: string }) {
   const blocks = parseMarkdown(source);
   if (blocks.length === 0) return null;
 
-  return <div>{blocks.map((block, index) => renderBlock(block, index))}</div>;
+  const headingIds = assignHeadingIds(blocks);
+
+  return (
+    <div>
+      {blocks.map((block, index) => renderBlock(block, index, headingIds.get(index)))}
+    </div>
+  );
 }

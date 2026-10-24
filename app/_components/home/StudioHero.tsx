@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { ThemeModeToggle } from "@/app/_components/ThemeModeToggle";
+import { StudioMark } from "@/app/_components/StudioMark";
 import { saveLocalePreference } from "@/app/_components/LocaleDocumentSync";
 import { HeroNameMotion } from "@/app/_components/home/HeroNameMotion";
 import { HeroPortraitMotion } from "@/app/_components/home/HeroPortraitMotion";
@@ -12,18 +13,21 @@ import { useChatState } from "@/lib/ChatContext";
 const profileHeroImage = "/images/brand/akkapol-hero-transparent.png";
 type HeroCopy = HomeContent["hero"];
 
-function StudioMark() {
+function BlogMark({ className = "h-3.5 w-3.5" }: { className?: string }) {
   return (
     <svg
-      aria-label="Akkapol Systems logo"
-      viewBox="0 0 520 200"
-      className="h-9 w-auto fill-current md:h-10"
+      aria-hidden="true"
+      viewBox="0 0 24 24"
+      className={className}
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.7"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     >
-      <path d="M25 175 85 25 145 175Z" />
-      <path d="M155 25h60l60 150h-60Z" />
-      <path d="M295 25h55v150h-55Z" />
-      <path d="M370 25h130l-130 130Z" />
-      <path d="M370 95 500 175H370Z" />
+      <path d="M4 19.5V6a2 2 0 0 1 2-2h8l6 6v9.5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z" />
+      <path d="M14 4v6h6" />
+      <path d="M8 13h8M8 17h5" />
     </svg>
   );
 }
@@ -203,14 +207,24 @@ export function StudioHero({
       <header className="relative z-30 flex items-start justify-between gap-5">
         <Link href="#top" className={`ak-text-primary group flex items-center gap-5 ${ctaFocus}`}>
           <StudioMark />
-          <span className="h-8 w-px bg-white/18" aria-hidden="true" />
-          <span className="ak-type-label ak-text-muted flex items-center gap-4 transition group-hover:text-[var(--ak-color-fg)]">
+          <span className="hidden h-8 w-px bg-white/18 sm:block" aria-hidden="true" />
+          <span className="ak-type-label ak-text-muted hidden items-center gap-4 transition group-hover:text-[var(--ak-color-fg)] sm:flex">
             <span className="h-2 w-2 rounded-full bg-amber-300 shadow-[0_0_18px_rgba(246,181,30,0.45)]" aria-hidden="true" />
             {copy.brand}
           </span>
         </Link>
 
         <div className="flex shrink-0 items-start justify-end gap-4">
+          <span className="hidden sm:inline-flex">
+            <Link
+              href="/blog"
+              aria-label={locale === "th" ? "บทความ" : "Blog"}
+              className={`ak-nav-pill ak-type-label ${ctaFocus}`}
+            >
+              <BlogMark />
+              <span>{locale === "th" ? "บทความ" : "Blog"}</span>
+            </Link>
+          </span>
           <nav
             className="ak-locale-switch"
             aria-label="Language"
@@ -270,17 +284,19 @@ export function StudioHero({
             </button>
           </div>
 
-          <Link
-            href="/blog"
-            className={`ak-type-label ak-text-muted group mt-7 inline-flex items-center gap-3 transition hover:text-[var(--ak-color-accent-text)] ${ctaFocus}`}
-          >
-            <span
-              aria-hidden="true"
-              className="h-px w-8 bg-[var(--ak-color-accent)] opacity-70 transition-all group-hover:w-10"
-            />
-            <span>{locale === "th" ? "บทความ" : "Writing"}</span>
-            <ArrowUpRight className="h-3.5 w-3.5 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-          </Link>
+          <div className="mt-7 sm:hidden">
+            <Link
+              href="/blog"
+              className={`ak-type-label ak-text-muted group inline-flex items-center gap-3 transition hover:text-[var(--ak-color-accent-text)] ${ctaFocus}`}
+            >
+              <span
+                aria-hidden="true"
+                className="h-px w-8 bg-[var(--ak-color-accent)] opacity-70 transition-all group-hover:w-10"
+              />
+              <span>{locale === "th" ? "บทความ" : "Writing"}</span>
+              <ArrowUpRight className="h-3.5 w-3.5 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+            </Link>
+          </div>
 
           <div
             aria-hidden="true"

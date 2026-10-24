@@ -418,6 +418,72 @@ html {
   color: var(--ak-color-contact-hover-text);
 }
 
+.ak-nav-pill {
+  display: inline-flex;
+  min-height: 2.5rem;
+  align-items: center;
+  gap: var(--ak-space-2);
+  border: 1px solid var(--ak-border-subtle);
+  border-radius: 999px;
+  background: var(--ak-surface-secondary);
+  color: var(--ak-color-secondary-text);
+  padding: var(--ak-space-2) var(--ak-space-4);
+  text-decoration: none;
+  backdrop-filter: blur(12px);
+  transition:
+    background var(--ak-duration-base) var(--ak-ease-premium),
+    border-color var(--ak-duration-base) var(--ak-ease-premium),
+    color var(--ak-duration-base) var(--ak-ease-premium),
+    transform var(--ak-duration-base) var(--ak-ease-premium);
+}
+
+.ak-nav-pill:hover {
+  border-color: var(--ak-border-secondary-hover);
+  background: var(--ak-surface-secondary-hover);
+  color: var(--ak-color-contact-hover-text);
+  transform: translate3d(0, -0.0625rem, 0);
+}
+
+.ak-nav-pill[aria-current="page"] {
+  border-color: var(--ak-color-accent);
+  background: color-mix(in srgb, var(--ak-color-accent) 12%, transparent);
+  color: var(--ak-color-accent-text);
+}
+
+.ak-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ak-space-1);
+  border: 1px solid var(--ak-border-subtle);
+  border-radius: 999px;
+  background: var(--ak-surface-secondary);
+  color: var(--ak-color-muted);
+  padding: 0.125rem var(--ak-space-3);
+  font-size: 0.75rem;
+  line-height: 1.25rem;
+}
+
+.ak-tag-button {
+  min-height: 2.25rem;
+  cursor: pointer;
+  transition:
+    background var(--ak-duration-base) var(--ak-ease-premium),
+    border-color var(--ak-duration-base) var(--ak-ease-premium),
+    color var(--ak-duration-base) var(--ak-ease-premium);
+}
+
+.ak-tag-button:hover {
+  border-color: var(--ak-border-secondary-hover);
+  background: var(--ak-surface-secondary-hover);
+  color: var(--ak-color-contact-hover-text);
+}
+
+.ak-tag[aria-pressed="true"] {
+  border-color: var(--ak-color-accent);
+  background: color-mix(in srgb, var(--ak-color-accent) 12%, transparent);
+  color: var(--ak-color-accent-text);
+}
+
 .ak-theme-toggle-track {
   position: relative;
   display: block;
@@ -1116,6 +1182,7 @@ html[data-theme="light"] .ak-system-pipeline-pulse {
 @media (prefers-reduced-motion: reduce) {
   .ak-action:hover,
   .ak-cta:hover,
+  .ak-nav-pill:hover,
   .ak-surface-card:hover,
   .ak-theme-toggle:hover {
     transform: none;

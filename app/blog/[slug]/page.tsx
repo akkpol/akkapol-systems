@@ -2,12 +2,27 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { SiteHeader } from "@/app/_components/SiteHeader";
+import { ScrollProgress } from "@/app/_components/HomeMotion";
 import { Markdown } from "@/app/blog/_components/Markdown";
-import { formatBlogDate, getPostBySlug, listPosts, type BlogPost } from "@/lib/blog";
+import { NoteCard, NoteTags } from "@/app/blog/_components/NoteCard";
+import {
+  collectBlogOutline,
+  formatBlogDate,
+  getAdjacentPosts,
+  getPostBySlug,
+  getRelatedPosts,
+  listPosts,
+  parseMarkdown,
+  toBlogCardData,
+  type BlogPost,
+} from "@/lib/blog";
 
 type BlogPostPageProps = {
   params: Promise<{ slug: string }>;
 };
+
+const siteUrl = "https://akkapol-systems.vercel.app";
 
 // Only posts present at build time are generated. A new file requires the
 // next rebuild/redeploy; unknown slugs return 404.
@@ -41,8 +56,12 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
   return {
     title: post.title,
     description,
+    keywords: post.tags,
     alternates: {
       canonical: url,
+      languages: {
+        en: url,
+      },
     },
     openGraph: {
       type: "article",
@@ -62,20 +81,26 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
   };
 }
 
-function PostTags({ tags }: { tags: string[] }) {
-  if (tags.length === 0) return null;
-
+function AdjacentNote({
+  direction,
+  post,
+}: {
+  direction: "newer" | "older";
+  post: BlogPost;
+}) {
   return (
-    <ul className="flex flex-wrap gap-2" aria-label="Tags">
-      {tags.map((tag) => (
-        <li
-          key={tag}
-          className="rounded-full border border-[var(--ak-border-subtle)] bg-[var(--ak-surface-secondary)] px-3 py-1 text-xs ak-text-muted"
-        >
-          {tag}
-        </li>
-      ))}
-    </ul>
+    <Link
+      href={`/blog/${post.slug}`}
+      className="ak-surface ak-surface-compact ak-focus-ring group flex flex-col gap-2"
+    >
+      <span className="ak-type-label ak-text-subtle">
+        {direction === "newer" ? "Newer note" : "Older note"}
+      </span>
+      <span className="ak-type-title-card ak-text-primary transition group-hover:text-[var(--ak-color-accent-text)]">
+        {post.title}
+      </span>
+      <span className="ak-type-label ak-text-muted">{formatBlogDate(post.date)}</span>
+    </Link>
   );
 }
 
@@ -84,28 +109,35 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const post = getPostBySlug(slug);
   if (!post) notFound();
 
-  return (
-    <main className="ak-theme-shell" data-locale="en" lang="en">
-      <div className="ak-section-frame flex flex-wrap items-center gap-x-3 gap-y-2 pb-0 pt-8 md:pt-10">
-        <Link
-          href="/"
-          className="ak-focus-ring group inline-flex items-center gap-2 rounded-full border border-[var(--ak-border-strong)] bg-[var(--ak-surface-panel)] px-4 py-2 text-sm font-medium ak-text-body transition hover:border-[var(--ak-color-accent)] hover:text-[var(--ak-color-accent-text)]"
-        >
-          <span aria-hidden="true" className="transition group-hover:-translate-x-0.5">
-            ←
-          </span>
-          <span>Home</span>
-        </Link>
-        <Link
-          href="/blog"
-          className="ak-focus-ring inline-flex items-center gap-2 rounded-full border border-[var(--ak-border-subtle)] px-4 py-2 text-sm font-medium ak-text-muted transition hover:border-[var(--ak-color-accent)] hover:text-[var(--ak-color-accent-text)]"
-        >
-          Writing
-        </Link>
-      </div>
+  const posts = listPosts();
+  const { newer, older } = getAdjacentPosts(posts, post.slug);
+  const related = getRelatedPosts(posts, post.slug);
+  const outline = collectBlogOutline(parseMarkdown(post.body));
+  const description = buildExcerpt(post);
+  const postUrl = `${siteUrl}/blog/${post.slug}`;
 
-      <article className="ak-section-frame pt-10 md:pt-14">
-        <div className="mx-auto max-w-[720px]">
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.title,
+    description,
+    datePublished: post.date,
+    dateModified: post.date,
+    inLanguage: "en",
+    keywords: post.tags.join(", "),
+    url: postUrl,
+    mainEntityOfPage: { "@type": "WebPage", "@id": postUrl },
+    author: { "@type": "Person", name: "Akkapol Kumpapug", url: siteUrl },
+    publisher: { "@type": "Organization", name: "Akkapol Systems", url: siteUrl },
+  };
+
+  return (
+    <main id="top" className="ak-theme-shell" data-locale="en" lang="en">
+      <ScrollProgress />
+      <SiteHeader current="blog" />
+
+      <article className="ak-section-frame">
+        <div className="mx-auto max-w-[760px] pt-4 md:pt-6">
           <header>
             <p className="ak-type-label ak-text-accent">Writing</p>
             <h1 className="mt-4 text-3xl font-semibold leading-tight ak-text-primary sm:text-4xl">
@@ -131,35 +163,97 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             ) : null}
 
             <div className="mt-6">
-              <PostTags tags={post.tags} />
+              <NoteTags tags={post.tags} />
             </div>
 
             <hr className="mt-9 border-t border-[var(--ak-border-subtle)]" />
           </header>
+
+          {outline.length >= 2 ? (
+            <nav
+              aria-labelledby="post-outline-title"
+              className="ak-surface ak-surface-compact mt-8"
+            >
+              <p id="post-outline-title" className="ak-type-label ak-text-muted">
+                On this page
+              </p>
+              <ol className="mt-3 space-y-2">
+                {outline.map((entry) => (
+                  <li key={entry.id} className={entry.level >= 3 ? "pl-4" : undefined}>
+                    <a
+                      href={`#${entry.id}`}
+                      className="ak-type-body-sm ak-text-muted rounded transition hover:text-[var(--ak-color-accent-text)] ak-focus-ring"
+                    >
+                      {entry.text}
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            </nav>
+          ) : null}
 
           <div className="mt-8">
             <Markdown source={post.body} />
           </div>
 
           <footer className="mt-14 border-t border-[var(--ak-border-subtle)] pt-8">
+            <p className="ak-type-body-sm ak-text-muted">
+              Written by <span className="ak-text-body">Akkapol Kumpapug</span> · Published{" "}
+              {formatBlogDate(post.date)}
+            </p>
+
             {post.source === "dsh" ? (
-              <p className="ak-type-body-sm ak-text-muted">
+              <p className="ak-type-body-sm ak-text-muted mt-2">
                 This note was drafted from a working session with an AI assistant
                 and published through the site&apos;s DSH blog writer.
               </p>
             ) : null}
 
-            <div className="mt-6 flex flex-wrap gap-3">
+            {newer || older ? (
+              <nav aria-label="More notes" className="mt-8 grid gap-4 sm:grid-cols-2">
+                {newer ? <AdjacentNote direction="newer" post={newer} /> : null}
+                {older ? <AdjacentNote direction="older" post={older} /> : null}
+              </nav>
+            ) : null}
+
+            {related.length > 0 ? (
+              <section className="mt-10">
+                <p className="ak-type-label ak-text-accent">Related notes</p>
+                <div className="mt-4 grid gap-4 sm:grid-cols-2">
+                  {related.map((item) => (
+                    <NoteCard key={item.slug} note={toBlogCardData(item)} />
+                  ))}
+                </div>
+              </section>
+            ) : null}
+
+            <div className="mt-10 flex flex-wrap gap-3">
               <Link href="/blog" className="ak-action ak-action-secondary ak-focus-ring">
                 All writing
               </Link>
               <Link href="/" className="ak-action ak-action-secondary ak-focus-ring">
                 Back to home
               </Link>
+              <a href="mailto:akkapol.kumpapug@gmail.com" className="ak-action ak-action-primary ak-focus-ring">
+                Start a conversation
+              </a>
             </div>
+
+            <p className="mt-8">
+              <a href="#top" className="ak-type-label ak-text-subtle ak-focus-ring rounded transition hover:text-[var(--ak-color-accent-text)]">
+                Back to top ↑
+              </a>
+            </p>
           </footer>
         </div>
       </article>
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+        }}
+      />
     </main>
   );
 }
