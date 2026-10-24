@@ -35,10 +35,15 @@ try {
       exit 2
     }
     Write-Log 'Fetching origin/main.'
+    $previousGitErrorAction = $ErrorActionPreference
+    $ErrorActionPreference = 'Continue'
     git fetch origin 2>&1 | ForEach-Object { Write-Log ('GIT ' + $_) }
-    if ($LASTEXITCODE -ne 0) { Write-Log 'git fetch failed.'; exit 3 }
+    $fetchExit = $LASTEXITCODE
+    if ($fetchExit -ne 0) { $ErrorActionPreference = $previousGitErrorAction; Write-Log 'git fetch failed.'; exit 3 }
     git pull --ff-only origin main 2>&1 | ForEach-Object { Write-Log ('GIT ' + $_) }
-    if ($LASTEXITCODE -ne 0) { Write-Log 'git pull failed.'; exit 4 }
+    $pullExit = $LASTEXITCODE
+    $ErrorActionPreference = $previousGitErrorAction
+    if ($pullExit -ne 0) { Write-Log 'git pull failed.'; exit 4 }
   }
 
   if ($DryRun) {
