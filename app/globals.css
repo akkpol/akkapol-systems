@@ -494,6 +494,37 @@ html {
   background: var(--ak-surface-panel-hover);
 }
 
+.ak-illustration-frame {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.ak-illustration-card {
+  box-shadow: var(--ak-shadow-panel);
+  isolation: isolate;
+  transition: transform var(--ak-duration-slow) var(--ak-ease-premium), border-color var(--ak-duration-base) var(--ak-ease-premium);
+}
+
+.ak-illustration-card:hover {
+  transform: translate3d(0, -0.25rem, 0);
+  border-color: var(--ak-border-strong);
+}
+
+.ak-illustration-card img {
+  transition: transform 700ms var(--ak-ease-premium), filter 700ms var(--ak-ease-premium);
+}
+
+.ak-illustration-card:hover img {
+  transform: scale(1.025);
+  filter: saturate(1.08);
+}
+
+.ak-illustration-index {
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.16em;
+}
+
 .ak-contact-row {
   display: flex;
   align-items: center;

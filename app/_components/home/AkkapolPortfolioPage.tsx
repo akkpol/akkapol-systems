@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 import { CvShareActions } from "@/app/_components/CvShareActions";
 import { ScrollProgress } from "@/app/_components/HomeMotion";
 import { ScrollReveal } from "@/app/_components/home/ScrollReveal";
@@ -183,6 +185,26 @@ export function AkkapolPortfolioPage({ locale = "en" }: { locale?: Locale }) {
               </ul>
             </Surface>
           ))}
+        </div>
+      </ScrollReveal>
+
+      <ScrollReveal className="ak-section-frame ak-illustration-frame" delay={0.01}>
+        <div className="ak-illustration-card relative overflow-hidden rounded-[var(--ak-radius-panel)] border border-white/10">
+          <Image
+            src="/images/portfolio-systems-illustration.png"
+            alt={locale === "th" ? "ภาพประกอบระบบดิจิทัลแบบนามธรรม" : "Abstract illustration of a connected digital system"}
+            width={1600}
+            height={720}
+            sizes="(max-width: 768px) 100vw, 1200px"
+            className="h-auto w-full object-cover"
+          />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/45 via-transparent to-black/20" />
+          <div className="absolute inset-x-6 bottom-5 flex items-end justify-between gap-4 md:inset-x-10 md:bottom-8">
+            <p className="ak-type-label ak-text-primary max-w-[14rem] drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)] md:max-w-none">
+              {locale === "th" ? "เปลี่ยนความซับซ้อนให้เป็นระบบที่ชัดเจน" : "Turning complexity into clear systems"}
+            </p>
+            <span className="ak-illustration-index ak-text-accent-soft hidden shrink-0 md:block">01 / 03</span>
+          </div>
         </div>
       </ScrollReveal>
 
