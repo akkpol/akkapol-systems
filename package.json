@@ -9,6 +9,7 @@
     "lint": "eslint",
     "test:security": "node --test --experimental-strip-types lib/*.test.mts",
     "test:metadata": "node scripts/check-built-metadata.mjs",
+    "blog:cover": "node scripts/blog-cover.mjs",
     "db:migrate": "node --env-file-if-exists=.env scripts/db-migrate.mjs"
   },
   "dependencies": {

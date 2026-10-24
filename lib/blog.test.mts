@@ -172,6 +172,35 @@ test("parseBlogPost keeps draft, tags, source, and sessionId", () => {
   assert.equal(post.sessionId, "abc123");
 });
 
+test("parseBlogPost keeps safe cover image metadata", () => {
+  const post = parseBlogPost(
+    "cover-post",
+    postSource({
+      ...validAttributes,
+      image: '"/images/blog/cover-post/cover.png"',
+      imageAlt: '"A branded cover for the note"',
+    }),
+  );
+  assert.ok(post);
+  assert.equal(post.image, "/images/blog/cover-post/cover.png");
+  assert.equal(post.imageAlt, "A branded cover for the note");
+});
+
+test("parseBlogPost drops unsafe or external cover images", () => {
+  const traversal = parseBlogPost(
+    "bad-image",
+    postSource({ ...validAttributes, image: '"/images/blog/../secret.png"' }),
+  );
+  const external = parseBlogPost(
+    "external-image",
+    postSource({ ...validAttributes, image: '"https://example.com/cover.png"' }),
+  );
+  assert.ok(traversal);
+  assert.ok(external);
+  assert.equal("image" in traversal, false);
+  assert.equal("image" in external, false);
+});
+
 test("parseBlogPost tolerates a quoted boolean draft value", () => {
   const quotedDraft = parseBlogPost(
     "quoted-draft",

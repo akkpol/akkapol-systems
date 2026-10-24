@@ -20,6 +20,13 @@ const MAX_SLUG_LENGTH = 160;
 const MAX_TAGS = 24;
 const MAX_TAG_LENGTH = 48;
 
+const BLOG_IMAGE_PATH_PATTERN =
+  /^\/images\/blog\/[a-z0-9][a-z0-9/_-]*\.(?:png|webp|jpe?g|avif|svg)$/i;
+
+export function isValidBlogImagePath(value: string): boolean {
+  return BLOG_IMAGE_PATH_PATTERN.test(value) && !value.includes("..");
+}
+
 const THAI_CHARACTER_PATTERN = /[\u0e00-\u0e7f]/g;
 const LATIN_WORD_PATTERN = /[A-Za-z0-9]+(?:['\u2019-][A-Za-z0-9]+)*/g;
 
@@ -42,6 +49,9 @@ export type BlogFrontmatter = {
   draft: boolean;
   source?: string;
   sessionId?: string;
+  /** Site-relative cover image, e.g. /images/blog/my-note/cover.png. */
+  image?: string;
+  imageAlt?: string;
 };
 
 export type BlogPost = BlogFrontmatter & {
@@ -596,6 +606,15 @@ export function parseBlogPost(slug: string, source: string): BlogPost | null {
   const sourceValue = attributes.source;
   const sessionIdValue = attributes.sessionId;
 
+  const imageValue = attributes.image;
+  const image = typeof imageValue === "string" && isValidBlogImagePath(imageValue.trim())
+    ? imageValue.trim()
+    : undefined;
+  const imageAltValue = attributes.imageAlt;
+  const imageAlt = typeof imageAltValue === "string" && imageAltValue.trim().length > 0
+    ? imageAltValue.trim()
+    : undefined;
+
   return {
     slug,
     title: title.trim(),
@@ -609,6 +628,8 @@ export function parseBlogPost(slug: string, source: string): BlogPost | null {
     ...(typeof sessionIdValue === "string" && sessionIdValue.trim().length > 0
       ? { sessionId: sessionIdValue.trim() }
       : {}),
+    ...(image ? { image } : {}),
+    ...(imageAlt ? { imageAlt } : {}),
     body,
     readingMinutes: estimateReadingMinutes(body),
   };
