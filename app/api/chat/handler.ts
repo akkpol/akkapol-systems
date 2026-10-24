@@ -1,3 +1,4 @@
+import { waitUntil } from "@vercel/functions";
 import type { UIMessage } from "ai";
 
 import {
@@ -119,19 +120,31 @@ export function createChatPostHandler(dependencies: ChatRouteDependencies) {
     const response = await dependencies.streamChat(
       payload.value.messages,
       async (event) => {
-        try {
-          await dependencies.saveTranscript({
-            sessionId: chatSession.sessionId,
-            messages: JSON.stringify(payload.value.messages),
-            messageCount: payload.value.messages.length,
-            finishReason: event.finishReason,
-            tokensUsed: event.usage?.totalTokens ?? 0,
-          });
-          const lead = dependencies.extractLead(payload.value.messages, chatSession.sessionId);
-          if (lead) await dependencies.saveStructuredLead(lead);
-        } catch (error) {
-          console.error("[chat] Failed to save lead:", error);
+        const persistence = (async () => {
+          try {
+            await dependencies.saveTranscript({
+              sessionId: chatSession.sessionId,
+              messages: JSON.stringify(payload.value.messages),
+              messageCount: payload.value.messages.length,
+              finishReason: event.finishReason,
+              tokensUsed: event.usage?.totalTokens ?? 0,
+            });
+            const lead = dependencies.extractLead(payload.value.messages, chatSession.sessionId);
+            if (lead) await dependencies.saveStructuredLead(lead);
+          } catch (error) {
+            console.error("[chat] Failed to save lead:", error);
+          }
+        })();
+
+        if (process.env.VERCEL) {
+          try {
+            waitUntil(persistence);
+          } catch (error) {
+            console.error("[chat] Failed to register background persistence:", error);
+          }
         }
+
+        await persistence;
       },
       req.signal,
     );
