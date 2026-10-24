@@ -3,10 +3,11 @@
 ## Before a release
 
 1. Run `npm ci`, `npm run lint`, `npm run test:security`, `npm run build`,
-   and `npm run test:metadata`.
+   and `npm run test:metadata`. Run `npm run db:migrate` when the Neon schema
+   changed.
 2. Confirm the production environment contains `DEEPSEEK_API_KEY`,
-   `BLOB_READ_WRITE_TOKEN`, and `CHAT_SESSION_SECRET`. A missing secret makes
-   the chat endpoint return `503` instead of issuing unstable sessions.
+   `DATABASE_URL`, and `CHAT_SESSION_SECRET`. A missing secret or database
+   makes the chat endpoint return `503` instead of issuing unstable sessions.
 3. If Google Sheets lead capture is enabled, confirm the spreadsheet is shared
    with the service account and all three Google variables are present.
 4. Use a preview deployment to test the English and Thai home pages, `/cv`,
@@ -16,11 +17,13 @@
 
 ## Lyra returns `503`
 
-1. Check whether `DEEPSEEK_API_KEY`, `BLOB_READ_WRITE_TOKEN`, and
+1. Check whether `DEEPSEEK_API_KEY`, `DATABASE_URL`, and
    `CHAT_SESSION_SECRET` are present in the affected Vercel environment.
-2. Review function logs for `[ratelimit] Shared rate limit is unavailable`.
-3. Check the DeepSeek provider status and credentials without printing secrets.
-4. Keep the email fallback visible while the chat is unavailable.
+2. Review function logs for `[ratelimit] Neon rate limit is unavailable`.
+3. Check the Neon project status, branch, and connection limit without printing
+   secrets.
+4. Check the DeepSeek provider status and credentials without printing secrets.
+5. Keep the email fallback visible while the chat is unavailable.
 
 ## Lyra returns `429`
 
@@ -38,11 +41,14 @@
 
 ## Chat transcripts look incomplete
 
-1. The Blob transcript is a rolling window of the most recent client request
-   (up to 16 messages); older messages are not appended.
-2. Confirm `BLOB_READ_WRITE_TOKEN` is set. A missing token skips transcript
-   storage while the chat itself keeps working in development.
-3. Review function logs for `[chat] Blob save failed`.
+1. Each transcript is a rolling window of the most recent client request (up
+   to 16 messages), stored as an append-only row in Neon `chat_transcripts`.
+   Older messages are not appended to that row.
+2. Confirm `DATABASE_URL` is set. A missing database skips transcript storage
+   in development; in production the chat endpoint fails closed.
+3. Review function logs for `[chat] Transcript save failed`.
+4. Transcripts created in Vercel Blob before the Neon cutover are not imported;
+   they remain in the old Blob store for manual cleanup.
 
 ## Rollback
 
