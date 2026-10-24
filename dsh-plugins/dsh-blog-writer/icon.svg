@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-labelledby="dshBlogWriterIconTitle dshBlogWriterIconDesc">
+  <title id="dshBlogWriterIconTitle">Blog Writer</title>
+  <desc id="dshBlogWriterIconDesc">An open white notebook with text lines on a deep blue rounded square, with an amber pen resting across the lower-right page.</desc>
+  <rect width="64" height="64" rx="14" fill="#0B3D91"/>
+  <path d="M13 19.5c6.2-2.5 12.2-2.5 18.4 0v27c-6.2-2.5-12.2-2.5-18.4 0z" fill="#F8FAFC"/>
+  <path d="M51 19.5c-6.2-2.5-12.2-2.5-18.4 0v27c6.2-2.5 12.2-2.5 18.4 0z" fill="#DBE4F0"/>
+  <g stroke="#8CA3C7" stroke-width="1.6" stroke-linecap="round">
+    <path d="M18 27.5h9M18 32.5h9M18 37.5h6"/>
+    <path d="M37 27.5h9M37 32.5h9M37 37.5h6"/>
+  </g>
+  <g transform="rotate(-45 47 45)">
+    <rect x="43.4" y="34" width="7.2" height="17.5" rx="1.6" fill="#F2B01E"/>
+    <path d="M43.4 51.5h7.2v2.6a3.6 3.6 0 0 1-7.2 0z" fill="#0B3D91"/>
+    <path d="M45.8 51.7l2.4 3.4 2.4-3.4z" fill="#8CA3C7"/>
+    <rect x="43.4" y="36.6" width="7.2" height="2.2" fill="#FFD166"/>
+    <path d="M43.4 34h7.2v2.6h-7.2z" fill="#FFD166"/>
+  </g>
+</svg>

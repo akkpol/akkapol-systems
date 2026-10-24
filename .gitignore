@@ -14,6 +14,9 @@
 /coverage
 /.playwright-mcp
 
+# local recon scratch
+/.recon/
+
 # next.js
 /.next/
 /out/
@@ -33,6 +36,7 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
 
 # vercel
 .vercel

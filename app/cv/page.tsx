@@ -1,11 +1,18 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { cv, cvFiles } from "@/app/_data/cv";
 
-export const metadata = {
-  title: "Akkapol Kumpapug CV",
+export const metadata: Metadata = {
+  title: { absolute: "Akkapol Kumpapug CV" },
   description:
     "Recruiter-ready CV for Akkapol Kumpapug, AI Systems Builder & Problem Solver.",
+  alternates: {
+    canonical: "/cv",
+    languages: {
+      en: "/cv",
+    },
+  },
 };
 
 function Section({
@@ -64,8 +71,7 @@ export default function CvPage() {
                 {cv.profile.name}
               </h1>
               <p className="mt-4 max-w-2xl text-base leading-7 text-zinc-300 print:text-sm">
-                AI-integrated systems, workflow design, and practical execution for
-                production-ready business operations.
+                {cv.profile.tagline}
               </p>
               <div className="mt-6 grid gap-2 text-sm text-zinc-300 sm:grid-cols-2 print:grid-cols-2 print:text-xs">
                 <a href={`mailto:${cv.profile.email}`}>{cv.profile.email}</a>

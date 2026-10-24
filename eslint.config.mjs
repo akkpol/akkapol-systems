@@ -11,6 +11,7 @@ const eslintConfig = defineConfig([
     ".next/**",
     ".vercel/**",
     ".playwright-mcp/**",
+    ".recon/**",
     "out/**",
     "build/**",
     "next-env.d.ts",

@@ -1,9 +1,17 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
-export const metadata = {
-  title: "Privacy Policy | Akkapol Kumpapug",
+export const metadata: Metadata = {
+  title: { absolute: "Privacy Policy | Akkapol Kumpapug" },
   description:
     "Privacy Policy for akkapol-systems.vercel.app — how we collect, use, and protect your data.",
+  alternates: {
+    canonical: "/privacy",
+    languages: {
+      en: "/privacy",
+      th: "/th/privacy",
+    },
+  },
 };
 
 const sections = [
@@ -33,8 +41,14 @@ const sections = [
           and see general traffic patterns. No personal data is collected.
         </li>
         <li>
-          <strong>Theme preference</strong> — Your dark/light mode choice is
-          saved in your browser&apos;s localStorage. It never leaves your device.
+          <strong>Site preferences</strong> — Theme and language choices are
+          saved in localStorage and first-party cookies so the site can restore
+          them on later visits.
+        </li>
+        <li>
+          <strong>Chat identifiers</strong> — Random device and signed chat
+          session identifiers are saved in localStorage for abuse prevention
+          and reliable follow-up. They are not used for advertising.
         </li>
       </ul>
     ),
@@ -72,7 +86,7 @@ const sections = [
           you can request deletion at any time.
         </li>
         <li>
-          Rate-limit counters reset daily and are not linked to any identity.
+          Rate-limit counters reset daily and are used only for abuse prevention.
         </li>
       </ul>
     ),
@@ -94,8 +108,8 @@ const sections = [
         </li>
         <li>
           To exercise these rights, contact Akkapol at{` `}
-          <a href="mailto:hi@akkapol.com" className="text-amber-200 hover:text-amber-100 underline">
-            hi@akkapol.com
+          <a href="mailto:akkapol.kumpapug@gmail.com" className="text-amber-200 hover:text-amber-100 underline">
+            akkapol.kumpapug@gmail.com
           </a>.
         </li>
       </ul>
@@ -151,10 +165,10 @@ const sections = [
     title: "6. Cookies",
     content: (
       <p>
-        This site does <strong>not</strong> use tracking cookies. The AI chat
-        and theme preference use browser localStorage only — no cookies are sent
-        to servers. Vercel Analytics uses a minimal beacon that does not identify
-        individual users.
+        This site does <strong>not</strong> use advertising or cross-site tracking
+        cookies. First-party cookies store only theme and language preferences;
+        chat identifiers stay in browser localStorage. Vercel Analytics uses a
+        minimal beacon that does not identify individual users.
       </p>
     ),
   },
@@ -193,7 +207,7 @@ export default function PrivacyPage() {
             How Your Data Is Handled
           </h1>
           <p className="mt-3 text-sm text-zinc-400">
-            Last updated: July 16, 2026
+            Last updated: August 25, 2026
           </p>
         </header>
 

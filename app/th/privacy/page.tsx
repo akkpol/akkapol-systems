@@ -1,9 +1,17 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
-export const metadata = {
-  title: "นโยบายความเป็นส่วนตัว | Akkapol Kumpapug",
+export const metadata: Metadata = {
+  title: { absolute: "นโยบายความเป็นส่วนตัว | Akkapol Kumpapug" },
   description:
     "นโยบายความเป็นส่วนตัวของ akkapol-systems.vercel.app — เราเก็บ ใช้ และปกป้องข้อมูลของคุณอย่างไร",
+  alternates: {
+    canonical: "/th/privacy",
+    languages: {
+      en: "/privacy",
+      th: "/th/privacy",
+    },
+  },
 };
 
 const sections = [
@@ -32,8 +40,13 @@ const sections = [
           ผู้เยี่ยมชมและดูแนวทางการใช้งานโดยรวม ไม่มีการเก็บข้อมูลส่วนบุคคล
         </li>
         <li>
-          <strong>การตั้งค่าธีม</strong> — การเลือกธีม dark/light ของคุณถูกบันทึก
-          ใน localStorage ของเบราว์เซอร์เท่านั้น ไม่มีการส่งออกไปที่อื่น
+          <strong>การตั้งค่าเว็บไซต์</strong> — การเลือกธีมและภาษาถูกบันทึกใน
+          localStorage และคุกกี้ของเว็บไซต์ เพื่อเรียกคืนค่าเดิมในการเข้าชมครั้งถัดไป
+        </li>
+        <li>
+          <strong>ตัวระบุแชท</strong> — ไอดีอุปกรณ์แบบสุ่มและไอดีเซสชันแชทที่มี
+          ลายเซ็นถูกบันทึกใน localStorage เพื่อป้องกันการใช้งานผิดขอบเขตและช่วยติดตามกลับ
+          โดยไม่ใช้เพื่อการโฆษณา
         </li>
       </ul>
     ),
@@ -70,7 +83,7 @@ const sections = [
           ขณะนี้ repository นี้ยังไม่มีระบบลบอัตโนมัติ ดังนั้นคุณสามารถขอให้ลบข้อมูลได้ทุกเมื่อ
         </li>
         <li>
-          ตัวนับการจำกัดจำนวนข้อความถูกรีเซ็ตทุกวันและไม่เชื่อมโยงกับตัวตนใด ๆ
+          ตัวนับการจำกัดจำนวนข้อความถูกรีเซ็ตทุกวันและใช้เพื่อป้องกันการใช้งานผิดขอบเขตเท่านั้น
         </li>
       </ul>
     ),
@@ -93,8 +106,8 @@ const sections = [
         </li>
         <li>
           หากต้องการใช้สิทธิ์เหล่านี้ ติดต่อ Akkapol ได้ที่{` `}
-          <a href="mailto:hi@akkapol.com" className="text-amber-200 hover:text-amber-100 underline">
-            hi@akkapol.com
+          <a href="mailto:akkapol.kumpapug@gmail.com" className="text-amber-200 hover:text-amber-100 underline">
+            akkapol.kumpapug@gmail.com
           </a>
         </li>
       </ul>
@@ -150,9 +163,9 @@ const sections = [
     title: "6. คุกกี้",
     content: (
       <p>
-        เว็บไซต์นี้ <strong>ไม่</strong> ใช้ tracking cookies การแชทและการตั้งค่า
-        ธีมใช้ localStorage ของเบราว์เซอร์เท่านั้น — ไม่มีคุกกี้ถูกส่งไปยังเซิร์ฟเวอร์
-        Vercel Analytics ใช้ beacon ขนาดเล็กที่ไม่ระบุตัวตนผู้ใช้
+        เว็บไซต์นี้ <strong>ไม่</strong> ใช้คุกกี้โฆษณาหรือติดตามข้ามเว็บไซต์
+        คุกกี้ของเว็บไซต์ใช้เก็บเฉพาะค่าธีมและภาษา ส่วนตัวระบุแชทเก็บใน localStorage
+        ของเบราว์เซอร์ Vercel Analytics ใช้ beacon ขนาดเล็กที่ไม่ระบุตัวตนผู้ใช้
       </p>
     ),
   },
@@ -191,7 +204,7 @@ export default function ThaiPrivacyPage() {
             ข้อมูลของคุณถูกจัดการอย่างไร
           </h1>
           <p className="mt-3 text-sm text-zinc-400">
-            อัปเดตล่าสุด: 16 กรกฎาคม 2026
+            อัปเดตล่าสุด: 25 สิงหาคม 2026
           </p>
         </header>
 
