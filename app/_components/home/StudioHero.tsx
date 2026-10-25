@@ -1,9 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { ThemeModeToggle } from "@/app/_components/ThemeModeToggle";
+import { SiteNav } from "@/app/_components/SiteNav";
 import { StudioMark } from "@/app/_components/StudioMark";
-import { saveLocalePreference } from "@/app/_components/LocaleDocumentSync";
 import { HeroNameMotion } from "@/app/_components/home/HeroNameMotion";
 import { HeroPortraitMotion } from "@/app/_components/home/HeroPortraitMotion";
 import { KineticHeroFX } from "@/app/_components/home/KineticHeroFX";
@@ -12,25 +11,6 @@ import { useChatState } from "@/lib/ChatContext";
 
 const profileHeroImage = "/images/brand/akkapol-hero-transparent.png";
 type HeroCopy = HomeContent["hero"];
-
-function BlogMark({ className = "h-3.5 w-3.5" }: { className?: string }) {
-  return (
-    <svg
-      aria-hidden="true"
-      viewBox="0 0 24 24"
-      className={className}
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.7"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M4 19.5V6a2 2 0 0 1 2-2h8l6 6v9.5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z" />
-      <path d="M14 4v6h6" />
-      <path d="M8 13h8M8 17h5" />
-    </svg>
-  );
-}
 
 function ArrowUpRight({ className = "h-5 w-5" }: { className?: string }) {
   return (
@@ -189,9 +169,6 @@ export function StudioHero({
 }) {
   const { setOpen } = useChatState();
   const ctaFocus = "ak-focus-ring";
-  const alternateLocaleHref = locale === "th" ? "/" : "/th";
-  const currentLocaleLabel = locale === "th" ? "TH" : "EN";
-  const alternateLocaleLabel = locale === "th" ? "EN" : "TH";
 
   return (
     <section
@@ -204,46 +181,28 @@ export function StudioHero({
       <KineticHeroFX />
       <HeroSystemMap labels={copy.mapLabels} />
 
-      <header className="relative z-30 flex items-start justify-between gap-5">
-        <Link href="#top" className={`ak-text-primary group flex items-center gap-5 ${ctaFocus}`}>
-          <StudioMark />
-          <span className="hidden h-8 w-px bg-white/18 sm:block" aria-hidden="true" />
-          <span className="ak-type-label ak-text-muted hidden items-center gap-4 transition group-hover:text-[var(--ak-color-fg)] sm:flex">
-            <span className="h-2 w-2 rounded-full bg-amber-300 shadow-[0_0_18px_rgba(246,181,30,0.45)]" aria-hidden="true" />
-            {copy.brand}
-          </span>
-        </Link>
-
-        <div className="flex shrink-0 items-start justify-end gap-4">
-          <span className="hidden sm:inline-flex">
-            <Link
-              href="/blog"
-              aria-label={locale === "th" ? "บทความ" : "Blog"}
-              className={`ak-nav-pill ak-type-label ${ctaFocus}`}
-            >
-              <BlogMark />
-              <span>{locale === "th" ? "บทความ" : "Blog"}</span>
+      <header className="relative z-30">
+        <SiteNav
+          locale={locale}
+          current="home"
+          align="start"
+          brand={
+            <Link href="#top" className={`ak-text-primary group flex items-center gap-5 ${ctaFocus}`}>
+              <StudioMark />
+              <span className="hidden h-8 w-px bg-white/18 sm:block" aria-hidden="true" />
+              <span className="ak-type-label ak-text-muted hidden items-center gap-4 transition group-hover:text-[var(--ak-color-fg)] sm:flex">
+                <span className="h-2 w-2 rounded-full bg-amber-300 shadow-[0_0_18px_rgba(246,181,30,0.45)]" aria-hidden="true" />
+                {copy.brand}
+              </span>
             </Link>
-          </span>
-          <nav
-            className="ak-locale-switch"
-            aria-label="Language"
-          >
-            <span aria-current="true">{currentLocaleLabel}</span>
-            <Link
-              href={alternateLocaleHref}
-              className={ctaFocus}
-              onClick={() => saveLocalePreference(locale === "th" ? "en" : "th")}
-            >
-              {alternateLocaleLabel}
-            </Link>
-          </nav>
-          <ThemeModeToggle />
-          <div className="ak-hero-status-card relative mt-14 hidden min-w-[25rem] border-t border-r border-white/16 px-8 py-4 text-right xl:mt-16 lg:block">
-            <span className="absolute -left-1.5 top-3 h-2 w-2 rounded-full bg-amber-300" />
-            <p className="ak-type-label ak-text-muted">{copy.status}</p>
-          </div>
-        </div>
+          }
+          trailing={
+            <div className="ak-hero-status-card relative mt-14 hidden min-w-[25rem] border-t border-r border-white/16 px-8 py-4 text-right xl:mt-16 lg:block">
+              <span className="absolute -left-1.5 top-3 h-2 w-2 rounded-full bg-amber-300" />
+              <p className="ak-type-label ak-text-muted">{copy.status}</p>
+            </div>
+          }
+        />
       </header>
 
       <div className="relative z-20 grid min-h-[calc(100svh-18rem)] items-center pt-12 lg:grid-cols-[0.48fr_0.52fr] lg:pt-5">

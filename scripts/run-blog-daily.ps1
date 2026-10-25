@@ -9,6 +9,9 @@ $logDir = Join-Path $repo 'logs\blog-daily'
 $stamp = Get-Date -Format 'yyyy-MM-dd-HHmmss'
 $logPath = Join-Path $logDir ($stamp + '.log')
 
+# Local kill switch. Create logs/blog-daily/DISABLED to stop the scheduled runner.
+if (Test-Path (Join-Path $logDir 'DISABLED')) { exit 0 }
+
 New-Item -ItemType Directory -Path $logDir -Force | Out-Null
 Set-Location $repo
 
